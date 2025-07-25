@@ -217,7 +217,7 @@ export const CallSam: React.FC<CallSamProps> = ({ windowId }) => {
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0, opacity: 0 }}
-              className="absolute bottom-4 right-4 w-32 h-24 rounded-lg overflow-hidden border-2 border-white/20 bg-black/50"
+              className="absolute bottom-4 right-4 w-40 h-30 rounded-lg overflow-hidden border-2 border-white/20 bg-black/50"
             >
               <video
                 ref={videoRef}
@@ -226,6 +226,43 @@ export const CallSam: React.FC<CallSamProps> = ({ windowId }) => {
                 playsInline
                 className="w-full h-full object-cover"
               />
+
+              {/* Camera selection button */}
+              {availableCameras.length > 1 && (
+                <div className="absolute top-2 right-2">
+                  <button
+                    onClick={() => setShowCameraMenu(!showCameraMenu)}
+                    className="p-1 bg-black/60 rounded-lg border border-white/20 hover:bg-black/80 transition-colors"
+                  >
+                    <Camera className="w-3 h-3 text-white" />
+                  </button>
+
+                  {/* Camera selection dropdown */}
+                  <AnimatePresence>
+                    {showCameraMenu && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8, y: -10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.8, y: -10 }}
+                        className="absolute top-8 right-0 bg-black/80 backdrop-blur-xl border border-white/30 rounded-lg py-2 min-w-48 z-10"
+                      >
+                        {availableCameras.map((camera) => (
+                          <button
+                            key={camera.deviceId}
+                            onClick={() => switchCamera(camera.deviceId)}
+                            className={cn(
+                              "w-full px-3 py-2 text-left text-white text-xs hover:bg-white/10 transition-colors",
+                              selectedCameraId === camera.deviceId && "bg-blue-500/30"
+                            )}
+                          >
+                            {camera.label || `Camera ${camera.deviceId.slice(0, 8)}`}
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
