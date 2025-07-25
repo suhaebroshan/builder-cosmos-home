@@ -64,6 +64,14 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
     }
   }
   
+  useEffect(() => {
+    if (window.isMaximized || !window.isMaximized) {
+      setIsAnimating(true)
+      const timer = setTimeout(() => setIsAnimating(false), 300)
+      return () => clearTimeout(timer)
+    }
+  }, [window.isMaximized])
+
   if (window.isMinimized) return null
 
   // Get viewport dimensions for window constraints
