@@ -152,7 +152,7 @@ export const Calendar: React.FC<CalendarProps> = ({ windowId }) => {
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
   
   return (
-    <div className="flex h-full bg-black/30 backdrop-blur-sm">
+    <div className="flex h-full bg-black/20 backdrop-blur-xl">
       {/* Calendar Grid */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
