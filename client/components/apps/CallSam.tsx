@@ -29,12 +29,32 @@ export const CallSam: React.FC<CallSamProps> = ({ windowId }) => {
   const streamRef = useRef<MediaStream | null>(null)
   
   useEffect(() => {
+    // Get available cameras on component mount
+    getCameras()
+  }, [])
+
+  useEffect(() => {
     if (isCameraOn) {
       startCamera()
     } else {
       stopCamera()
     }
-  }, [isCameraOn])
+  }, [isCameraOn, selectedCameraId])
+
+  const getCameras = async () => {
+    try {
+      // Request permission first
+      await navigator.mediaDevices.getUserMedia({ video: true })
+      const devices = await navigator.mediaDevices.enumerateDevices()
+      const cameras = devices.filter(device => device.kind === 'videoinput')
+      setAvailableCameras(cameras)
+      if (cameras.length > 0 && !selectedCameraId) {
+        setSelectedCameraId(cameras[0].deviceId)
+      }
+    } catch (error) {
+      console.error('Error getting cameras:', error)
+    }
+  }
   
   const startCamera = async () => {
     try {
