@@ -160,7 +160,7 @@ export const Desktop: React.FC = () => {
               
               {/* App Description Tooltip */}
               <motion.div
-                className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-md border border-white/20 opacity-0 group-hover:opacity-100 transition-all duration-200 delay-300 pointer-events-none whitespace-nowrap z-10"
+                className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-black/60 backdrop-blur-xl text-white text-xs px-3 py-2 rounded-xl border border-white/30 opacity-0 group-hover:opacity-100 transition-all duration-200 delay-300 pointer-events-none whitespace-nowrap z-10 shadow-lg shadow-black/30"
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileHover={{ opacity: 1, scale: 1 }}
               >
