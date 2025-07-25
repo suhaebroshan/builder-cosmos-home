@@ -91,17 +91,25 @@ export const useWindowStore = create<WindowStore>((set, get) => ({
   },
 
   updateWindowPosition: (id, position) => {
+    const safePosition = {
+      x: isNaN(position.x) ? 100 : Math.max(0, position.x),
+      y: isNaN(position.y) ? 100 : Math.max(0, position.y),
+    }
     set((state) => ({
       windows: state.windows.map((w) =>
-        w.id === id ? { ...w, position } : w
+        w.id === id ? { ...w, position: safePosition } : w
       ),
     }))
   },
 
   updateWindowSize: (id, size) => {
+    const safeSize = {
+      width: isNaN(size.width) ? 400 : Math.max(200, size.width),
+      height: isNaN(size.height) ? 300 : Math.max(150, size.height),
+    }
     set((state) => ({
       windows: state.windows.map((w) =>
-        w.id === id ? { ...w, size } : w
+        w.id === id ? { ...w, size: safeSize } : w
       ),
     }))
   },
