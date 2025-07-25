@@ -6,6 +6,7 @@ import { EnhancedDesktop } from '@/components/os/EnhancedDesktop'
 import { BootAnimation } from '@/components/os/BootAnimation'
 import { SpaceWallpaper } from '@/components/os/SpaceWallpaper'
 import { useSamStore } from '@/store/sam-store'
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 
 export const NyxOS: React.FC = () => {
   const { currentEmotion, emotionIntensity } = useSamStore()
