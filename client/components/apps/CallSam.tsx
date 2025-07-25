@@ -22,7 +22,11 @@ export const CallSam: React.FC<CallSamProps> = ({ windowId }) => {
   const [isMuted, setIsMuted] = useState(false)
   const [isCameraOn, setIsCameraOn] = useState(false)
   const [audioLevel, setAudioLevel] = useState(0)
+  const [availableCameras, setAvailableCameras] = useState<MediaDeviceInfo[]>([])
+  const [selectedCameraId, setSelectedCameraId] = useState<string>('')
+  const [showCameraMenu, setShowCameraMenu] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
+  const streamRef = useRef<MediaStream | null>(null)
   
   useEffect(() => {
     if (isCameraOn) {
