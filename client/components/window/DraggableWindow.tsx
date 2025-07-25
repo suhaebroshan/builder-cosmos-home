@@ -30,8 +30,8 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
   const isFocused = focusedWindowId === window.id
   
   const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    const newX = Math.max(0, Math.min(window.position.x + info.offset.x, window.innerWidth - window.size.width))
-    const newY = Math.max(0, Math.min(window.position.y + info.offset.y, window.innerHeight - window.size.height))
+    const newX = Math.max(0, Math.min(window.position.x + info.offset.x, viewportWidth - window.size.width))
+    const newY = Math.max(0, Math.min(window.position.y + info.offset.y, viewportHeight - window.size.height))
     updateWindowPosition(window.id, { x: newX, y: newY })
   }
   
