@@ -307,104 +307,30 @@ export const EnhancedDesktop: React.FC = () => {
       {/* Free Icons */}
       <AnimatePresence>
         {freeIcons.map((icon, index) => {
-          const Icon = icon.icon
           const isSelected = selectedIcons.includes(icon.id)
           const isOpen = windows.some(w => w.title === icon.name && !w.isMinimized)
-          
+          const isFocused = focusedIconIndex === index
+
           return (
-            <motion.div
+            <DesktopIcon
               key={icon.id}
-              className={cn(
-                "absolute cursor-pointer group",
-                isEditMode && "z-20"
-              )}
-              style={{
-                left: icon.position.x,
-                top: icon.position.y,
-                width: icon.size.width,
-                height: icon.size.height + 20, // Extra space for label
+              icon={icon}
+              index={index}
+              isSelected={isSelected}
+              isOpen={isOpen}
+              isEditMode={isEditMode}
+              isFocused={isFocused}
+              onOpen={() => openApp(icon)}
+              onSelect={(multiSelect) => selectIcon(icon.id, multiSelect)}
+              onPositionUpdate={(info) => handleIconDragEnd(icon.id, info)}
+              onDelete={() => handleDeleteIcon(icon.id)}
+              onDuplicate={() => handleDuplicateIcon(icon.id)}
+              onStartEdit={() => {
+                setEditMode(true)
+                setEmotion('focused', 0.8)
+                addMessage("Icon edit mode activated! Customize away, bruv.", 'sam', 'focused')
               }}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ delay: index * 0.05 }}
-              drag={isEditMode}
-              dragMomentum={false}
-              onDragEnd={(_, info) => handleIconDragEnd(icon.id, info)}
-              onClick={(e) => {
-                e.stopPropagation()
-                if (isEditMode) {
-                  selectIcon(icon.id, e.ctrlKey || e.metaKey)
-                } else {
-                  openApp(icon)
-                }
-              }}
-              onDoubleClick={(e) => {
-                e.stopPropagation()
-                if (!isEditMode) {
-                  openApp(icon)
-                }
-              }}
-              whileHover={{ scale: isEditMode ? 1.1 : 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {/* Selection indicator */}
-              {isEditMode && isSelected && (
-                <motion.div
-                  className="absolute -inset-2 rounded-2xl border-2 border-blue-400 bg-blue-500/10"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  layoutId={`selection-${icon.id}`}
-                />
-              )}
-              
-              {/* App Icon */}
-              <div
-                className={cn(
-                  "relative rounded-2xl backdrop-blur-xl border flex items-center justify-center transition-all duration-200",
-                  isOpen 
-                    ? 'bg-blue-500/20 border-blue-400/60 shadow-xl shadow-blue-500/30' 
-                    : 'bg-white/5 border-white/20 hover:bg-white/10 hover:border-white/40 hover:shadow-lg hover:shadow-white/10',
-                  isEditMode && 'ring-2 ring-white/30'
-                )}
-                style={{
-                  width: icon.size.width,
-                  height: icon.size.height,
-                }}
-              >
-                <Icon className="w-8 h-8 text-white/90" />
-                
-                {/* Running indicator */}
-                {isOpen && (
-                  <motion.div
-                    className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-blue-400 rounded-full"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.2 }}
-                  />
-                )}
-                
-                {/* Edit mode controls */}
-                {isEditMode && (
-                  <motion.div
-                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleDeleteIcon(icon.id)
-                    }}
-                  >
-                    <Trash2 className="w-3 h-3 text-white" />
-                  </motion.div>
-                )}
-              </div>
-              
-              {/* App Name */}
-              <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 text-white/90 text-xs font-medium text-center px-2 py-1 rounded-lg bg-black/40 backdrop-blur-xl border border-white/20 opacity-0 group-hover:opacity-100 transition-all duration-200">
-                {icon.name}
-              </div>
-            </motion.div>
+            />
           )
         })}
       </AnimatePresence>
