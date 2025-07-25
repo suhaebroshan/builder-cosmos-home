@@ -424,36 +424,7 @@ export const EnhancedDesktop: React.FC = () => {
         )}
       </AnimatePresence>
       
-      {/* Welcome Message */}
-      <motion.div
-        className="absolute bottom-8 left-8 max-w-md"
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 1, duration: 0.8 }}
-      >
-        <div className="bg-black/30 backdrop-blur-xl border border-white/30 rounded-2xl p-4 shadow-lg shadow-black/20">
-          <h3 className="text-white font-medium mb-2">Welcome to Nyx OS</h3>
-          <p className="text-white/70 text-sm">
-            Double-click apps to open them. Long-press empty space to enter edit mode for customization.
-          </p>
-        </div>
-      </motion.div>
-      
-      {/* System Info */}
-      <motion.div
-        className="absolute bottom-8 right-8"
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 1.2, duration: 0.8 }}
-      >
-        <div className="bg-black/30 backdrop-blur-xl border border-white/30 rounded-2xl p-4 text-right shadow-lg shadow-black/20">
-          <div className="text-white/90 font-medium">Nyx OS v1.0</div>
-          <div className="text-white/60 text-sm">Sentient Operating System</div>
-          <div className="text-white/40 text-xs mt-1">
-            {new Date().toLocaleDateString()}
-          </div>
-        </div>
-      </motion.div>
+
     </div>
   )
 }
