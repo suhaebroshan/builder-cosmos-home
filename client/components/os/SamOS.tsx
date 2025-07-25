@@ -48,40 +48,16 @@ export const NyxOS: React.FC = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
-      {/* Dynamic Background */}
+      {/* Space Wallpaper */}
+      <SpaceWallpaper />
+
+      {/* Emotional Overlay */}
       <div
-        className="absolute inset-0 transition-all duration-1000 ease-out"
+        className="absolute inset-0 transition-all duration-1000 ease-out pointer-events-none"
         style={{
-          background: `
-            linear-gradient(135deg, #0a0a1f 0%, #1a1a3e 50%, #2d1b4e 100%),
-            ${getBackgroundGradient()}
-          `,
+          background: getBackgroundGradient(),
         }}
       />
-
-      {/* Animated Background Particles */}
-      <div className="absolute inset-0">
-        {Array.from({ length: 30 }).map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-0.5 h-0.5 bg-white/30 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -100, 0],
-              opacity: [0, 1, 0],
-              scale: [0.5, 1, 0.5],
-            }}
-            transition={{
-              duration: 4 + Math.random() * 3,
-              repeat: Infinity,
-              delay: Math.random() * 3,
-            }}
-          />
-        ))}
-      </div>
 
       {/* Emotion Indicator */}
       <motion.div
