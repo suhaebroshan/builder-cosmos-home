@@ -41,6 +41,58 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
 
     updateWindowPosition(window.id, { x: newX, y: newY })
   }
+
+  const handleResizeStart = useCallback((e: React.MouseEvent, direction: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    setIsResizing(true)
+    setResizeHandle(direction)
+
+    const startX = e.clientX
+    const startY = e.clientY
+    const startWidth = safeSize.width
+    const startHeight = safeSize.height
+    const startPosX = safePosition.x
+    const startPosY = safePosition.y
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const deltaX = moveEvent.clientX - startX
+      const deltaY = moveEvent.clientY - startY
+
+      let newWidth = startWidth
+      let newHeight = startHeight
+      let newX = startPosX
+      let newY = startPosY
+
+      // Handle different resize directions
+      if (direction.includes('e')) newWidth = Math.max(200, startWidth + deltaX)
+      if (direction.includes('w')) {
+        newWidth = Math.max(200, startWidth - deltaX)
+        newX = startPosX + deltaX
+      }
+      if (direction.includes('s')) newHeight = Math.max(150, startHeight + deltaY)
+      if (direction.includes('n')) {
+        newHeight = Math.max(150, startHeight - deltaY)
+        newY = startPosY + deltaY
+      }
+
+      updateWindowSize(window.id, { width: newWidth, height: newHeight })
+      if (direction.includes('w') || direction.includes('n')) {
+        updateWindowPosition(window.id, { x: newX, y: newY })
+      }
+    }
+
+    const handleMouseUp = () => {
+      setIsResizing(false)
+      setResizeHandle(null)
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
+
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
+  }, [window.id, safeSize, safePosition, updateWindowSize, updateWindowPosition])
   
   const getEmotionBorderColor = () => {
     const intensity = emotionIntensity
