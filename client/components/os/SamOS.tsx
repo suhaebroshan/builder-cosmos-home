@@ -84,8 +84,8 @@ export const NyxOS: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Desktop with App Icons */}
-      <Desktop />
+      {/* Enhanced Desktop with App Icons */}
+      <EnhancedDesktop />
 
       {/* Window Manager */}
       <WindowManager />
