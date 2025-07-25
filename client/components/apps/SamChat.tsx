@@ -91,7 +91,7 @@ export const SamChat: React.FC<SamChatProps> = ({ windowId }) => {
   }
   
   return (
-    <div className="flex flex-col h-full bg-black/30 backdrop-blur-sm">
+    <div className="flex flex-col h-full bg-black/20 backdrop-blur-xl">
       {/* Chat Header */}
       <div className="p-4 border-b border-white/10">
         <div className="flex items-center gap-3">
