@@ -141,18 +141,18 @@ export const NyxOS: React.FC = () => {
   }
   
   if (!isBooted) {
-    return <NyxBootAnimation onComplete={handleBootComplete} />
+    return <EnhancedBootAnimation onComplete={handleBootComplete} />
   }
 
   return (
     <motion.div
-      className="fixed inset-0 overflow-hidden"
+      className={`fixed inset-0 overflow-hidden ${themeSettings.mode}`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
-      {/* Dynamic Wallpaper System */}
-      <DynamicWallpaper />
+      {/* Lively Wallpaper System */}
+      <LivelyWallpaper theme={themeSettings.mode} />
 
       {/* Emotional Overlay */}
       <div
@@ -162,33 +162,32 @@ export const NyxOS: React.FC = () => {
         }}
       />
 
-      {/* System Instructions (Auto-remove after 1 minute) */}
-      {showSystemInstructions && (
-        <motion.div
-          className="absolute top-8 left-8 max-w-sm z-40"
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -50 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="bg-black/60 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-4 shadow-lg">
-            <h3 className="text-purple-400 font-medium mb-2 text-sm">🌌 Nyx OS Quick Start</h3>
-            <div className="text-white/80 text-xs space-y-1">
-              <div>• Voice: "Open browser", "Change wallpaper"</div>
-              <div>• Keyboard: Cmd+W (close), Alt+Tab (switch)</div>
-              <div>• Desktop: Long-press icons to customize</div>
-              <div>• N button: App launcher & quick actions</div>
-            </div>
-            <div className="text-purple-300/60 text-xs mt-2">
-              This message auto-removes in 1 minute
-            </div>
+      {/* User Info & Theme Toggle */}
+      <motion.div
+        className="absolute top-4 left-4 flex items-center gap-3 z-30"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        <div className="bg-black/40 backdrop-blur-xl border border-purple-500/30 rounded-2xl px-4 py-2 shadow-lg flex items-center gap-3">
+          <div className="text-lg">{currentUser?.avatar}</div>
+          <div>
+            <div className="text-white text-sm font-medium">{currentUser?.displayName}</div>
+            <div className="text-purple-300/70 text-xs">@{currentUser?.username}</div>
           </div>
-        </motion.div>
-      )}
+        </div>
+
+        <button
+          onClick={() => setThemeMode(themeSettings.mode === 'dark' ? 'light' : 'dark')}
+          className="bg-black/40 backdrop-blur-xl border border-purple-500/30 rounded-xl p-3 hover:bg-black/50 transition-all shadow-lg"
+        >
+          {themeSettings.mode === 'dark' ? '☀️' : '🌙'}
+        </button>
+      </motion.div>
 
       {/* AI Status Indicator */}
       <motion.div
-        className="absolute top-8 right-8 text-white/80 text-sm z-30"
+        className="absolute top-4 right-4 text-white/80 text-sm z-30"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
