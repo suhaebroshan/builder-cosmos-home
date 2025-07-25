@@ -104,7 +104,7 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
     >
       {/* Window Header */}
       <motion.div
-        className="flex items-center justify-between p-3 bg-black/20 backdrop-blur-sm border-b border-white/10 cursor-move select-none"
+        className="flex items-center justify-between p-3 bg-black/30 backdrop-blur-xl border-b border-white/20 cursor-move select-none"
         drag={!window.isMaximized}
         dragMomentum={false}
         onDragEnd={handleDragEnd}
