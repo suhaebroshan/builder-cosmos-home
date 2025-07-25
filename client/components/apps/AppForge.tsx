@@ -225,7 +225,7 @@ const NotesApp = () => {
   }
   
   return (
-    <div className="flex h-full bg-black/30 backdrop-blur-sm">
+    <div className="flex h-full bg-black/20 backdrop-blur-xl">
       {/* Sidebar - Generated Apps */}
       <div className="w-1/3 border-r border-white/10 p-4">
         <div className="flex items-center gap-2 mb-4">
