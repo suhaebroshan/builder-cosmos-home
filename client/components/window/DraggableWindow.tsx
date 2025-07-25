@@ -83,10 +83,10 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
         isFocused && "ring-2 ring-white/30"
       )}
       style={{
-        left: window.position.x,
-        top: window.position.y,
-        width: window.isMaximized ? '100vw' : window.size.width,
-        height: window.isMaximized ? '100vh' : window.size.height,
+        left: safePosition.x,
+        top: safePosition.y,
+        width: window.isMaximized ? '100vw' : safeSize.width,
+        height: window.isMaximized ? '100vh' : safeSize.height,
         zIndex: window.zIndex,
         borderColor: getEmotionBorderColor(),
       }}
