@@ -7,12 +7,14 @@ import { CallSam } from '@/components/apps/CallSam'
 import { AppForge } from '@/components/apps/AppForge'
 import { Files } from '@/components/apps/Files'
 import { Calendar } from '@/components/apps/Calendar'
-import { 
-  MessageCircle, 
-  Phone, 
-  Folder, 
-  Wrench, 
+import { Settings } from '@/components/apps/Settings'
+import {
+  MessageCircle,
+  Phone,
+  Folder,
+  Wrench,
   Calendar as CalendarIcon,
+  Settings as SettingsIcon,
 } from 'lucide-react'
 
 export const Desktop: React.FC = () => {
