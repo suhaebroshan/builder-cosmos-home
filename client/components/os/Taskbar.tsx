@@ -58,7 +58,7 @@ export const Taskbar: React.FC = () => {
     {
       id: 'calendar',
       name: 'Chrono',
-      icon: Calendar,
+      icon: CalendarIcon,
       component: Calendar,
       defaultSize: { width: 900, height: 600 },
       defaultPosition: { x: 200, y: 50 },
