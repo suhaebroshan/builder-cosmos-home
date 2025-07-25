@@ -4,6 +4,7 @@ import { WindowManager } from '@/components/window/WindowManager'
 import { Taskbar } from '@/components/os/Taskbar'
 import { Desktop } from '@/components/os/Desktop'
 import { BootAnimation } from '@/components/os/BootAnimation'
+import { SpaceWallpaper } from '@/components/os/SpaceWallpaper'
 import { useSamStore } from '@/store/sam-store'
 
 export const NyxOS: React.FC = () => {
