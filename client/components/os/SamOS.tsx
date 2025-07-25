@@ -101,7 +101,7 @@ export const NyxOS: React.FC = () => {
   }
   
   if (!isBooted) {
-    return <BootAnimation onComplete={handleBootComplete} />
+    return <NyxBootAnimation onComplete={handleBootComplete} />
   }
 
   return (
@@ -111,8 +111,8 @@ export const NyxOS: React.FC = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
-      {/* Space Wallpaper */}
-      <SpaceWallpaper />
+      {/* Dynamic Wallpaper System */}
+      <DynamicWallpaper />
 
       {/* Emotional Overlay */}
       <div
@@ -122,14 +122,38 @@ export const NyxOS: React.FC = () => {
         }}
       />
 
-      {/* Emotion Indicator */}
+      {/* System Instructions (Auto-remove after 1 minute) */}
+      {showSystemInstructions && (
+        <motion.div
+          className="absolute top-8 left-8 max-w-sm z-40"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -50 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="bg-black/60 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-4 shadow-lg">
+            <h3 className="text-purple-400 font-medium mb-2 text-sm">🌌 Nyx OS Quick Start</h3>
+            <div className="text-white/80 text-xs space-y-1">
+              <div>• Voice: "Open browser", "Change wallpaper"</div>
+              <div>• Keyboard: Cmd+W (close), Alt+Tab (switch)</div>
+              <div>• Desktop: Long-press icons to customize</div>
+              <div>• N button: App launcher & quick actions</div>
+            </div>
+            <div className="text-purple-300/60 text-xs mt-2">
+              This message auto-removes in 1 minute
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* AI Status Indicator */}
       <motion.div
         className="absolute top-8 right-8 text-white/80 text-sm z-30"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
       >
-        <div className="flex items-center gap-2 bg-black/30 backdrop-blur-xl border border-white/30 rounded-2xl px-4 py-2 shadow-lg shadow-black/20">
+        <div className="flex items-center gap-2 bg-black/40 backdrop-blur-xl border border-purple-500/30 rounded-2xl px-4 py-2 shadow-lg">
           <div
             className="w-3 h-3 rounded-full transition-all duration-300"
             style={{
@@ -139,11 +163,12 @@ export const NyxOS: React.FC = () => {
                              currentEmotion === 'annoyed' ? '#ef4444' :
                              currentEmotion === 'focused' ? '#a855f7' :
                              currentEmotion === 'confused' ? '#9ca3af' :
-                             currentEmotion === 'tired' ? '#4b5563' : '#475569',
+                             currentEmotion === 'tired' ? '#4b5563' : '#8b5cf6',
               boxShadow: `0 0 10px currentColor`,
             }}
           />
-          <span className="capitalize">{currentEmotion}</span>
+          <span className="capitalize text-purple-200">{currentEmotion}</span>
+          <div className="text-xs text-purple-300/70 ml-2">AI Active</div>
         </div>
       </motion.div>
 
@@ -153,8 +178,8 @@ export const NyxOS: React.FC = () => {
       {/* Window Manager */}
       <WindowManager />
 
-      {/* Taskbar */}
-      <Taskbar />
+      {/* Nyx Taskbar */}
+      <NyxTaskbar />
     </motion.div>
   )
 }
