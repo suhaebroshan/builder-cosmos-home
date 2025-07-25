@@ -7,12 +7,12 @@ import { CallSam } from '@/components/apps/CallSam'
 import { AppForge } from '@/components/apps/AppForge'
 import { Files } from '@/components/apps/Files'
 import { Calendar } from '@/components/apps/Calendar'
-import { 
-  MessageCircle, 
-  Phone, 
-  Folder, 
-  Wrench, 
-  Calendar,
+import {
+  MessageCircle,
+  Phone,
+  Folder,
+  Wrench,
+  Calendar as CalendarIcon,
   Settings,
   Minimize2
 } from 'lucide-react'
