@@ -32,9 +32,9 @@ export const Taskbar: React.FC = () => {
       id: 'call-sam',
       name: 'Call Sam',
       icon: Phone,
-      component: () => <div className="p-4 text-white">Call Sam - Coming Soon</div>,
-      defaultSize: { width: 500, height: 400 },
-      defaultPosition: { x: 200, y: 150 },
+      component: CallSam,
+      defaultSize: { width: 500, height: 600 },
+      defaultPosition: { x: 200, y: 100 },
     },
     {
       id: 'files',
