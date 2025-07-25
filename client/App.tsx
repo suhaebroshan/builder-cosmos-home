@@ -7,7 +7,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<SamOS />} />
+        <Route path="/" element={<NyxOS />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
