@@ -12,6 +12,9 @@ export const NyxOS: React.FC = () => {
   const { currentEmotion, emotionIntensity } = useSamStore()
   const [isBooted, setIsBooted] = useState(false)
 
+  // Enable global keyboard shortcuts
+  useKeyboardShortcuts()
+
   const handleBootComplete = () => {
     setIsBooted(true)
   }
