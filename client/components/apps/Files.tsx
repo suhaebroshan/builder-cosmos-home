@@ -146,7 +146,7 @@ export const Files: React.FC<FilesProps> = ({ windowId }) => {
   }
   
   return (
-    <div className="flex flex-col h-full bg-black/30 backdrop-blur-sm">
+    <div className="flex flex-col h-full bg-black/20 backdrop-blur-xl">
       {/* Header */}
       <div className="p-4 border-b border-white/10">
         <div className="flex items-center justify-between mb-3">
