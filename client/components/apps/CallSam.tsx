@@ -58,7 +58,17 @@ export const CallSam: React.FC<CallSamProps> = ({ windowId }) => {
   
   const startCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+      // Stop existing stream if any
+      stopCamera()
+
+      const constraints: MediaStreamConstraints = {
+        video: selectedCameraId ? { deviceId: { exact: selectedCameraId } } : true,
+        audio: false
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia(constraints)
+      streamRef.current = stream
+
       if (videoRef.current) {
         videoRef.current.srcObject = stream
       }
@@ -67,12 +77,22 @@ export const CallSam: React.FC<CallSamProps> = ({ windowId }) => {
       setIsCameraOn(false)
     }
   }
-  
+
   const stopCamera = () => {
-    if (videoRef.current?.srcObject) {
-      const tracks = (videoRef.current.srcObject as MediaStream).getTracks()
-      tracks.forEach(track => track.stop())
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop())
+      streamRef.current = null
+    }
+    if (videoRef.current) {
       videoRef.current.srcObject = null
+    }
+  }
+
+  const switchCamera = (cameraId: string) => {
+    setSelectedCameraId(cameraId)
+    setShowCameraMenu(false)
+    if (isCameraOn) {
+      // Camera will restart due to useEffect dependency
     }
   }
   
