@@ -36,6 +36,8 @@ interface DesktopStore {
   duplicateIcon: (id: string) => string
   updateIconPosition: (id: string, position: { x: number; y: number }) => void
   updateIconSize: (id: string, size: { width: number; height: number }) => void
+  updateIconColor: (id: string, color: string) => void
+  updateIconName: (id: string, name: string) => void
   selectIcon: (id: string, multiSelect?: boolean) => void
   clearSelection: () => void
   setDraggedIcon: (id: string | null) => void
