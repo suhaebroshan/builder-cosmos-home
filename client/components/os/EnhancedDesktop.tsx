@@ -12,6 +12,7 @@ import { AppForge } from '@/components/apps/AppForge'
 import { Files } from '@/components/apps/Files'
 import { Calendar } from '@/components/apps/Calendar'
 import { Settings } from '@/components/apps/Settings'
+import { NyxBrowser } from '@/components/apps/NyxBrowser'
 import {
   MessageCircle,
   Phone,
@@ -19,6 +20,7 @@ import {
   Wrench,
   Calendar as CalendarIcon,
   Settings as SettingsIcon,
+  Globe,
   FolderPlus,
   Copy,
   Trash2,
