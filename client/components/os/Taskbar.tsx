@@ -43,8 +43,8 @@ export const Taskbar: React.FC = () => {
       id: 'files',
       name: 'Files',
       icon: Folder,
-      component: () => <div className="p-4 text-white">Files App - Coming Soon</div>,
-      defaultSize: { width: 600, height: 500 },
+      component: Files,
+      defaultSize: { width: 700, height: 500 },
       defaultPosition: { x: 150, y: 120 },
     },
     {
