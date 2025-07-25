@@ -140,17 +140,6 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
   // Get viewport dimensions for window constraints
   const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1200
   const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 800
-
-  // Ensure valid position and size values
-  const safePosition = {
-    x: isNaN(window.position.x) ? 100 : window.position.x,
-    y: isNaN(window.position.y) ? 100 : window.position.y,
-  }
-
-  const safeSize = {
-    width: isNaN(window.size.width) ? 400 : window.size.width,
-    height: isNaN(window.size.height) ? 300 : window.size.height,
-  }
   
   return (
     <motion.div
