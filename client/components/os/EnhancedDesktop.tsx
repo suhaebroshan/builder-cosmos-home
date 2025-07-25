@@ -220,7 +220,69 @@ export const EnhancedDesktop: React.FC = () => {
   }
   
   const freeIcons = getFreeIcons()
-  
+
+  // Keyboard navigation for icons
+  const navigateIcons = (direction: 'up' | 'down' | 'left' | 'right') => {
+    if (freeIcons.length === 0) return
+
+    const iconsPerRow = Math.floor((window.innerWidth - 100) / 120) // Estimate icons per row
+    let newIndex = focusedIconIndex
+
+    switch (direction) {
+      case 'left':
+        newIndex = Math.max(0, focusedIconIndex - 1)
+        break
+      case 'right':
+        newIndex = Math.min(freeIcons.length - 1, focusedIconIndex + 1)
+        break
+      case 'up':
+        newIndex = Math.max(0, focusedIconIndex - iconsPerRow)
+        break
+      case 'down':
+        newIndex = Math.min(freeIcons.length - 1, focusedIconIndex + iconsPerRow)
+        break
+    }
+
+    setFocusedIconIndex(newIndex)
+    if (isEditMode) {
+      selectIcon(freeIcons[newIndex].id, false)
+    }
+  }
+
+  const activateFocusedIcon = () => {
+    if (freeIcons[focusedIconIndex]) {
+      if (isEditMode) {
+        selectIcon(freeIcons[focusedIconIndex].id, true)
+      } else {
+        openApp(freeIcons[focusedIconIndex])
+      }
+    }
+  }
+
+  // Desktop focusable behavior
+  const desktopFocusable = useFocusable({
+    onArrowUp: () => navigateIcons('up'),
+    onArrowDown: () => navigateIcons('down'),
+    onArrowLeft: () => navigateIcons('left'),
+    onArrowRight: () => navigateIcons('right'),
+    onEnter: activateFocusedIcon,
+    onSpace: activateFocusedIcon,
+    onEscape: () => {
+      if (isEditMode) {
+        setEditMode(false)
+      } else {
+        clearSelection()
+      }
+    }
+  })
+
+  // Auto-focus desktop when edit mode changes
+  useEffect(() => {
+    if (isEditMode && desktopFocusable.ref.current) {
+      desktopFocusable.ref.current.focus()
+    }
+  }, [isEditMode])
+
   return (
     <div 
       ref={desktopRef}
