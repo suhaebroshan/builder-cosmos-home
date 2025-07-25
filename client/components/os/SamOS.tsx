@@ -1,33 +1,18 @@
-import React, { useEffect } from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { WindowManager } from '@/components/window/WindowManager'
 import { Taskbar } from '@/components/os/Taskbar'
+import { Desktop } from '@/components/os/Desktop'
+import { BootAnimation } from '@/components/os/BootAnimation'
 import { useSamStore } from '@/store/sam-store'
-import { useWindowStore } from '@/store/window-store'
-import { SamChat } from '@/components/apps/SamChat'
 
-export const SamOS: React.FC = () => {
-  const { currentTheme, currentEmotion, emotionIntensity, addMessage } = useSamStore()
-  const { openWindow, windows } = useWindowStore()
-  
-  useEffect(() => {
-    // Auto-open Sam chat when OS starts
-    if (windows.length === 0) {
-      setTimeout(() => {
-        openWindow({
-          title: 'Sam',
-          component: SamChat,
-          position: { x: 100, y: 100 },
-          size: { width: 400, height: 600 },
-        })
-        
-        // Sam's greeting
-        setTimeout(() => {
-          addMessage("Yo, welcome to SamOS, bruv! I'm Sam, and this is my house now. Feel free to poke around, ask me anything, or just vibe. What's good?", 'sam', 'happy')
-        }, 1000)
-      }, 1500)
-    }
-  }, [])
+export const NyxOS: React.FC = () => {
+  const { currentEmotion, emotionIntensity } = useSamStore()
+  const [isBooted, setIsBooted] = useState(false)
+
+  const handleBootComplete = () => {
+    setIsBooted(true)
+  }
   
   const getBackgroundGradient = () => {
     const intensity = emotionIntensity * 0.3
