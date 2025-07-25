@@ -67,6 +67,15 @@ export const Desktop: React.FC = () => {
       defaultPosition: { x: 200, y: 50 },
       description: 'Calendar & scheduling'
     },
+    {
+      id: 'settings',
+      name: 'Settings',
+      icon: SettingsIcon,
+      component: Settings,
+      defaultSize: { width: 800, height: 600 },
+      defaultPosition: { x: 300, y: 100 },
+      description: 'System settings & customization'
+    },
   ]
   
   const openApp = (app: typeof apps[0]) => {
