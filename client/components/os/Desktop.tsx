@@ -151,7 +151,7 @@ export const Desktop: React.FC = () => {
               
               {/* App Name */}
               <motion.div
-                className="text-white/90 text-sm font-medium text-center px-2 py-1 rounded-lg bg-black/20 backdrop-blur-sm border border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-200"
+                className="text-white/90 text-sm font-medium text-center px-3 py-1.5 rounded-xl bg-black/40 backdrop-blur-xl border border-white/30 opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-lg shadow-black/20"
                 initial={{ opacity: 0, y: 5 }}
                 whileHover={{ opacity: 1, y: 0 }}
               >
