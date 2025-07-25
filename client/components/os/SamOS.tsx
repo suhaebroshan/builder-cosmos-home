@@ -12,31 +12,70 @@ import { useThemeStore, updateCSSVariables } from '@/store/theme-store'
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 import { aiService } from '@/services/ai-service'
 
+interface User {
+  id: string
+  username: string
+  displayName: string
+  password: string
+  avatar?: string
+}
+
 export const NyxOS: React.FC = () => {
   const { currentEmotion, emotionIntensity, addMessage, setEmotion } = useSamStore()
   const { openWindow } = useWindowStore()
+  const { settings: themeSettings, setThemeMode } = useThemeStore()
   const [isBooted, setIsBooted] = useState(false)
-  const [showSystemInstructions, setShowSystemInstructions] = useState(true)
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
 
   // Enable global keyboard shortcuts
   useKeyboardShortcuts()
 
-  const handleBootComplete = () => {
-    setIsBooted(true)
+  // Update CSS variables when theme changes
+  useEffect(() => {
+    updateCSSVariables(themeSettings)
+  }, [themeSettings])
 
-    // Auto-remove system instructions after 1 minute
-    setTimeout(() => {
-      setShowSystemInstructions(false)
-    }, 60000)
+  // Disable default browser shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Prevent Ctrl+W from closing browser tab
+      if ((e.ctrlKey || e.metaKey) && e.key === 'w') {
+        e.preventDefault()
+        e.stopPropagation()
+        // Let our OS handle it
+        return false
+      }
+
+      // Prevent Ctrl+T from opening new tab
+      if ((e.ctrlKey || e.metaKey) && e.key === 't') {
+        e.preventDefault()
+        e.stopPropagation()
+        return false
+      }
+
+      // Prevent F12 dev tools
+      if (e.key === 'F12') {
+        e.preventDefault()
+        return false
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown, true)
+    return () => document.removeEventListener('keydown', handleKeyDown, true)
+  }, [])
+
+  const handleBootComplete = (user: User) => {
+    setCurrentUser(user)
+    setIsBooted(true)
 
     // Initialize AI service
     aiService.setVoiceMode(true)
 
-    // Welcome message
+    // Welcome message for the user
     setTimeout(() => {
       setEmotion('happy', 0.8)
-      addMessage("Welcome to Nyx OS! I'm your AI assistant. Try saying 'open browser' or use voice commands!", 'sam', 'happy')
-    }, 2000)
+      addMessage(`Welcome back, ${user.displayName}! Nyx OS is ready for quantum computing.`, 'sam', 'happy')
+    }, 1500)
   }
 
   // Handle system events
