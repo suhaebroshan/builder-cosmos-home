@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { useWindowStore } from '@/store/window-store'
 import { useSamStore } from '@/store/sam-store'
 import { SamChat } from '@/components/apps/SamChat'
+import { CallSam } from '@/components/apps/CallSam'
 import { 
   MessageCircle, 
   Phone, 
