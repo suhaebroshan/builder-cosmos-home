@@ -49,8 +49,8 @@ export const Taskbar: React.FC = () => {
       id: 'app-forge',
       name: 'App Forge',
       icon: Wrench,
-      component: () => <div className="p-4 text-white">App Forge - Coming Soon</div>,
-      defaultSize: { width: 700, height: 600 },
+      component: AppForge,
+      defaultSize: { width: 800, height: 600 },
       defaultPosition: { x: 250, y: 80 },
     },
     {
