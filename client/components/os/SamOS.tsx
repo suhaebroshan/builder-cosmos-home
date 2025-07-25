@@ -36,6 +36,10 @@ export const NyxOS: React.FC = () => {
     }
   }
   
+  if (!isBooted) {
+    return <BootAnimation onComplete={handleBootComplete} />
+  }
+
   return (
     <motion.div
       className="fixed inset-0 overflow-hidden"
@@ -48,18 +52,18 @@ export const NyxOS: React.FC = () => {
         className="absolute inset-0 transition-all duration-1000 ease-out"
         style={{
           background: `
-            linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #2d1b4e 100%),
+            linear-gradient(135deg, #0a0a1f 0%, #1a1a3e 50%, #2d1b4e 100%),
             ${getBackgroundGradient()}
           `,
         }}
       />
-      
+
       {/* Animated Background Particles */}
       <div className="absolute inset-0">
-        {Array.from({ length: 20 }).map((_, i) => (
+        {Array.from({ length: 30 }).map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-white/20 rounded-full"
+            className="absolute w-0.5 h-0.5 bg-white/30 rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -67,35 +71,25 @@ export const NyxOS: React.FC = () => {
             animate={{
               y: [0, -100, 0],
               opacity: [0, 1, 0],
+              scale: [0.5, 1, 0.5],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: 4 + Math.random() * 3,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: Math.random() * 3,
             }}
           />
         ))}
       </div>
-      
-      {/* Boot Text */}
-      <motion.div
-        className="absolute top-8 left-8 text-white/60 font-mono text-sm"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
-        <div>SamOS v1.0</div>
-        <div className="text-xs mt-1">Sentient Operating System</div>
-      </motion.div>
-      
+
       {/* Emotion Indicator */}
       <motion.div
-        className="absolute top-8 right-8 text-white/80 text-sm"
+        className="absolute top-8 right-8 text-white/80 text-sm z-30"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 bg-black/20 backdrop-blur-md border border-white/20 rounded-xl px-3 py-2">
           <div
             className="w-3 h-3 rounded-full transition-all duration-300"
             style={{
@@ -112,10 +106,13 @@ export const NyxOS: React.FC = () => {
           <span className="capitalize">{currentEmotion}</span>
         </div>
       </motion.div>
-      
+
+      {/* Desktop with App Icons */}
+      <Desktop />
+
       {/* Window Manager */}
       <WindowManager />
-      
+
       {/* Taskbar */}
       <Taskbar />
     </motion.div>
