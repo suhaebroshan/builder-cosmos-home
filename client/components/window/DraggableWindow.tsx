@@ -58,6 +58,10 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
   }
   
   if (window.isMinimized) return null
+
+  // Get viewport dimensions for window constraints
+  const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1200
+  const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 800
   
   return (
     <motion.div
