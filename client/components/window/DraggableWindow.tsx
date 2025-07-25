@@ -30,8 +30,14 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
   const isFocused = focusedWindowId === window.id
   
   const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    const newX = Math.max(0, Math.min(safePosition.x + info.offset.x, viewportWidth - safeSize.width))
-    const newY = Math.max(0, Math.min(safePosition.y + info.offset.y, viewportHeight - safeSize.height))
+    const minX = -safeSize.width + 100 // Allow some window to go off-screen but keep 100px visible
+    const maxX = viewportWidth - 100 // Keep at least 100px of window visible
+    const minY = 0 // Don't allow window to go above screen
+    const maxY = viewportHeight - 40 // Keep title bar visible
+
+    const newX = Math.max(minX, Math.min(safePosition.x + info.offset.x, maxX))
+    const newY = Math.max(minY, Math.min(safePosition.y + info.offset.y, maxY))
+
     updateWindowPosition(window.id, { x: newX, y: newY })
   }
   
