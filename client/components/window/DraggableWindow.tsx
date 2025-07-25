@@ -29,7 +29,18 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
   const [isAnimating, setIsAnimating] = useState(false)
   
   const isFocused = focusedWindowId === window.id
-  
+
+  // Ensure valid position and size values
+  const safePosition = {
+    x: isNaN(window.position.x) ? 100 : window.position.x,
+    y: isNaN(window.position.y) ? 100 : window.position.y,
+  }
+
+  const safeSize = {
+    width: isNaN(window.size.width) ? 400 : window.size.width,
+    height: isNaN(window.size.height) ? 300 : window.size.height,
+  }
+
   const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     const minX = -safeSize.width + 100 // Allow some window to go off-screen but keep 100px visible
     const maxX = viewportWidth - 100 // Keep at least 100px of window visible
