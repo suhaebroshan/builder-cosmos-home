@@ -125,6 +125,22 @@ export const useDesktopStore = create<DesktopStore>((set, get) => ({
       ),
     }))
   },
+
+  updateIconColor: (id, color) => {
+    set((state) => ({
+      icons: state.icons.map((icon) =>
+        icon.id === id ? { ...icon, color } : icon
+      ),
+    }))
+  },
+
+  updateIconName: (id, name) => {
+    set((state) => ({
+      icons: state.icons.map((icon) =>
+        icon.id === id ? { ...icon, name } : icon
+      ),
+    }))
+  },
   
   selectIcon: (id, multiSelect = false) => {
     set((state) => {
