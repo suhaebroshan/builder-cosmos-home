@@ -110,7 +110,7 @@ export const Taskbar: React.FC = () => {
       transition={{ delay: 0.5, duration: 0.6 }}
     >
       <div
-        className="flex items-center gap-2 p-3 bg-black/30 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl"
+        className="flex items-center gap-2 p-3 bg-black/40 backdrop-blur-xl border border-white/30 rounded-2xl shadow-2xl shadow-black/30"
         style={{ boxShadow: getEmotionGlow() }}
       >
         {apps.map((app) => {
