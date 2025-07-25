@@ -82,7 +82,7 @@ export const BootAnimation: React.FC<BootAnimationProps> = ({ onComplete }) => {
             >
               <div className="text-center">
                 <motion.div
-                  className="text-4xl font-bold text-white mb-2 tracking-wider"
+                  className="text-4xl font-bold text-gray-800 mb-2 tracking-wider"
                   initial={{ letterSpacing: "0.1em" }}
                   animate={{ letterSpacing: "0.2em" }}
                   transition={{ duration: 1, delay: 0.5 }}
@@ -90,7 +90,7 @@ export const BootAnimation: React.FC<BootAnimationProps> = ({ onComplete }) => {
                   NYX OS
                 </motion.div>
                 <motion.div
-                  className="text-sm text-gray-300 tracking-widest uppercase"
+                  className="text-sm text-gray-700 tracking-widest uppercase"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1, duration: 0.5 }}
