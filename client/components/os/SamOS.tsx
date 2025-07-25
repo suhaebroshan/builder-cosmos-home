@@ -12,15 +12,71 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 import { aiService } from '@/services/ai-service'
 
 export const NyxOS: React.FC = () => {
-  const { currentEmotion, emotionIntensity } = useSamStore()
+  const { currentEmotion, emotionIntensity, addMessage, setEmotion } = useSamStore()
+  const { openWindow } = useWindowStore()
   const [isBooted, setIsBooted] = useState(false)
+  const [showSystemInstructions, setShowSystemInstructions] = useState(true)
 
   // Enable global keyboard shortcuts
   useKeyboardShortcuts()
 
   const handleBootComplete = () => {
     setIsBooted(true)
+
+    // Auto-remove system instructions after 1 minute
+    setTimeout(() => {
+      setShowSystemInstructions(false)
+    }, 60000)
+
+    // Initialize AI service
+    aiService.setVoiceMode(true)
+
+    // Welcome message
+    setTimeout(() => {
+      setEmotion('happy', 0.8)
+      addMessage("Welcome to Nyx OS! I'm your AI assistant. Try saying 'open browser' or use voice commands!", 'sam', 'happy')
+    }, 2000)
   }
+
+  // Handle system events
+  useEffect(() => {
+    const handleOpenBrowser = () => {
+      openWindow({
+        title: 'Nyx Browse',
+        component: NyxBrowser,
+        position: { x: 100, y: 50 },
+        size: { width: 1000, height: 700 },
+      })
+    }
+
+    const handleOpenSettings = () => {
+      // Import Settings dynamically to avoid circular imports
+      import('@/components/apps/Settings').then(({ Settings }) => {
+        openWindow({
+          title: 'Settings',
+          component: Settings,
+          position: { x: 200, y: 100 },
+          size: { width: 800, height: 600 },
+        })
+      })
+    }
+
+    const handleChangeWallpaper = () => {
+      // Trigger wallpaper change
+      setEmotion('excited', 0.7)
+      addMessage("Wallpaper system activated! Check settings for customization options.", 'sam', 'excited')
+    }
+
+    window.addEventListener('nyx:open-browser', handleOpenBrowser)
+    window.addEventListener('nyx:open-settings', handleOpenSettings)
+    window.addEventListener('nyx:change-wallpaper', handleChangeWallpaper)
+
+    return () => {
+      window.removeEventListener('nyx:open-browser', handleOpenBrowser)
+      window.removeEventListener('nyx:open-settings', handleOpenSettings)
+      window.removeEventListener('nyx:change-wallpaper', handleChangeWallpaper)
+    }
+  }, [openWindow, setEmotion, addMessage])
   
   const getBackgroundGradient = () => {
     const intensity = emotionIntensity * 0.3
