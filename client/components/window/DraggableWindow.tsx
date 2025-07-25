@@ -26,6 +26,7 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
   const windowRef = useRef<HTMLDivElement>(null)
   const [isResizing, setIsResizing] = useState(false)
   const [resizeHandle, setResizeHandle] = useState<string | null>(null)
+  const [isAnimating, setIsAnimating] = useState(false)
   
   const isFocused = focusedWindowId === window.id
   
