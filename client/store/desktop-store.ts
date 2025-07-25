@@ -11,6 +11,8 @@ export interface DesktopIcon {
   defaultSize: { width: number; height: number }
   defaultPosition: { x: number; y: number }
   description: string
+  color?: string
+  rotation?: number
   isInFolder?: boolean
   folderId?: string
 }
