@@ -5,6 +5,8 @@ import { useSamStore } from '@/store/sam-store'
 import { SamChat } from '@/components/apps/SamChat'
 import { CallSam } from '@/components/apps/CallSam'
 import { AppForge } from '@/components/apps/AppForge'
+import { Files } from '@/components/apps/Files'
+import { Calendar } from '@/components/apps/Calendar'
 import { 
   MessageCircle, 
   Phone, 
