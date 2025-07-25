@@ -127,6 +127,17 @@ export const EnhancedDesktop: React.FC = () => {
           description: 'System settings & customization',
           position: { x: 300, y: 200 },
           size: { width: 64, height: 64 }
+        },
+        {
+          appId: 'browser',
+          name: 'Nyx Browse',
+          icon: Globe,
+          component: NyxBrowser,
+          defaultSize: { width: 1000, height: 700 },
+          defaultPosition: { x: 100, y: 50 },
+          description: 'Quantum web browser',
+          position: { x: 100, y: 300 },
+          size: { width: 64, height: 64 }
         }
       ]
       
