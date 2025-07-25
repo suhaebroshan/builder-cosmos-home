@@ -64,6 +64,14 @@ export const Taskbar: React.FC = () => {
       defaultSize: { width: 900, height: 600 },
       defaultPosition: { x: 200, y: 50 },
     },
+    {
+      id: 'settings',
+      name: 'Settings',
+      icon: SettingsIcon,
+      component: Settings,
+      defaultSize: { width: 800, height: 600 },
+      defaultPosition: { x: 300, y: 100 },
+    },
   ]
   
   const openApp = (app: typeof apps[0]) => {
