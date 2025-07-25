@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { WindowManager } from '@/components/window/WindowManager'
-import { Taskbar } from '@/components/os/Taskbar'
+import { NyxTaskbar } from '@/components/os/NyxTaskbar'
 import { EnhancedDesktop } from '@/components/os/EnhancedDesktop'
-import { BootAnimation } from '@/components/os/BootAnimation'
-import { SpaceWallpaper } from '@/components/os/SpaceWallpaper'
+import { NyxBootAnimation } from '@/components/os/NyxBootAnimation'
+import { DynamicWallpaper } from '@/components/os/DynamicWallpaper'
+import { NyxBrowser } from '@/components/apps/NyxBrowser'
 import { useSamStore } from '@/store/sam-store'
+import { useWindowStore } from '@/store/window-store'
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
+import { aiService } from '@/services/ai-service'
 
 export const NyxOS: React.FC = () => {
   const { currentEmotion, emotionIntensity } = useSamStore()
