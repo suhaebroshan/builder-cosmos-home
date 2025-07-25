@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { SamOS } from '@/components/os/SamOS'
-import { NotFound } from '@/pages/NotFound'
+import NotFound from '@/pages/NotFound'
 
 function App() {
   return (
