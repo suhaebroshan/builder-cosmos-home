@@ -98,17 +98,26 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
         isFocused && "ring-2 ring-blue-400/50 shadow-lg shadow-blue-500/20"
       )}
       style={{
-        left: safePosition.x,
-        top: safePosition.y,
-        width: window.isMaximized ? '100vw' : safeSize.width,
-        height: window.isMaximized ? '100vh' : safeSize.height,
         zIndex: window.zIndex,
         borderColor: getEmotionBorderColor(),
       }}
       initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
+      animate={{
+        scale: 1,
+        opacity: 1,
+        left: window.isMaximized ? 0 : safePosition.x,
+        top: window.isMaximized ? 0 : safePosition.y,
+        width: window.isMaximized ? '100vw' : safeSize.width,
+        height: window.isMaximized ? '100vh' : safeSize.height,
+      }}
       exit={{ scale: 0.8, opacity: 0 }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+        layout: { duration: 0.3, ease: "easeInOut" }
+      }}
+      layout
       onClick={() => focusWindow(window.id)}
     >
       {/* Window Header */}
