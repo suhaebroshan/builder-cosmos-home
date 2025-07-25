@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useCallback } from 'react'
 import { motion, PanInfo } from 'framer-motion'
 import { useWindowStore, Window } from '@/store/window-store'
 import { useSamStore } from '@/store/sam-store'
