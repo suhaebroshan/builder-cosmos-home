@@ -110,7 +110,7 @@ export const CallSam: React.FC<CallSamProps> = ({ windowId }) => {
   }
   
   return (
-    <div className="flex flex-col h-full bg-black/40 backdrop-blur-sm">
+    <div className="flex flex-col h-full bg-black/20 backdrop-blur-xl">
       {/* Call Header */}
       <div className="p-4 border-b border-white/10">
         <div className="flex items-center justify-between">
