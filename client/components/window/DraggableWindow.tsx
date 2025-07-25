@@ -104,11 +104,22 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
     >
       {/* Window Header */}
       <motion.div
-        className="flex items-center justify-between p-3 bg-black/30 backdrop-blur-xl border-b border-white/20 cursor-move select-none"
+        className="flex items-center justify-between p-3 bg-black/30 backdrop-blur-xl border-b border-white/20 cursor-move select-none hover:bg-black/40 transition-colors"
         drag={!window.isMaximized}
         dragMomentum={false}
         onDragEnd={handleDragEnd}
-        dragElastic={0}
+        dragElastic={0.1}
+        dragConstraints={{
+          left: -safeSize.width + 100,
+          right: viewportWidth - 100,
+          top: 0,
+          bottom: viewportHeight - 40,
+        }}
+        whileDrag={{
+          scale: 1.02,
+          boxShadow: "0 10px 40px rgba(0, 0, 0, 0.3)",
+          cursor: "grabbing"
+        }}
       >
         <div className="flex items-center gap-2">
           <div className="text-white/90 font-medium text-sm">{window.title}</div>
