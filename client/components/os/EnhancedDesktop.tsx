@@ -48,7 +48,11 @@ export const EnhancedDesktop: React.FC = () => {
   
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; iconId?: string } | null>(null)
   const [editModeTimeout, setEditModeTimeout] = useState<NodeJS.Timeout | null>(null)
+  const [focusedIconIndex, setFocusedIconIndex] = useState(0)
   const desktopRef = useRef<HTMLDivElement>(null)
+
+  // Enable global keyboard shortcuts
+  const { shortcuts } = useKeyboardShortcuts()
   
   // Initialize default apps if none exist
   useEffect(() => {
