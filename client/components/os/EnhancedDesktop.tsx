@@ -12,11 +12,11 @@ import { AppForge } from '@/components/apps/AppForge'
 import { Files } from '@/components/apps/Files'
 import { Calendar } from '@/components/apps/Calendar'
 import { Settings } from '@/components/apps/Settings'
-import { 
-  MessageCircle, 
-  Phone, 
-  Folder, 
-  Wrench, 
+import {
+  MessageCircle,
+  Phone,
+  Folder,
+  Wrench,
   Calendar as CalendarIcon,
   Settings as SettingsIcon,
   FolderPlus,
@@ -26,6 +26,7 @@ import {
   Plus
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { DesktopIcon } from './DesktopIcon'
 
 export const EnhancedDesktop: React.FC = () => {
   const { openWindow, windows, minimizeWindow, focusWindow } = useWindowStore()
