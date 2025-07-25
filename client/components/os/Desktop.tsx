@@ -193,7 +193,7 @@ export const Desktop: React.FC = () => {
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1.2, duration: 0.8 }}
       >
-        <div className="bg-black/20 backdrop-blur-md border border-white/20 rounded-xl p-4 text-right">
+        <div className="bg-black/30 backdrop-blur-xl border border-white/30 rounded-2xl p-4 text-right shadow-lg shadow-black/20">
           <div className="text-white/90 font-medium">Nyx OS v1.0</div>
           <div className="text-white/60 text-sm">Sentient Operating System</div>
           <div className="text-white/40 text-xs mt-1">
