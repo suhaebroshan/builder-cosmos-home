@@ -121,10 +121,10 @@ export const Desktop: React.FC = () => {
             >
               {/* App Icon */}
               <motion.div
-                className={`relative w-16 h-16 rounded-2xl backdrop-blur-md border border-white/20 flex items-center justify-center mb-3 transition-all duration-200 ${
-                  isOpen 
-                    ? 'bg-blue-500/30 border-blue-400/50 shadow-lg shadow-blue-500/25' 
-                    : 'bg-white/10 hover:bg-white/20 hover:border-white/30'
+                className={`relative w-16 h-16 rounded-2xl backdrop-blur-xl border flex items-center justify-center mb-3 transition-all duration-200 ${
+                  isOpen
+                    ? 'bg-blue-500/20 border-blue-400/60 shadow-xl shadow-blue-500/30'
+                    : 'bg-white/5 border-white/20 hover:bg-white/10 hover:border-white/40 hover:shadow-lg hover:shadow-white/10'
                 }`}
                 whileHover={{ 
                   boxShadow: "0 10px 30px rgba(255, 255, 255, 0.1)",
