@@ -66,7 +66,7 @@ export const NyxOS: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
       >
-        <div className="flex items-center gap-2 bg-black/20 backdrop-blur-md border border-white/20 rounded-xl px-3 py-2">
+        <div className="flex items-center gap-2 bg-black/30 backdrop-blur-xl border border-white/30 rounded-2xl px-4 py-2 shadow-lg shadow-black/20">
           <div
             className="w-3 h-3 rounded-full transition-all duration-300"
             style={{
