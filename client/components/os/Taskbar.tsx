@@ -59,9 +59,9 @@ export const Taskbar: React.FC = () => {
       id: 'calendar',
       name: 'Chrono',
       icon: Calendar,
-      component: () => <div className="p-4 text-white">Calendar - Coming Soon</div>,
-      defaultSize: { width: 500, height: 500 },
-      defaultPosition: { x: 300, y: 100 },
+      component: Calendar,
+      defaultSize: { width: 900, height: 600 },
+      defaultPosition: { x: 200, y: 50 },
     },
   ]
   
