@@ -198,16 +198,62 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
       {/* Resize Handles */}
       {!window.isMaximized && (
         <>
-          {/* Bottom-right corner resize */}
+          {/* Corner handles */}
           <div
-            className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize opacity-0 hover:opacity-100 transition-opacity"
-            onMouseDown={(e) => {
-              e.preventDefault()
-              setIsResizing(true)
-              setResizeHandle('se')
-            }}
+            className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize opacity-0 hover:opacity-100 transition-opacity z-20"
+            onMouseDown={(e) => handleResizeStart(e, 'se')}
           >
             <div className="w-full h-full bg-white/30 rounded-tl-md" />
+          </div>
+
+          <div
+            className="absolute bottom-0 left-0 w-4 h-4 cursor-sw-resize opacity-0 hover:opacity-100 transition-opacity z-20"
+            onMouseDown={(e) => handleResizeStart(e, 'sw')}
+          >
+            <div className="w-full h-full bg-white/30 rounded-tr-md" />
+          </div>
+
+          <div
+            className="absolute top-0 right-0 w-4 h-4 cursor-ne-resize opacity-0 hover:opacity-100 transition-opacity z-20"
+            onMouseDown={(e) => handleResizeStart(e, 'ne')}
+          >
+            <div className="w-full h-full bg-white/30 rounded-bl-md" />
+          </div>
+
+          <div
+            className="absolute top-0 left-0 w-4 h-4 cursor-nw-resize opacity-0 hover:opacity-100 transition-opacity z-20"
+            onMouseDown={(e) => handleResizeStart(e, 'nw')}
+          >
+            <div className="w-full h-full bg-white/30 rounded-br-md" />
+          </div>
+
+          {/* Edge handles */}
+          <div
+            className="absolute bottom-0 left-4 right-4 h-2 cursor-s-resize opacity-0 hover:opacity-100 transition-opacity z-20"
+            onMouseDown={(e) => handleResizeStart(e, 's')}
+          >
+            <div className="w-full h-full bg-white/20" />
+          </div>
+
+          <div
+            className="absolute top-0 left-4 right-4 h-2 cursor-n-resize opacity-0 hover:opacity-100 transition-opacity z-20"
+            onMouseDown={(e) => handleResizeStart(e, 'n')}
+          >
+            <div className="w-full h-full bg-white/20" />
+          </div>
+
+          <div
+            className="absolute left-0 top-4 bottom-4 w-2 cursor-w-resize opacity-0 hover:opacity-100 transition-opacity z-20"
+            onMouseDown={(e) => handleResizeStart(e, 'w')}
+          >
+            <div className="w-full h-full bg-white/20" />
+          </div>
+
+          <div
+            className="absolute right-0 top-4 bottom-4 w-2 cursor-e-resize opacity-0 hover:opacity-100 transition-opacity z-20"
+            onMouseDown={(e) => handleResizeStart(e, 'e')}
+          >
+            <div className="w-full h-full bg-white/20" />
           </div>
         </>
       )}
