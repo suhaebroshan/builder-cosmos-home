@@ -17,6 +17,8 @@ import { InfiniteRunner } from '@/components/apps/InfiniteRunner'
 import { FlappyGame } from '@/components/apps/FlappyGame'
 import { ChessGame } from '@/components/apps/ChessGame'
 import { MemoryAlarms } from '@/components/apps/MemoryAlarms'
+import { Notepad } from '@/components/apps/Notepad'
+import { Calculator } from '@/components/apps/Calculator'
 import {
   MessageCircle,
   Phone,
@@ -33,7 +35,9 @@ import {
   Gamepad2,
   Crown,
   Zap,
-  Brain
+  Brain,
+  FileText,
+  Calculator as CalculatorIcon
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { DesktopIcon } from './DesktopIcon'
@@ -189,6 +193,28 @@ export const EnhancedDesktop: React.FC = () => {
           defaultPosition: { x: 180, y: 40 },
           description: 'Memory, alarms, and scheduling',
           position: { x: 500, y: 100 },
+          size: { width: 64, height: 64 }
+        },
+        {
+          appId: 'notepad',
+          name: 'Notepad',
+          icon: FileText,
+          component: Notepad,
+          defaultSize: { width: 800, height: 600 },
+          defaultPosition: { x: 200, y: 120 },
+          description: 'Text editor with rich features',
+          position: { x: 500, y: 200 },
+          size: { width: 64, height: 64 }
+        },
+        {
+          appId: 'calculator',
+          name: 'Calculator',
+          icon: CalculatorIcon,
+          component: Calculator,
+          defaultSize: { width: 400, height: 600 },
+          defaultPosition: { x: 220, y: 100 },
+          description: 'Scientific calculator',
+          position: { x: 500, y: 300 },
           size: { width: 64, height: 64 }
         }
       ]
