@@ -145,60 +145,64 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
     <motion.div
       ref={windowRef}
       className={cn(
-        "absolute rounded-2xl overflow-hidden shadow-2xl",
-        "backdrop-blur-xl bg-black/20 border border-white/30",
-        isFocused && "ring-2 ring-blue-400/50 shadow-lg shadow-blue-500/20"
+        "absolute rounded-2xl overflow-hidden shadow-2xl cursor-move",
+        "backdrop-blur-2xl bg-black/10 border border-white/20",
+        "before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/5 before:to-transparent before:pointer-events-none",
+        isFocused && "ring-2 ring-purple-400/50 shadow-xl shadow-purple-500/30"
       )}
       style={{
         zIndex: window.zIndex,
         borderColor: getEmotionBorderColor(),
+        left: window.isMaximized ? 0 : safePosition.x,
+        top: window.isMaximized ? 0 : safePosition.y,
+        width: window.isMaximized ? '100vw' : safeSize.width,
+        height: window.isMaximized ? '100vh' : safeSize.height,
       }}
       initial={{ scale: 0.8, opacity: 0 }}
       animate={{
         scale: 1,
         opacity: 1,
-        left: window.isMaximized ? 0 : safePosition.x,
-        top: window.isMaximized ? 0 : safePosition.y,
-        width: window.isMaximized ? '100vw' : safeSize.width,
-        height: window.isMaximized ? '100vh' : safeSize.height,
       }}
       exit={{ scale: 0.8, opacity: 0 }}
       transition={{
         type: "spring",
         stiffness: 300,
         damping: 30,
-        layout: { duration: 0.3, ease: "easeInOut" }
       }}
-      layout
       onClick={() => focusWindow(window.id)}
+      onMouseDown={(e) => {
+        if (window.isMaximized) return
+        e.preventDefault()
+        const startX = e.clientX
+        const startY = e.clientY
+        const startPosX = safePosition.x
+        const startPosY = safePosition.y
+
+        const handleMouseMove = (moveEvent: MouseEvent) => {
+          const deltaX = moveEvent.clientX - startX
+          const deltaY = moveEvent.clientY - startY
+
+          // Allow movement anywhere on screen with constraints to keep window partially visible
+          const newX = Math.max(-safeSize.width + 100, Math.min(startPosX + deltaX, viewportWidth - 100))
+          const newY = Math.max(0, Math.min(startPosY + deltaY, viewportHeight - 40))
+
+          updateWindowPosition(window.id, { x: newX, y: newY })
+        }
+
+        const handleMouseUp = () => {
+          document.removeEventListener('mousemove', handleMouseMove)
+          document.removeEventListener('mouseup', handleMouseUp)
+        }
+
+        document.addEventListener('mousemove', handleMouseMove)
+        document.addEventListener('mouseup', handleMouseUp)
+      }}
     >
       {/* Window Header */}
-      <motion.div
-        className="flex items-center justify-between p-3 bg-black/30 backdrop-blur-xl border-b border-white/20 cursor-move select-none hover:bg-black/40 transition-colors"
+      <div
+        className="flex items-center justify-between p-3 bg-black/20 backdrop-blur-2xl border-b border-white/10 select-none hover:bg-black/30 transition-colors"
         onMouseDown={(e) => {
-          e.preventDefault()
-          const startX = e.clientX
-          const startY = e.clientY
-          const startPosX = safePosition.x
-          const startPosY = safePosition.y
-
-          const handleMouseMove = (moveEvent: MouseEvent) => {
-            const deltaX = moveEvent.clientX - startX
-            const deltaY = moveEvent.clientY - startY
-
-            const newX = Math.max(-safeSize.width + 100, Math.min(startPosX + deltaX, viewportWidth - 100))
-            const newY = Math.max(0, Math.min(startPosY + deltaY, viewportHeight - 40))
-
-            updateWindowPosition(window.id, { x: newX, y: newY })
-          }
-
-          const handleMouseUp = () => {
-            document.removeEventListener('mousemove', handleMouseMove)
-            document.removeEventListener('mouseup', handleMouseUp)
-          }
-
-          document.addEventListener('mousemove', handleMouseMove)
-          document.addEventListener('mouseup', handleMouseUp)
+          e.stopPropagation() // Prevent triggering the window drag
         }}
       >
         <div className="flex items-center gap-2">
@@ -250,10 +254,10 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
             <X className="w-3 h-3 text-white/70" />
           </button>
         </div>
-      </motion.div>
+      </div>
       
       {/* Window Content */}
-      <div className="h-full overflow-hidden">
+      <div className="flex-1 overflow-hidden bg-black/5 backdrop-blur-sm">
         {children}
       </div>
       
