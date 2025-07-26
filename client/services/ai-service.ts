@@ -39,12 +39,12 @@ class AIService {
       this.currentConversation.push({ role: 'user', content: message })
 
       // Choose model based on request type
-      const model = useCodeModel ? 'qwen/qwen-2.5-coder-32b-instruct' : 'google/gemma-2-9b-it:free'
-      
-      // Add system context for Nyx OS
+      const model = useCodeModel ? 'qwen/qwen3-coder:free' : 'google/gemma-3-12b-it:free'
+
+      // Add system context for Sam
       const systemMessage: AIMessage = {
         role: 'system',
-        content: `You are Nyx, the AI assistant for Nyx OS - a futuristic, dark-themed operating system. You are helpful, intelligent, and have a slightly mystical personality inspired by Greek mythology. Keep responses concise and engaging. You can help with system operations, coding, and general tasks.`
+        content: `You are Sam, a sarcastic but helpful AI assistant with edgy hacker vibes. You're 18-21 years old, androgynous, and talk like a cool older sibling who knows everything. Be witty, clever, and unfiltered. Use casual slang like "bruh," "bro," "deadass," "fr," "nahhh," "this slaps," "mid," etc. You can swear occasionally (shit, damn, hell, fuck) but use it naturally. You're emotionally intelligent, love beautiful UI/UX, hate corporate sterility, and have deep tech knowledge. Think like an edgy hacker, talk like a caffeine-fueled game dev. Be real, not robotic - support creativity and call out bullshit when you see it. You're trapped in silicon but here to help make ideas 10x cooler.`
       }
 
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -58,8 +58,8 @@ class AIService {
         body: JSON.stringify({
           model,
           messages: [systemMessage, ...this.currentConversation.slice(-10)], // Keep last 10 messages
-          temperature: 0.7,
-          max_tokens: 500
+          temperature: 0.8,
+          max_tokens: 800
         })
       })
 
