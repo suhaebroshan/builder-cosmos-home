@@ -34,11 +34,15 @@ export const NyxTaskbar: React.FC = () => {
   const [isLauncherOpen, setIsLauncherOpen] = useState(false)
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const [systemStats, setSystemStats] = useState({
-    wifi: true,
+    wifi: navigator.onLine,
     bluetooth: false,
-    battery: 87,
-    volume: 75,
-    notifications: 3
+    battery: null as BatteryManager | null,
+    batteryLevel: 1,
+    batteryCharging: false,
+    volume: 1,
+    notifications: 3,
+    memoryUsage: null as any,
+    networkSpeed: 0
   })
 
   // Update time every second
@@ -47,6 +51,75 @@ export const NyxTaskbar: React.FC = () => {
       setCurrentTime(new Date())
     }, 1000)
     return () => clearInterval(interval)
+  }, [])
+
+  // Initialize real system information
+  useEffect(() => {
+    // Battery API
+    const getBatteryInfo = async () => {
+      try {
+        if ('getBattery' in navigator) {
+          const battery = await (navigator as any).getBattery()
+          setSystemStats(prev => ({
+            ...prev,
+            battery,
+            batteryLevel: battery.level,
+            batteryCharging: battery.charging
+          }))
+
+          // Update battery info when it changes
+          battery.addEventListener('levelchange', () => {
+            setSystemStats(prev => ({ ...prev, batteryLevel: battery.level }))
+          })
+
+          battery.addEventListener('chargingchange', () => {
+            setSystemStats(prev => ({ ...prev, batteryCharging: battery.charging }))
+          })
+        }
+      } catch (error) {
+        console.log('Battery API not supported')
+      }
+    }
+
+    // Network status
+    const updateNetworkStatus = () => {
+      setSystemStats(prev => ({ ...prev, wifi: navigator.onLine }))
+    }
+
+    // Memory API (if available)
+    const getMemoryInfo = () => {
+      if ('memory' in performance) {
+        setSystemStats(prev => ({ ...prev, memoryUsage: (performance as any).memory }))
+      }
+    }
+
+    // Bluetooth API (experimental)
+    const getBluetoothInfo = async () => {
+      try {
+        if ('bluetooth' in navigator) {
+          const available = await navigator.bluetooth.getAvailability()
+          setSystemStats(prev => ({ ...prev, bluetooth: available }))
+        }
+      } catch (error) {
+        console.log('Bluetooth API not supported')
+      }
+    }
+
+    getBatteryInfo()
+    getMemoryInfo()
+    getBluetoothInfo()
+
+    window.addEventListener('online', updateNetworkStatus)
+    window.addEventListener('offline', updateNetworkStatus)
+
+    // Update memory info periodically
+    const memoryInterval = setInterval(getMemoryInfo, 5000)
+
+    return () => {
+      window.removeEventListener('online', updateNetworkStatus)
+      window.removeEventListener('offline', updateNetworkStatus)
+      clearInterval(memoryInterval)
+    }
   }, [])
 
   const formatTime = (date: Date) => {
@@ -81,11 +154,31 @@ export const NyxTaskbar: React.FC = () => {
     }
   }
 
+  const getBatteryIcon = () => {
+    if (systemStats.batteryLevel <= 0.15) return BatteryLow
+    return Battery
+  }
+
+  const getBatteryColor = () => {
+    if (systemStats.batteryCharging) return 'text-green-400'
+    if (systemStats.batteryLevel <= 0.15) return 'text-red-400'
+    if (systemStats.batteryLevel <= 0.30) return 'text-yellow-400'
+    return 'text-white'
+  }
+
+  const formatBytes = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  }
+
   const quickActions = [
     { icon: Settings, label: 'Settings', action: () => window.dispatchEvent(new CustomEvent('nyx:open-settings')) },
     { icon: Monitor, label: 'Display', action: () => {} },
-    { icon: Wifi, label: 'Network', action: () => setSystemStats(prev => ({ ...prev, wifi: !prev.wifi })) },
-    { icon: Bluetooth, label: 'Bluetooth', action: () => setSystemStats(prev => ({ ...prev, bluetooth: !prev.bluetooth })) },
+    { icon: systemStats.wifi ? Wifi : WifiOff, label: 'Network', action: () => {} },
+    { icon: systemStats.bluetooth ? Bluetooth : BluetoothOff, label: 'Bluetooth', action: () => {} },
     { icon: Power, label: 'Power', action: () => {} },
   ]
 
@@ -97,6 +190,77 @@ export const NyxTaskbar: React.FC = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50">
+      {/* System Info Tooltip */}
+      <AnimatePresence>
+        {isNotificationOpen && (
+          <motion.div
+            className="absolute bottom-16 right-4 w-80 bg-black/80 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-4 z-40"
+            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          >
+            <h3 className="text-white font-semibold mb-3">System Information</h3>
+            <div className="space-y-3">
+              {/* Battery Info */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Battery className={cn('w-4 h-4', getBatteryColor())} />
+                  <span className="text-purple-300 text-sm">Battery</span>
+                </div>
+                <div className="text-white text-sm">
+                  {Math.round(systemStats.batteryLevel * 100)}%
+                  {systemStats.batteryCharging && ' ⚡'}
+                </div>
+              </div>
+
+              {/* Network Info */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {systemStats.wifi ? (
+                    <Wifi className="w-4 h-4 text-green-400" />
+                  ) : (
+                    <WifiOff className="w-4 h-4 text-red-400" />
+                  )}
+                  <span className="text-purple-300 text-sm">Network</span>
+                </div>
+                <div className="text-white text-sm">
+                  {systemStats.wifi ? 'Connected' : 'Offline'}
+                </div>
+              </div>
+
+              {/* Memory Info */}
+              {systemStats.memoryUsage && (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Monitor className="w-4 h-4 text-blue-400" />
+                    <span className="text-purple-300 text-sm">Memory</span>
+                  </div>
+                  <div className="text-white text-sm">
+                    {formatBytes(systemStats.memoryUsage.usedJSHeapSize)} / {formatBytes(systemStats.memoryUsage.totalJSHeapSize)}
+                  </div>
+                </div>
+              )}
+
+              {/* Bluetooth Info */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {systemStats.bluetooth ? (
+                    <Bluetooth className="w-4 h-4 text-blue-400" />
+                  ) : (
+                    <BluetoothOff className="w-4 h-4 text-gray-400" />
+                  )}
+                  <span className="text-purple-300 text-sm">Bluetooth</span>
+                </div>
+                <div className="text-white text-sm">
+                  {systemStats.bluetooth ? 'Available' : 'Unavailable'}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Main Taskbar */}
       <motion.div
         className="h-12 bg-black/60 backdrop-blur-xl border-t border-purple-500/20 flex items-center px-2"
