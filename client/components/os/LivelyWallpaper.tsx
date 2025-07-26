@@ -1,5 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+
+interface Star {
+  id: number
+  x: number
+  y: number
+  size: number
+  delay: number
+  duration: number
+}
 
 interface LivelyWallpaperProps {
   theme: 'light' | 'dark'
@@ -10,6 +19,18 @@ export const LivelyWallpaper: React.FC<LivelyWallpaperProps> = ({ theme }) => {
   const [showPlane, setShowPlane] = useState(false)
   const [showUFO, setShowUFO] = useState(false)
   const [showBatSignal, setShowBatSignal] = useState(false)
+
+  // Generate static stars that won't change
+  const stars = useMemo<Star[]>(() => {
+    return Array.from({ length: 100 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 70,
+      size: 0.5 + Math.random() * 1.5,
+      delay: Math.random() * 2,
+      duration: 2 + Math.random() * 3
+    }))
+  }, [])
 
   // Animation triggers for day theme
   useEffect(() => {
@@ -182,23 +203,25 @@ export const LivelyWallpaper: React.FC<LivelyWallpaperProps> = ({ theme }) => {
         </AnimatePresence>
       </motion.div>
 
-      {/* Stars */}
-      {Array.from({ length: 50 }).map((_, i) => (
+      {/* Static Stars */}
+      {stars.map((star) => (
         <motion.div
-          key={i}
-          className="absolute w-1 h-1 bg-white rounded-full"
+          key={star.id}
+          className="absolute bg-white rounded-full"
           style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 70}%`,
+            left: `${star.x}%`,
+            top: `${star.y}%`,
+            width: `${star.size}px`,
+            height: `${star.size}px`,
           }}
           animate={{
             opacity: [0.3, 1, 0.3],
-            scale: [0.5, 1, 0.5],
+            scale: [0.8, 1.2, 0.8],
           }}
           transition={{
-            duration: 2 + Math.random() * 3,
+            duration: star.duration,
             repeat: Infinity,
-            delay: Math.random() * 2,
+            delay: star.delay,
           }}
         />
       ))}
