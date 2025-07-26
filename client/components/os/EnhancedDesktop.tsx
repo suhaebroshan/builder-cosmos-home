@@ -242,6 +242,17 @@ export const EnhancedDesktop: React.FC = () => {
           description: 'Scientific calculator',
           position: getGridPosition(13),
           size: { width: 64, height: 64 }
+        },
+        {
+          appId: '2048-game',
+          name: '2048',
+          icon: Grid3x3,
+          component: Game2048,
+          defaultSize: { width: 600, height: 700 },
+          defaultPosition: { x: 240, y: 80 },
+          description: 'Classic 2048 puzzle game',
+          position: getGridPosition(14),
+          size: { width: 64, height: 64 }
         }
       ]
       
