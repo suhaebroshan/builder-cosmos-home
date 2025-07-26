@@ -199,48 +199,32 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
           }
 
           e.preventDefault()
+          setIsDragging(true)
 
-          // Start long press timer
-          const timeout = setTimeout(() => {
-            setIsDragging(true)
-            const startX = e.clientX
-            const startY = e.clientY
-            const startPosX = safePosition.x
-            const startPosY = safePosition.y
+          const startX = e.clientX
+          const startY = e.clientY
+          const startPosX = safePosition.x
+          const startPosY = safePosition.y
 
-            const handleMouseMove = (moveEvent: MouseEvent) => {
-              const deltaX = moveEvent.clientX - startX
-              const deltaY = moveEvent.clientY - startY
+          const handleMouseMove = (moveEvent: MouseEvent) => {
+            const deltaX = moveEvent.clientX - startX
+            const deltaY = moveEvent.clientY - startY
 
-              // Keep window partially visible
-              const newX = Math.max(-safeSize.width + 100, Math.min(startPosX + deltaX, viewportWidth - 100))
-              const newY = Math.max(0, Math.min(startPosY + deltaY, viewportHeight - 40))
+            // Keep window partially visible
+            const newX = Math.max(-safeSize.width + 100, Math.min(startPosX + deltaX, viewportWidth - 100))
+            const newY = Math.max(0, Math.min(startPosY + deltaY, viewportHeight - 40))
 
-              updateWindowPosition(window.id, { x: newX, y: newY })
-            }
-
-            const handleMouseUp = () => {
-              setIsDragging(false)
-              document.removeEventListener('mousemove', handleMouseMove)
-              document.removeEventListener('mouseup', handleMouseUp)
-            }
-
-            document.addEventListener('mousemove', handleMouseMove)
-            document.addEventListener('mouseup', handleMouseUp)
-          }, 300) // 300ms long press delay
-
-          setDragTimeout(timeout)
-
-          // Clear timeout if mouse is released quickly
-          const handleQuickRelease = () => {
-            if (timeout) {
-              clearTimeout(timeout)
-              setDragTimeout(null)
-            }
-            document.removeEventListener('mouseup', handleQuickRelease)
+            updateWindowPosition(window.id, { x: newX, y: newY })
           }
 
-          document.addEventListener('mouseup', handleQuickRelease)
+          const handleMouseUp = () => {
+            setIsDragging(false)
+            document.removeEventListener('mousemove', handleMouseMove)
+            document.removeEventListener('mouseup', handleMouseUp)
+          }
+
+          document.addEventListener('mousemove', handleMouseMove)
+          document.addEventListener('mouseup', handleMouseUp)
         }}
         onMouseLeave={() => {
           // Cancel drag if mouse leaves header
