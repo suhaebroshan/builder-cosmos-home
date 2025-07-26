@@ -16,6 +16,7 @@ import { NyxBrowser } from '@/components/apps/NyxBrowser'
 import { InfiniteRunner } from '@/components/apps/InfiniteRunner'
 import { FlappyGame } from '@/components/apps/FlappyGame'
 import { ChessGame } from '@/components/apps/ChessGame'
+import { MemoryAlarms } from '@/components/apps/MemoryAlarms'
 import {
   MessageCircle,
   Phone,
@@ -31,7 +32,8 @@ import {
   Plus,
   Gamepad2,
   Crown,
-  Zap
+  Zap,
+  Brain
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { DesktopIcon } from './DesktopIcon'
@@ -177,6 +179,17 @@ export const EnhancedDesktop: React.FC = () => {
           description: 'Strategic chess game',
           position: { x: 400, y: 300 },
           size: { width: 64, height: 64 }
+        },
+        {
+          appId: 'memory-alarms',
+          name: 'Memory',
+          icon: Brain,
+          component: MemoryAlarms,
+          defaultSize: { width: 900, height: 700 },
+          defaultPosition: { x: 180, y: 40 },
+          description: 'Memory, alarms, and scheduling',
+          position: { x: 500, y: 100 },
+          size: { width: 64, height: 64 }
         }
       ]
       
@@ -232,6 +245,16 @@ export const EnhancedDesktop: React.FC = () => {
       setTimeout(() => {
         setEmotion('happy', 0.8)
         addMessage("Hey there! Welcome to Nyx OS, bruv. What's good?", 'sam', 'happy')
+      }, 500)
+    } else if (icon.appId === 'runner-game' || icon.appId === 'flappy-game' || icon.appId === 'chess-game') {
+      setTimeout(() => {
+        setEmotion('excited', 0.7)
+        addMessage(`Time to game! ${icon.name} is fucking sick, bro. Let's see what you got.`, 'sam', 'excited')
+      }, 500)
+    } else if (icon.appId === 'memory-alarms') {
+      setTimeout(() => {
+        setEmotion('focused', 0.8)
+        addMessage("Memory time! I'll help you remember everything and keep you on schedule, my dude.", 'sam', 'focused')
       }, 500)
     }
   }
