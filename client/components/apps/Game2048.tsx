@@ -530,17 +530,13 @@ export const Game2048: React.FC = () => {
                       left: tile.col * 92 + 16, // 80px tile + 12px gap + 4px padding
                       top: tile.row * 92 + 16,
                     }}
-                    initial={tile.isNew ? { scale: 0, rotate: 0 } : false}
-                    animate={{ 
-                      scale: tile.isMerged ? [1, 1.2, 1] : 1,
-                      rotate: tile.isMerged ? [0, 5, 0] : 0
+                    initial={tile.isNew ? { scale: 0 } : false}
+                    animate={{
+                      scale: tile.isMerged ? [1, 1.1, 1] : 1
                     }}
                     exit={{ scale: 0, opacity: 0 }}
-                    transition={{ 
-                      type: "spring", 
-                      stiffness: 300, 
-                      damping: 25,
-                      duration: tile.isMerged ? 0.3 : 0.2
+                    transition={{
+                      duration: tile.isMerged ? 0.2 : 0.15
                     }}
                   >
                     {tile.value.toLocaleString()}
