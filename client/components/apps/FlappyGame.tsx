@@ -141,11 +141,13 @@ export const FlappyGame: React.FC = () => {
   }, [gameState.isPlaying, gameState.isPaused, gameState.isGameOver, createParticles])
 
   const checkCollisions = useCallback((state: GameState): GameState => {
+    // Slightly smaller collision box for more forgiving gameplay
+    const margin = 4
     const birdRect = {
-      x: 100 - birdSize / 2,
-      y: state.birdY - birdSize / 2,
-      width: birdSize,
-      height: birdSize
+      x: 100 - birdSize / 2 + margin,
+      y: state.birdY - birdSize / 2 + margin,
+      width: birdSize - margin * 2,
+      height: birdSize - margin * 2
     }
 
     // Check ground and ceiling collision
