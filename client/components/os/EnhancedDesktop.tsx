@@ -19,6 +19,7 @@ import { ChessGame } from '@/components/apps/ChessGame'
 import { MemoryAlarms } from '@/components/apps/MemoryAlarms'
 import { Notepad } from '@/components/apps/Notepad'
 import { Calculator } from '@/components/apps/Calculator'
+import { WebBrowser } from '@/components/apps/WebBrowser'
 import {
   MessageCircle,
   Phone,
@@ -37,7 +38,8 @@ import {
   Zap,
   Brain,
   FileText,
-  Calculator as CalculatorIcon
+  Calculator as CalculatorIcon,
+  Chrome
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { DesktopIcon } from './DesktopIcon'
@@ -149,6 +151,17 @@ export const EnhancedDesktop: React.FC = () => {
           defaultPosition: { x: 100, y: 50 },
           description: 'Quantum web browser',
           position: { x: 100, y: 300 },
+          size: { width: 64, height: 64 }
+        },
+        {
+          appId: 'web-browser',
+          name: 'Web Browser',
+          icon: Chrome,
+          component: WebBrowser,
+          defaultSize: { width: 1200, height: 800 },
+          defaultPosition: { x: 120, y: 40 },
+          description: 'Full-featured web browser',
+          position: { x: 100, y: 400 },
           size: { width: 64, height: 64 }
         },
         {
@@ -281,6 +294,21 @@ export const EnhancedDesktop: React.FC = () => {
       setTimeout(() => {
         setEmotion('focused', 0.8)
         addMessage("Memory time! I'll help you remember everything and keep you on schedule, my dude.", 'sam', 'focused')
+      }, 500)
+    } else if (icon.appId === 'web-browser') {
+      setTimeout(() => {
+        setEmotion('excited', 0.8)
+        addMessage("New browser loaded! This one's got all the goods - tabs, bookmarks, history, the works!", 'sam', 'excited')
+      }, 500)
+    } else if (icon.appId === 'notepad') {
+      setTimeout(() => {
+        setEmotion('focused', 0.7)
+        addMessage("Time to write! This notepad has everything - formatting, search, export. Write your masterpiece!", 'sam', 'focused')
+      }, 500)
+    } else if (icon.appId === 'calculator') {
+      setTimeout(() => {
+        setEmotion('focused', 0.6)
+        addMessage("Calculator ready! Basic or scientific - I got you covered for all the math.", 'sam', 'focused')
       }, 500)
     }
   }
