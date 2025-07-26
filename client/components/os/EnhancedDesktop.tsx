@@ -75,6 +75,17 @@ export const EnhancedDesktop: React.FC = () => {
   // Initialize default apps if none exist
   useEffect(() => {
     if (icons.length === 0) {
+      // Calculate grid positions
+      const gridSize = 80
+      const iconsPerRow = Math.floor((window.innerWidth || 1200) / gridSize)
+      const startX = 40
+      const startY = 40
+
+      const getGridPosition = (index: number) => ({
+        x: startX + (index % iconsPerRow) * gridSize,
+        y: startY + Math.floor(index / iconsPerRow) * gridSize
+      })
+
       const defaultApps = [
         {
           appId: 'sam-chat',
@@ -84,7 +95,7 @@ export const EnhancedDesktop: React.FC = () => {
           defaultSize: { width: 400, height: 600 },
           defaultPosition: { x: 100, y: 100 },
           description: 'Chat with Sam AI',
-          position: { x: 100, y: 100 },
+          position: getGridPosition(0),
           size: { width: 64, height: 64 }
         },
         {
@@ -95,7 +106,7 @@ export const EnhancedDesktop: React.FC = () => {
           defaultSize: { width: 500, height: 600 },
           defaultPosition: { x: 200, y: 100 },
           description: 'Voice chat with Sam',
-          position: { x: 200, y: 100 },
+          position: getGridPosition(1),
           size: { width: 64, height: 64 }
         },
         {
@@ -106,7 +117,7 @@ export const EnhancedDesktop: React.FC = () => {
           defaultSize: { width: 700, height: 500 },
           defaultPosition: { x: 150, y: 120 },
           description: 'File manager',
-          position: { x: 300, y: 100 },
+          position: getGridPosition(2),
           size: { width: 64, height: 64 }
         },
         {
@@ -117,7 +128,7 @@ export const EnhancedDesktop: React.FC = () => {
           defaultSize: { width: 800, height: 600 },
           defaultPosition: { x: 250, y: 80 },
           description: 'AI-powered app builder',
-          position: { x: 100, y: 200 },
+          position: getGridPosition(3),
           size: { width: 64, height: 64 }
         },
         {
@@ -128,7 +139,7 @@ export const EnhancedDesktop: React.FC = () => {
           defaultSize: { width: 900, height: 600 },
           defaultPosition: { x: 200, y: 50 },
           description: 'Calendar & scheduling',
-          position: { x: 200, y: 200 },
+          position: getGridPosition(4),
           size: { width: 64, height: 64 }
         },
         {
@@ -139,7 +150,7 @@ export const EnhancedDesktop: React.FC = () => {
           defaultSize: { width: 800, height: 600 },
           defaultPosition: { x: 300, y: 100 },
           description: 'System settings & customization',
-          position: { x: 300, y: 200 },
+          position: getGridPosition(5),
           size: { width: 64, height: 64 }
         },
         {
@@ -150,7 +161,7 @@ export const EnhancedDesktop: React.FC = () => {
           defaultSize: { width: 1000, height: 700 },
           defaultPosition: { x: 100, y: 50 },
           description: 'Quantum web browser',
-          position: { x: 100, y: 300 },
+          position: getGridPosition(6),
           size: { width: 64, height: 64 }
         },
         {
@@ -161,7 +172,7 @@ export const EnhancedDesktop: React.FC = () => {
           defaultSize: { width: 1200, height: 800 },
           defaultPosition: { x: 120, y: 40 },
           description: 'Full-featured web browser',
-          position: { x: 100, y: 400 },
+          position: getGridPosition(7),
           size: { width: 64, height: 64 }
         },
         {
@@ -172,7 +183,7 @@ export const EnhancedDesktop: React.FC = () => {
           defaultSize: { width: 900, height: 600 },
           defaultPosition: { x: 120, y: 80 },
           description: '2D infinite runner game',
-          position: { x: 400, y: 100 },
+          position: getGridPosition(8),
           size: { width: 64, height: 64 }
         },
         {
@@ -183,7 +194,7 @@ export const EnhancedDesktop: React.FC = () => {
           defaultSize: { width: 900, height: 600 },
           defaultPosition: { x: 140, y: 100 },
           description: 'Flappy bird inspired game',
-          position: { x: 400, y: 200 },
+          position: getGridPosition(9),
           size: { width: 64, height: 64 }
         },
         {
@@ -194,7 +205,7 @@ export const EnhancedDesktop: React.FC = () => {
           defaultSize: { width: 800, height: 700 },
           defaultPosition: { x: 160, y: 60 },
           description: 'Strategic chess game',
-          position: { x: 400, y: 300 },
+          position: getGridPosition(10),
           size: { width: 64, height: 64 }
         },
         {
@@ -205,7 +216,7 @@ export const EnhancedDesktop: React.FC = () => {
           defaultSize: { width: 900, height: 700 },
           defaultPosition: { x: 180, y: 40 },
           description: 'Memory, alarms, and scheduling',
-          position: { x: 500, y: 100 },
+          position: getGridPosition(11),
           size: { width: 64, height: 64 }
         },
         {
@@ -216,7 +227,7 @@ export const EnhancedDesktop: React.FC = () => {
           defaultSize: { width: 800, height: 600 },
           defaultPosition: { x: 200, y: 120 },
           description: 'Text editor with rich features',
-          position: { x: 500, y: 200 },
+          position: getGridPosition(12),
           size: { width: 64, height: 64 }
         },
         {
@@ -227,7 +238,7 @@ export const EnhancedDesktop: React.FC = () => {
           defaultSize: { width: 400, height: 600 },
           defaultPosition: { x: 220, y: 100 },
           description: 'Scientific calculator',
-          position: { x: 500, y: 300 },
+          position: getGridPosition(13),
           size: { width: 64, height: 64 }
         }
       ]
