@@ -563,10 +563,10 @@ export const Game2048: React.FC = () => {
                     left: particle.y * 92 + 50,
                     top: particle.x * 92 + 40,
                   }}
-                  initial={{ opacity: 1, y: 0, scale: 1 }}
-                  animate={{ opacity: 0, y: -30, scale: 1.5 }}
+                  initial={{ opacity: 1, y: 0 }}
+                  animate={{ opacity: 0, y: -20 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 1 }}
+                  transition={{ duration: 0.8 }}
                 >
                   +{particle.value}
                 </motion.div>
