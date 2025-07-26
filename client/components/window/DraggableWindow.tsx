@@ -27,6 +27,8 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
   const [isResizing, setIsResizing] = useState(false)
   const [resizeHandle, setResizeHandle] = useState<string | null>(null)
   const [isAnimating, setIsAnimating] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragTimeout, setDragTimeout] = useState<NodeJS.Timeout | null>(null)
   
   const isFocused = focusedWindowId === window.id
 
@@ -170,52 +172,72 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
         damping: 30,
       }}
       onClick={() => focusWindow(window.id)}
-      onMouseDown={(e) => {
-        if (window.isMaximized) return
-
-        // Don't prevent default or start dragging if clicking on interactive elements
-        const target = e.target as HTMLElement
-        const isInteractiveElement = target.tagName === 'INPUT' ||
-                                   target.tagName === 'TEXTAREA' ||
-                                   target.tagName === 'SELECT' ||
-                                   target.tagName === 'BUTTON' ||
-                                   target.closest('input, textarea, select, button, [contenteditable]')
-
-        if (isInteractiveElement) {
-          return // Allow normal interaction with form elements
-        }
-
-        e.preventDefault()
-        const startX = e.clientX
-        const startY = e.clientY
-        const startPosX = safePosition.x
-        const startPosY = safePosition.y
-
-        const handleMouseMove = (moveEvent: MouseEvent) => {
-          const deltaX = moveEvent.clientX - startX
-          const deltaY = moveEvent.clientY - startY
-
-          // Allow movement anywhere on screen with constraints to keep window partially visible
-          const newX = Math.max(-safeSize.width + 100, Math.min(startPosX + deltaX, viewportWidth - 100))
-          const newY = Math.max(0, Math.min(startPosY + deltaY, viewportHeight - 40))
-
-          updateWindowPosition(window.id, { x: newX, y: newY })
-        }
-
-        const handleMouseUp = () => {
-          document.removeEventListener('mousemove', handleMouseMove)
-          document.removeEventListener('mouseup', handleMouseUp)
-        }
-
-        document.addEventListener('mousemove', handleMouseMove)
-        document.addEventListener('mouseup', handleMouseUp)
-      }}
     >
       {/* Window Header */}
       <div
-        className="flex items-center justify-between p-3 bg-black/20 backdrop-blur-2xl border-b border-white/10 select-none hover:bg-black/30 transition-colors"
+        className={cn(
+          "flex items-center justify-between p-3 bg-black/20 backdrop-blur-2xl border-b border-white/10 select-none hover:bg-black/30 transition-colors cursor-grab",
+          isDragging && "cursor-grabbing"
+        )}
         onMouseDown={(e) => {
-          e.stopPropagation() // Prevent triggering the window drag
+          if (window.isMaximized) return
+
+          // Don't start dragging if clicking on buttons
+          const target = e.target as HTMLElement
+          if (target.closest('button')) {
+            return
+          }
+
+          e.preventDefault()
+
+          // Start long press timer
+          const timeout = setTimeout(() => {
+            setIsDragging(true)
+            const startX = e.clientX
+            const startY = e.clientY
+            const startPosX = safePosition.x
+            const startPosY = safePosition.y
+
+            const handleMouseMove = (moveEvent: MouseEvent) => {
+              const deltaX = moveEvent.clientX - startX
+              const deltaY = moveEvent.clientY - startY
+
+              // Keep window partially visible
+              const newX = Math.max(-safeSize.width + 100, Math.min(startPosX + deltaX, viewportWidth - 100))
+              const newY = Math.max(0, Math.min(startPosY + deltaY, viewportHeight - 40))
+
+              updateWindowPosition(window.id, { x: newX, y: newY })
+            }
+
+            const handleMouseUp = () => {
+              setIsDragging(false)
+              document.removeEventListener('mousemove', handleMouseMove)
+              document.removeEventListener('mouseup', handleMouseUp)
+            }
+
+            document.addEventListener('mousemove', handleMouseMove)
+            document.addEventListener('mouseup', handleMouseUp)
+          }, 300) // 300ms long press delay
+
+          setDragTimeout(timeout)
+
+          // Clear timeout if mouse is released quickly
+          const handleQuickRelease = () => {
+            if (timeout) {
+              clearTimeout(timeout)
+              setDragTimeout(null)
+            }
+            document.removeEventListener('mouseup', handleQuickRelease)
+          }
+
+          document.addEventListener('mouseup', handleQuickRelease)
+        }}
+        onMouseLeave={() => {
+          // Cancel drag if mouse leaves header
+          if (dragTimeout) {
+            clearTimeout(dragTimeout)
+            setDragTimeout(null)
+          }
         }}
       >
         <div className="flex items-center gap-2">
