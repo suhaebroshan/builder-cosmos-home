@@ -149,8 +149,8 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
   }
 
   // Get viewport dimensions for window constraints
-  const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1200
-  const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 800
+  const viewportWidth = typeof globalThis.window !== 'undefined' ? globalThis.window.innerWidth : 1200
+  const viewportHeight = typeof globalThis.window !== 'undefined' ? globalThis.window.innerHeight - 80 : 720 // Account for taskbar
   
   return (
     <motion.div
