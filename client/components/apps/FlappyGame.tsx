@@ -87,8 +87,8 @@ export const FlappyGame: React.FC = () => {
 
   const generatePipe = useCallback((x: number): Pipe => {
     const { gapSize } = getDifficultySettings()
-    const minHeight = 50
-    const maxHeight = 250
+    const minHeight = 60 // Slightly higher minimum
+    const maxHeight = 200 // Lower maximum for more centered gaps
     const topHeight = minHeight + Math.random() * (maxHeight - minHeight)
     
     return {
