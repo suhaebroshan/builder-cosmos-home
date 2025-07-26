@@ -92,7 +92,7 @@ export const EnhancedDesktop: React.FC = () => {
           name: 'Sam',
           icon: MessageCircle,
           component: SamChat,
-          defaultSize: { width: 400, height: 600 },
+          defaultSize: { width: 450, height: 650 },
           defaultPosition: { x: 100, y: 100 },
           description: 'Chat with Sam AI',
           position: getGridPosition(0),
@@ -235,7 +235,7 @@ export const EnhancedDesktop: React.FC = () => {
           name: 'Calculator',
           icon: CalculatorIcon,
           component: Calculator,
-          defaultSize: { width: 400, height: 600 },
+          defaultSize: { width: 450, height: 700 },
           defaultPosition: { x: 220, y: 100 },
           description: 'Scientific calculator',
           position: getGridPosition(13),
@@ -243,7 +243,13 @@ export const EnhancedDesktop: React.FC = () => {
         }
       ]
       
-      defaultApps.forEach(app => addIcon(app))
+      // Only add each app once to prevent duplicates
+      defaultApps.forEach(app => {
+        const existingIcon = icons.find(icon => icon.appId === app.appId)
+        if (!existingIcon) {
+          addIcon(app)
+        }
+      })
     }
   }, [icons.length, addIcon])
   
