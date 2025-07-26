@@ -241,71 +241,136 @@ export const FlappyGame: React.FC = () => {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    // Clear canvas with gradient background
+    // Clear canvas with animated gradient background
+    const time = Date.now() * 0.001
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-    gradient.addColorStop(0, '#0f0f23')
-    gradient.addColorStop(0.5, '#1e1b4b')
-    gradient.addColorStop(1, '#312e81')
+    gradient.addColorStop(0, `hsl(${240 + Math.sin(time * 0.5) * 10}, 90%, ${10 + Math.sin(time * 0.3) * 5}%)`)
+    gradient.addColorStop(0.5, `hsl(${260 + Math.cos(time * 0.4) * 15}, 80%, ${20 + Math.cos(time * 0.2) * 8}%)`)
+    gradient.addColorStop(1, `hsl(${280 + Math.sin(time * 0.6) * 20}, 70%, ${30 + Math.sin(time * 0.4) * 10}%)`)
     ctx.fillStyle = gradient
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    // Draw background stars
+    // Draw animated background stars
     ctx.fillStyle = '#ffffff'
-    for (let i = 0; i < 50; i++) {
-      const x = (i * 37) % canvas.width
+    for (let i = 0; i < 100; i++) {
+      const x = (i * 37 + Math.sin(time * 0.2 + i) * 2) % canvas.width
       const y = (i * 71) % canvas.height
+      const size = 1 + Math.sin(time * 2 + i) * 0.5
+      const alpha = 0.3 + Math.sin(time * 3 + i * 0.1) * 0.3
+      ctx.globalAlpha = alpha
       ctx.beginPath()
-      ctx.arc(x, y, Math.random() * 2, 0, Math.PI * 2)
+      ctx.arc(x, y, size, 0, Math.PI * 2)
       ctx.fill()
     }
-
-    // Draw pipes
-    gameState.pipes.forEach(pipe => {
-      // Top pipe
-      ctx.fillStyle = '#22c55e'
-      ctx.fillRect(pipe.x, 0, pipeWidth, pipe.topHeight)
-      
-      // Bottom pipe
-      ctx.fillRect(pipe.x, pipe.bottomY, pipeWidth, canvas.height - pipe.bottomY)
-      
-      // Pipe highlights
-      ctx.fillStyle = '#16a34a'
-      ctx.fillRect(pipe.x, 0, 5, pipe.topHeight)
-      ctx.fillRect(pipe.x, pipe.bottomY, 5, canvas.height - pipe.bottomY)
-    })
-
-    // Draw particles
-    gameState.particles.forEach(particle => {
-      ctx.fillStyle = particle.color
-      ctx.globalAlpha = particle.life / 30
-      ctx.beginPath()
-      ctx.arc(particle.x, particle.y, 3, 0, Math.PI * 2)
-      ctx.fill()
-    })
     ctx.globalAlpha = 1
 
-    // Draw bird with rotation based on velocity
+    // Draw enhanced pipes with gradient and glow
+    gameState.pipes.forEach(pipe => {
+      // Pipe gradient
+      const pipeGradient = ctx.createLinearGradient(pipe.x, 0, pipe.x + pipeWidth, 0)
+      pipeGradient.addColorStop(0, '#16a34a')
+      pipeGradient.addColorStop(0.3, '#22c55e')
+      pipeGradient.addColorStop(0.7, '#15803d')
+      pipeGradient.addColorStop(1, '#14532d')
+
+      // Pipe shadow/glow
+      ctx.shadowColor = '#16a34a'
+      ctx.shadowBlur = 10
+      ctx.shadowOffsetX = 2
+      ctx.shadowOffsetY = 2
+
+      // Top pipe
+      ctx.fillStyle = pipeGradient
+      ctx.fillRect(pipe.x, 0, pipeWidth, pipe.topHeight)
+
+      // Bottom pipe
+      ctx.fillRect(pipe.x, pipe.bottomY, pipeWidth, canvas.height - pipe.bottomY)
+
+      // Reset shadow
+      ctx.shadowColor = 'transparent'
+      ctx.shadowBlur = 0
+      ctx.shadowOffsetX = 0
+      ctx.shadowOffsetY = 0
+
+      // Pipe highlights with animated shine
+      const shineOffset = Math.sin(time * 2) * 3
+      ctx.fillStyle = `rgba(255, 255, 255, ${0.3 + Math.sin(time * 4) * 0.1})`
+      ctx.fillRect(pipe.x + shineOffset, 0, 8, pipe.topHeight)
+      ctx.fillRect(pipe.x + shineOffset, pipe.bottomY, 8, canvas.height - pipe.bottomY)
+
+      // Pipe caps
+      ctx.fillStyle = '#15803d'
+      ctx.fillRect(pipe.x - 5, pipe.topHeight - 20, pipeWidth + 10, 20)
+      ctx.fillRect(pipe.x - 5, pipe.bottomY, pipeWidth + 10, 20)
+    })
+
+    // Draw enhanced particles with trails
+    gameState.particles.forEach(particle => {
+      const alpha = particle.life / 30
+      // Particle glow
+      ctx.shadowColor = particle.color
+      ctx.shadowBlur = 8
+      ctx.fillStyle = particle.color
+      ctx.globalAlpha = alpha
+      ctx.beginPath()
+      ctx.arc(particle.x, particle.y, 4, 0, Math.PI * 2)
+      ctx.fill()
+
+      // Particle trail
+      ctx.globalAlpha = alpha * 0.3
+      ctx.beginPath()
+      ctx.arc(particle.x - particle.vx, particle.y - particle.vy, 2, 0, Math.PI * 2)
+      ctx.fill()
+    })
+    ctx.shadowColor = 'transparent'
+    ctx.shadowBlur = 0
+    ctx.globalAlpha = 1
+
+    // Draw enhanced bird with animation
     ctx.save()
     ctx.translate(100, gameState.birdY)
-    ctx.rotate(Math.min(Math.max(gameState.birdVelocity * 0.1, -0.5), 0.5))
-    
-    // Bird body
-    ctx.fillStyle = '#fbbf24'
+    const rotation = Math.min(Math.max(gameState.birdVelocity * 0.08, -0.4), 0.4)
+    ctx.rotate(rotation)
+
+    // Bird glow effect
+    ctx.shadowColor = '#fbbf24'
+    ctx.shadowBlur = 15
+
+    // Bird body with gradient
+    const birdGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, birdSize / 2)
+    birdGradient.addColorStop(0, '#fde047')
+    birdGradient.addColorStop(0.7, '#fbbf24')
+    birdGradient.addColorStop(1, '#f59e0b')
+    ctx.fillStyle = birdGradient
     ctx.beginPath()
     ctx.arc(0, 0, birdSize / 2, 0, Math.PI * 2)
     ctx.fill()
-    
-    // Bird eye
+
+    // Bird wing animation
+    const wingFlap = Math.sin(time * 15) * 0.3
+    ctx.fillStyle = '#f97316'
+    ctx.beginPath()
+    ctx.ellipse(-8, wingFlap, 8, 5, wingFlap * 0.5, 0, Math.PI * 2)
+    ctx.fill()
+
+    // Reset shadow
+    ctx.shadowColor = 'transparent'
+    ctx.shadowBlur = 0
+
+    // Bird eye with animated blink
+    const eyeScale = Math.sin(time * 8) > 0.8 ? 0.3 : 1
     ctx.fillStyle = '#ffffff'
     ctx.beginPath()
-    ctx.arc(5, -5, 6, 0, Math.PI * 2)
+    ctx.arc(5, -5, 6 * eyeScale, 0, Math.PI * 2)
     ctx.fill()
-    
-    ctx.fillStyle = '#000000'
-    ctx.beginPath()
-    ctx.arc(7, -3, 3, 0, Math.PI * 2)
-    ctx.fill()
-    
+
+    if (eyeScale > 0.5) {
+      ctx.fillStyle = '#000000'
+      ctx.beginPath()
+      ctx.arc(7, -3, 3, 0, Math.PI * 2)
+      ctx.fill()
+    }
+
     // Bird beak
     ctx.fillStyle = '#f97316'
     ctx.beginPath()
@@ -314,19 +379,33 @@ export const FlappyGame: React.FC = () => {
     ctx.lineTo(25, 3)
     ctx.closePath()
     ctx.fill()
-    
+
     ctx.restore()
 
-    // Draw UI
+    // Draw enhanced UI with glow effects
+    ctx.shadowColor = '#ffffff'
+    ctx.shadowBlur = 5
     ctx.fillStyle = '#ffffff'
-    ctx.font = 'bold 24px monospace'
+    ctx.font = 'bold 28px monospace'
     ctx.textAlign = 'center'
     ctx.fillText(`${gameState.score}`, canvas.width / 2, 50)
-    
-    ctx.font = '14px monospace'
+
+    ctx.shadowBlur = 2
+    ctx.font = '16px monospace'
     ctx.textAlign = 'left'
     ctx.fillText(`Difficulty: ${gameState.difficulty.toUpperCase()}`, 10, 25)
-    ctx.fillText(`High Score: ${highScores[gameState.difficulty]}`, 10, 45)
+    ctx.fillText(`High Score: ${highScores[gameState.difficulty]}`, 10, 50)
+
+    // Combo indicator
+    if (gameState.score > 0 && gameState.score % 5 === 0) {
+      ctx.fillStyle = '#fbbf24'
+      ctx.font = 'bold 20px monospace'
+      ctx.textAlign = 'center'
+      ctx.fillText('COMBO!', canvas.width / 2, 90)
+    }
+
+    ctx.shadowColor = 'transparent'
+    ctx.shadowBlur = 0
 
   }, [gameState, highScores])
 
