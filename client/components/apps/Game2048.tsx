@@ -389,11 +389,11 @@ export const Game2048: React.FC = () => {
     setTouchStart(null)
   }
 
-  // Clean up particles
+  // Clean up particles with less frequent updates
   useEffect(() => {
     const interval = setInterval(() => {
       setParticles(prev => prev.filter(p => Date.now() - p.timestamp < 1000))
-    }, 100)
+    }, 500) // Reduced from 100ms to 500ms
     return () => clearInterval(interval)
   }, [])
 
