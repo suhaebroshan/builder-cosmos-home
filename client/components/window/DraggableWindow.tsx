@@ -172,6 +172,19 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
       onClick={() => focusWindow(window.id)}
       onMouseDown={(e) => {
         if (window.isMaximized) return
+
+        // Don't prevent default or start dragging if clicking on interactive elements
+        const target = e.target as HTMLElement
+        const isInteractiveElement = target.tagName === 'INPUT' ||
+                                   target.tagName === 'TEXTAREA' ||
+                                   target.tagName === 'SELECT' ||
+                                   target.tagName === 'BUTTON' ||
+                                   target.closest('input, textarea, select, button, [contenteditable]')
+
+        if (isInteractiveElement) {
+          return // Allow normal interaction with form elements
+        }
+
         e.preventDefault()
         const startX = e.clientX
         const startY = e.clientY
