@@ -85,6 +85,69 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
         ))}
       </div>
 
+      {/* User Selection Menu - Bottom Left */}
+      <div className="absolute bottom-8 left-8">
+        <AnimatePresence>
+          {showUserSwitcher && (
+            <motion.div
+              className="bg-black/80 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-4 mb-4 min-w-64"
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              <h3 className="text-purple-300 text-sm font-medium mb-3">Switch User</h3>
+              <div className="space-y-2">
+                {defaultUsers.map((user) => (
+                  <button
+                    key={user.id}
+                    onClick={() => {
+                      setSelectedUser(user)
+                      setPassword('')
+                      setError('')
+                      setShowUserSwitcher(false)
+                    }}
+                    className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors text-left ${
+                      selectedUser.id === user.id
+                        ? 'bg-purple-600/30 border border-purple-500/50'
+                        : 'hover:bg-purple-800/20'
+                    }`}
+                  >
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-violet-700 rounded-full flex items-center justify-center text-lg">
+                      {user.avatar}
+                    </div>
+                    <div>
+                      <div className="text-white text-sm font-medium">{user.displayName}</div>
+                      <div className="text-purple-300/70 text-xs">@{user.username}</div>
+                    </div>
+                    {selectedUser.id === user.id && (
+                      <div className="ml-auto w-2 h-2 bg-purple-400 rounded-full" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Current User Button */}
+        <motion.button
+          onClick={() => setShowUserSwitcher(!showUserSwitcher)}
+          className="flex items-center gap-3 bg-black/60 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-3 hover:bg-black/70 transition-colors group"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-violet-700 rounded-full flex items-center justify-center text-lg">
+            {selectedUser.avatar}
+          </div>
+          <div className="text-left">
+            <div className="text-white text-sm font-medium">{selectedUser.displayName}</div>
+            <div className="text-purple-300/70 text-xs">@{selectedUser.username}</div>
+          </div>
+          <Users className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
+        </motion.button>
+      </div>
+
       <motion.div
         className="relative bg-black/40 backdrop-blur-xl border border-purple-500/30 rounded-3xl p-8 shadow-2xl max-w-md w-full mx-4"
         initial={{ opacity: 0, scale: 0.8, y: 50 }}
@@ -113,68 +176,25 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
 
         {!isLoggingIn ? (
           <>
-            {/* User Selection */}
-            <div className="mb-6">
-              <div className="flex items-center justify-center mb-4">
-                <div className="relative">
-                  <motion.div
-                    className="w-20 h-20 bg-gradient-to-br from-purple-600 to-violet-700 rounded-full flex items-center justify-center text-2xl cursor-pointer"
-                    onClick={() => setShowUserSwitcher(!showUserSwitcher)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    {selectedUser.avatar}
-                  </motion.div>
-                  
-                  <button
-                    onClick={() => setShowUserSwitcher(!showUserSwitcher)}
-                    className="absolute -bottom-1 -right-1 w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center hover:bg-purple-500 transition-colors"
-                  >
-                    <Users className="w-3 h-3 text-white" />
-                  </button>
-                </div>
-              </div>
-              
-              <div className="text-center">
-                <h2 className="text-white text-xl font-medium">{selectedUser.displayName}</h2>
-                <p className="text-purple-300/70 text-sm">@{selectedUser.username}</p>
-              </div>
+            {/* Current User Display */}
+            <div className="mb-6 text-center">
+              <motion.div
+                className="w-24 h-24 bg-gradient-to-br from-purple-600 to-violet-700 rounded-full flex items-center justify-center text-3xl mx-auto mb-4"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30, delay: 0.3 }}
+              >
+                {selectedUser.avatar}
+              </motion.div>
 
-              {/* User Switcher */}
-              <AnimatePresence>
-                {showUserSwitcher && (
-                  <motion.div
-                    className="absolute top-full left-0 right-0 bg-black/80 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-4 mt-2 z-10"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    <h3 className="text-purple-300 text-sm font-medium mb-3">Switch User</h3>
-                    <div className="space-y-2">
-                      {defaultUsers.map((user) => (
-                        <button
-                          key={user.id}
-                          onClick={() => {
-                            setSelectedUser(user)
-                            setPassword('')
-                            setError('')
-                            setShowUserSwitcher(false)
-                          }}
-                          className="w-full flex items-center gap-3 p-3 hover:bg-purple-800/20 rounded-lg transition-colors text-left"
-                        >
-                          <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-violet-700 rounded-full flex items-center justify-center">
-                            {user.avatar}
-                          </div>
-                          <div>
-                            <div className="text-white text-sm font-medium">{user.displayName}</div>
-                            <div className="text-purple-300/70 text-xs">@{user.username}</div>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <h2 className="text-white text-xl font-medium mb-1">{selectedUser.displayName}</h2>
+                <p className="text-purple-300/70 text-sm">@{selectedUser.username}</p>
+              </motion.div>
             </div>
 
             {/* Password Input */}
