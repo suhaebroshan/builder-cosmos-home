@@ -330,10 +330,14 @@ export const EnhancedDesktop: React.FC = () => {
     }
   }
   
-  const snapToGrid = (x: number, y: number, gridSize: number = 80) => {
+  const snapToGrid = (x: number, y: number, iconSize: { width: number; height: number } = { width: 64, height: 64 }) => {
+    // Calculate dynamic grid based on icon size + padding
+    const gridSizeX = Math.max(80, iconSize.width + 24)
+    const gridSizeY = Math.max(80, iconSize.height + 32) // Extra space for label
+
     return {
-      x: Math.round(x / gridSize) * gridSize,
-      y: Math.round(y / gridSize) * gridSize
+      x: Math.round(x / gridSizeX) * gridSizeX,
+      y: Math.round(y / gridSizeY) * gridSizeY
     }
   }
 
