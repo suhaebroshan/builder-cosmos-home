@@ -13,6 +13,9 @@ import { Files } from '@/components/apps/Files'
 import { Calendar } from '@/components/apps/Calendar'
 import { Settings } from '@/components/apps/Settings'
 import { NyxBrowser } from '@/components/apps/NyxBrowser'
+import { InfiniteRunner } from '@/components/apps/InfiniteRunner'
+import { FlappyGame } from '@/components/apps/FlappyGame'
+import { ChessGame } from '@/components/apps/ChessGame'
 import {
   MessageCircle,
   Phone,
@@ -25,7 +28,10 @@ import {
   Copy,
   Trash2,
   Edit,
-  Plus
+  Plus,
+  Gamepad2,
+  Crown,
+  Zap
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { DesktopIcon } from './DesktopIcon'
@@ -138,6 +144,39 @@ export const EnhancedDesktop: React.FC = () => {
           description: 'Quantum web browser',
           position: { x: 100, y: 300 },
           size: { width: 64, height: 64 }
+        },
+        {
+          appId: 'runner-game',
+          name: 'Nyx Runner',
+          icon: Zap,
+          component: InfiniteRunner,
+          defaultSize: { width: 900, height: 600 },
+          defaultPosition: { x: 120, y: 80 },
+          description: '2D infinite runner game',
+          position: { x: 400, y: 100 },
+          size: { width: 64, height: 64 }
+        },
+        {
+          appId: 'flappy-game',
+          name: 'Nyx Flap',
+          icon: Gamepad2,
+          component: FlappyGame,
+          defaultSize: { width: 900, height: 600 },
+          defaultPosition: { x: 140, y: 100 },
+          description: 'Flappy bird inspired game',
+          position: { x: 400, y: 200 },
+          size: { width: 64, height: 64 }
+        },
+        {
+          appId: 'chess-game',
+          name: 'Nyx Chess',
+          icon: Crown,
+          component: ChessGame,
+          defaultSize: { width: 800, height: 700 },
+          defaultPosition: { x: 160, y: 60 },
+          description: 'Strategic chess game',
+          position: { x: 400, y: 300 },
+          size: { width: 64, height: 64 }
         }
       ]
       
@@ -197,14 +236,31 @@ export const EnhancedDesktop: React.FC = () => {
     }
   }
   
+  const snapToGrid = (x: number, y: number, gridSize: number = 80) => {
+    return {
+      x: Math.round(x / gridSize) * gridSize,
+      y: Math.round(y / gridSize) * gridSize
+    }
+  }
+
   const handleIconDragEnd = (iconId: string, info: PanInfo) => {
     const icon = icons.find(i => i.id === iconId)
     if (!icon) return
-    
-    const newX = Math.max(0, icon.position.x + info.offset.x)
-    const newY = Math.max(0, icon.position.y + info.offset.y)
-    
-    updateIconPosition(iconId, { x: newX, y: newY })
+
+    const rawX = Math.max(0, icon.position.x + info.offset.x)
+    const rawY = Math.max(0, icon.position.y + info.offset.y)
+
+    // Snap to grid for organized layout
+    const snapped = snapToGrid(rawX, rawY)
+
+    // Ensure icons stay within viewport bounds
+    const maxX = (window.innerWidth || 1200) - 100
+    const maxY = (window.innerHeight || 800) - 100
+
+    const finalX = Math.min(snapped.x, maxX)
+    const finalY = Math.min(snapped.y, maxY)
+
+    updateIconPosition(iconId, { x: finalX, y: finalY })
   }
   
   const handleCreateFolder = () => {
