@@ -130,10 +130,17 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
       }}
       drag={isEditMode}
       dragMomentum={false}
+      dragElastic={0.1}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       whileHover={{ scale: isEditMode ? 1.05 : 1.02 }}
       whileTap={{ scale: 0.95 }}
+      whileDrag={{
+        scale: 1.1,
+        rotate: 2,
+        zIndex: 999,
+        boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
+      }}
       {...iconInteraction.interactionProps}
     >
       {/* Selection indicator */}
