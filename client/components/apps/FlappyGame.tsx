@@ -62,11 +62,11 @@ export const FlappyGame: React.FC = () => {
   const getDifficultySettings = useCallback(() => {
     switch (gameState.difficulty) {
       case 'easy':
-        return { gapSize: 180, pipeFrequency: 180 }
+        return { gapSize: 220, pipeFrequency: 200 } // Much larger gap and more time between pipes
       case 'medium':
-        return { gapSize: 150, pipeFrequency: 160 }
+        return { gapSize: 180, pipeFrequency: 180 } // Larger gap
       case 'hard':
-        return { gapSize: 120, pipeFrequency: 140 }
+        return { gapSize: 150, pipeFrequency: 160 } // Still challenging but more reasonable
     }
   }, [gameState.difficulty])
 
