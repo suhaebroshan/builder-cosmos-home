@@ -40,7 +40,8 @@ import {
   Brain,
   FileText,
   Calculator as CalculatorIcon,
-  Chrome
+  Chrome,
+  Grid3x3
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { DesktopIcon } from './DesktopIcon'
