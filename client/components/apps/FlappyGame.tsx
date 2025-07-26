@@ -55,9 +55,9 @@ export const FlappyGame: React.FC = () => {
   
   const birdSize = 30
   const pipeWidth = 80
-  const gravity = 0.6
-  const jumpPower = -12
-  const pipeSpeed = 3
+  const gravity = 0.4 // Reduced gravity
+  const jumpPower = -10 // Reduced jump power for more control
+  const pipeSpeed = 2 // Slower pipes
   
   const getDifficultySettings = useCallback(() => {
     switch (gameState.difficulty) {
