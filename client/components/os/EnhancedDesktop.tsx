@@ -340,6 +340,11 @@ export const EnhancedDesktop: React.FC = () => {
         setEmotion('focused', 0.6)
         addMessage("Calculator ready! Basic or scientific - I got you covered for all the math.", 'sam', 'focused')
       }, 500)
+    } else if (icon.appId === '2048-game') {
+      setTimeout(() => {
+        setEmotion('excited', 0.8)
+        addMessage("2048 time! This puzzle is addictive as hell, bro. Can you reach the magical 2048 tile?", 'sam', 'excited')
+      }, 500)
     }
   }
   
