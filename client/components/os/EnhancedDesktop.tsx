@@ -20,6 +20,7 @@ import { MemoryAlarms } from '@/components/apps/MemoryAlarms'
 import { Notepad } from '@/components/apps/Notepad'
 import { Calculator } from '@/components/apps/Calculator'
 import { WebBrowser } from '@/components/apps/WebBrowser'
+import { Game2048 } from '@/components/apps/Game2048'
 import {
   MessageCircle,
   Phone,
