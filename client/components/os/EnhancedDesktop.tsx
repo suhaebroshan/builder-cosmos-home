@@ -345,18 +345,22 @@ export const EnhancedDesktop: React.FC = () => {
     const icon = icons.find(i => i.id === iconId)
     if (!icon) return
 
+    // Calculate new position with bounds checking
     const rawX = Math.max(0, icon.position.x + info.offset.x)
     const rawY = Math.max(0, icon.position.y + info.offset.y)
 
-    // Snap to grid for organized layout
-    const snapped = snapToGrid(rawX, rawY)
+    // Snap to adaptive grid based on icon size
+    const snapped = snapToGrid(rawX, rawY, icon.size)
 
-    // Ensure icons stay within viewport bounds
-    const maxX = (window.innerWidth || 1200) - 100
-    const maxY = (window.innerHeight || 800) - 100
+    // Ensure icons stay within viewport bounds with margin
+    const viewportWidth = window.innerWidth || 1200
+    const viewportHeight = (window.innerHeight || 800) - 120 // Account for taskbar
 
-    const finalX = Math.min(snapped.x, maxX)
-    const finalY = Math.min(snapped.y, maxY)
+    const maxX = viewportWidth - icon.size.width - 20
+    const maxY = viewportHeight - icon.size.height - 40 // Extra space for icon label
+
+    const finalX = Math.min(Math.max(20, snapped.x), maxX)
+    const finalY = Math.min(Math.max(20, snapped.y), maxY)
 
     updateIconPosition(iconId, { x: finalX, y: finalY })
   }
