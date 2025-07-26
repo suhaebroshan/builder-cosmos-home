@@ -137,7 +137,16 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
     }
   }, [window.isMaximized])
 
-  if (window.isMinimized) return null
+  if (window.isMinimized) {
+    return (
+      <motion.div
+        className="fixed bottom-16 left-1/2 transform -translate-x-1/2 pointer-events-none"
+        initial={{ scale: 1, opacity: 1 }}
+        animate={{ scale: 0.1, opacity: 0 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+      />
+    )
+  }
 
   // Get viewport dimensions for window constraints
   const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1200
