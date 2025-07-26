@@ -226,13 +226,6 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
           document.addEventListener('mousemove', handleMouseMove)
           document.addEventListener('mouseup', handleMouseUp)
         }}
-        onMouseLeave={() => {
-          // Cancel drag if mouse leaves header
-          if (dragTimeout) {
-            clearTimeout(dragTimeout)
-            setDragTimeout(null)
-          }
-        }}
       >
         <div className="flex items-center gap-2">
           <div className="text-white/90 font-medium text-sm">{window.title}</div>
