@@ -318,32 +318,31 @@ export const NyxTaskbar: React.FC = () => {
           {/* Connectivity Icons */}
           <div className="flex items-center gap-1 px-2">
             {systemStats.wifi ? (
-              <Wifi className="w-4 h-4 text-green-400" />
+              <Wifi className="w-4 h-4 text-green-400" title="Network: Connected" />
             ) : (
-              <WifiOff className="w-4 h-4 text-red-400" />
+              <WifiOff className="w-4 h-4 text-red-400" title="Network: Offline" />
             )}
-            
+
             {systemStats.bluetooth ? (
-              <Bluetooth className="w-4 h-4 text-blue-400" />
+              <Bluetooth className="w-4 h-4 text-blue-400" title="Bluetooth: Available" />
             ) : (
-              <BluetoothOff className="w-4 h-4 text-gray-500" />
+              <BluetoothOff className="w-4 h-4 text-gray-500" title="Bluetooth: Unavailable" />
             )}
             
             {systemStats.volume > 0 ? (
-              <Volume2 className="w-4 h-4 text-white/70" />
+              <Volume2 className="w-4 h-4 text-white/70" title={`Volume: ${Math.round(systemStats.volume * 100)}%`} />
             ) : (
-              <VolumeX className="w-4 h-4 text-red-400" />
+              <VolumeX className="w-4 h-4 text-red-400" title="Volume: Muted" />
             )}
           </div>
 
           {/* Battery */}
-          <div className="flex items-center gap-1 px-2">
-            {systemStats.battery > 20 ? (
-              <Battery className="w-4 h-4 text-green-400" />
-            ) : (
-              <BatteryLow className="w-4 h-4 text-red-400" />
-            )}
-            <span className="text-xs text-white/70">{systemStats.battery}%</span>
+          <div className="flex items-center gap-1 px-2" title={`Battery: ${Math.round(systemStats.batteryLevel * 100)}%${systemStats.batteryCharging ? ' (Charging)' : ''}`}>
+            {React.createElement(getBatteryIcon(), { className: cn('w-4 h-4', getBatteryColor()) })}
+            <span className="text-xs text-white/70">
+              {Math.round(systemStats.batteryLevel * 100)}%
+              {systemStats.batteryCharging && ' ⚡'}
+            </span>
           </div>
 
           {/* Notifications */}
@@ -365,14 +364,18 @@ export const NyxTaskbar: React.FC = () => {
           </motion.button>
 
           {/* Date & Time */}
-          <div className="text-right px-3 border-l border-white/10 ml-2">
+          <button
+            className="text-right px-3 border-l border-white/10 ml-2 hover:bg-white/10 rounded transition-colors"
+            onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+            title="Click for system information"
+          >
             <div className="text-xs text-white/90 font-medium leading-tight">
               {formatTime(currentTime)}
             </div>
             <div className="text-xs text-white/60 leading-tight">
               {formatDate(currentTime)}
             </div>
-          </div>
+          </button>
         </div>
       </motion.div>
 
