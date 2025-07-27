@@ -540,15 +540,60 @@ export const WebBrowser: React.FC = () => {
     if (tab.url === 'nyx://newtab') {
       return renderNewTabPage()
     }
-    
+
+    // Handle sites that don't allow iframe embedding
+    const isRestrictedSite = tab.url.includes('google.com') ||
+                            tab.url.includes('youtube.com') ||
+                            tab.url.includes('facebook.com') ||
+                            tab.url.includes('twitter.com') ||
+                            tab.url.includes('instagram.com') ||
+                            tab.url.includes('linkedin.com')
+
+    if (isRestrictedSite) {
+      return (
+        <div className="h-full flex items-center justify-center liquid-glass">
+          <div className="text-center max-w-md mx-4">
+            <div className="text-6xl mb-4">🔒</div>
+            <h3 className="text-white text-xl font-semibold mb-2">Site Restrictions</h3>
+            <p className="text-white/70 mb-4">
+              This site doesn't allow embedding in frames for security reasons.
+            </p>
+            <div className="space-y-3">
+              <button
+                onClick={() => {
+                  window.open(tab.url, '_blank')
+                  setEmotion('helpful', 0.8)
+                  addMessage('Opened in a new window! Some sites need their own space to run properly!', 'sam', 'helpful')
+                }}
+                className="w-full px-6 py-3 apple-button text-white hover:text-white transition-colors"
+              >
+                Open in New Window
+              </button>
+              <div className="p-4 apple-control-panel">
+                <h4 className="text-white text-sm font-medium mb-2">Why this happens:</h4>
+                <p className="text-white/60 text-xs">
+                  Sites like Google, YouTube, and social media platforms use X-Frame-Options headers
+                  to prevent embedding for security and user protection.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
     return (
       <div className="h-full">
         <iframe
           ref={iframeRef}
           src={tab.url}
           className="w-full h-full border-none"
-          sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+          sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
           title={tab.title}
+          onError={() => {
+            setEmotion('confused', 0.7)
+            addMessage('Had trouble loading that page. Some sites are picky about how they\'re accessed!', 'sam', 'confused')
+          }}
         />
       </div>
     )
