@@ -156,9 +156,7 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
     <motion.div
       ref={windowRef}
       className={cn(
-        "absolute rounded-2xl overflow-hidden shadow-2xl cursor-move",
-        "backdrop-blur-2xl bg-black/10 border border-white/20",
-        "before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/5 before:to-transparent before:pointer-events-none",
+        "absolute rounded-2xl overflow-hidden cursor-move liquid-glass-window liquid-reflection",
         isFocused && "ring-2 ring-purple-400/50 shadow-xl shadow-purple-500/30"
       )}
       style={{
