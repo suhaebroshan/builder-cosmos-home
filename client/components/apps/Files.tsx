@@ -19,7 +19,7 @@ import {
   Plus,
   MoreVertical,
   Copy,
-  Cut,
+  Scissors,
   Clipboard,
   FolderPlus,
   Edit,
