@@ -741,7 +741,7 @@ export const Files: React.FC<FilesProps> = ({ windowId }) => {
                   }}
                   className="w-full px-4 py-2 text-left text-white text-sm hover:bg-white/10 transition-colors flex items-center gap-2"
                 >
-                  <Cut className="w-4 h-4" />
+                  <Scissors className="w-4 h-4" />
                   Cut
                 </button>
                 <button
