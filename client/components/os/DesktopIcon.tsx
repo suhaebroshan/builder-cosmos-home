@@ -243,7 +243,7 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
       {/* Customization Panel */}
       {isCustomizing && isEditMode && (
         <motion.div
-          className="absolute top-full left-1/2 transform -translate-x-1/2 mt-4 bg-black/80 backdrop-blur-xl border border-white/30 rounded-2xl p-4 min-w-64 z-50"
+          className="absolute top-full left-1/2 transform -translate-x-1/2 mt-4 apple-control-panel p-4 min-w-64 z-50"
           initial={{ opacity: 0, scale: 0.8, y: -10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: -10 }}
