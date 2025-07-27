@@ -184,7 +184,7 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
       {/* Window Header */}
       <div
         className={cn(
-          "flex items-center justify-between p-3 bg-black/20 backdrop-blur-2xl border-b border-white/10 select-none hover:bg-black/30 transition-colors cursor-grab",
+          "flex items-center justify-between p-3 liquid-glass-dark border-b border-white/10 select-none hover:bg-black/20 transition-all duration-300 cursor-grab liquid-reflection",
           isDragging && "cursor-grabbing"
         )}
         onMouseDown={(e) => {
