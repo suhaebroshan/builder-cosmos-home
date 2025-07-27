@@ -492,19 +492,19 @@ export const WebBrowser: React.FC = () => {
         {/* Recent Sites */}
         {history.length > 0 && (
           <div className="mb-8">
-            <h2 className="text-white text-lg font-semibold mb-4">Recently Visited</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <h2 className="text-white/90 text-lg font-semibold mb-4">Recently Visited</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {history.slice(0, 6).map((entry) => (
                 <motion.button
                   key={entry.id}
                   onClick={() => navigateToUrl(entry.url)}
-                  className="flex items-center gap-3 p-3 liquid-glass rounded-lg hover:bg-white/10 transition-all text-left"
+                  className="flex items-center gap-3 p-3 apple-button text-left"
                   whileHover={{ x: 4 }}
                 >
                   <div className="text-lg">{entry.favicon}</div>
                   <div className="flex-1 min-w-0">
                     <div className="text-white text-sm truncate">{entry.title}</div>
-                    <div className="text-white/40 text-xs truncate">{entry.url}</div>
+                    <div className="text-white/50 text-xs truncate">{entry.url}</div>
                   </div>
                   <div className="text-white/40 text-xs">
                     {entry.timestamp.toLocaleDateString()}
@@ -514,12 +514,12 @@ export const WebBrowser: React.FC = () => {
             </div>
           </div>
         )}
-        
+
         {/* Categories */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {['Development', 'Entertainment', 'Social', 'AI'].map((category) => (
-            <div key={category} className="liquid-glass rounded-xl p-4">
-              <h3 className="text-white font-semibold mb-3">{category}</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {['Demo', 'Development', 'Social', 'Reference'].map((category) => (
+            <div key={category} className="apple-control-panel p-4">
+              <h3 className="text-white/90 font-semibold mb-3">{category}</h3>
               <div className="space-y-2">
                 {bookmarks
                   .filter(b => b.folder === category)
@@ -528,7 +528,7 @@ export const WebBrowser: React.FC = () => {
                     <button
                       key={bookmark.id}
                       onClick={() => navigateToUrl(bookmark.url)}
-                      className="flex items-center gap-2 w-full text-left hover:bg-white/10 p-2 rounded transition-colors"
+                      className="flex items-center gap-2 w-full text-left hover:bg-white/10 p-2 rounded-lg transition-all duration-200"
                     >
                       <span className="text-sm">{bookmark.favicon}</span>
                       <span className="text-white/80 text-sm truncate">{bookmark.title}</span>
