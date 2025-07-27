@@ -33,31 +33,16 @@ const defaultUsers: User[] = [
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const [selectedUser, setSelectedUser] = useState(defaultUsers[0])
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
   const [isLoggingIn, setIsLoggingIn] = useState(false)
-  const [error, setError] = useState('')
   const [showUserSwitcher, setShowUserSwitcher] = useState(false)
 
   const handleLogin = async () => {
-    if (password === selectedUser.password) {
-      setIsLoggingIn(true)
-      setError('')
-      
-      // Simulate login process
-      setTimeout(() => {
-        onLogin(selectedUser)
-      }, 1500)
-    } else {
-      setError('Incorrect password')
-      setPassword('')
-    }
-  }
+    setIsLoggingIn(true)
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleLogin()
-    }
+    // Simulate login process
+    setTimeout(() => {
+      onLogin(selectedUser)
+    }, 1500)
   }
 
   return (
