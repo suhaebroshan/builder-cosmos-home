@@ -236,7 +236,7 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
       </div>
       
       {/* App Name */}
-      <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 text-white/90 text-xs font-medium text-center px-2 py-1 rounded-lg bg-black/40 backdrop-blur-xl border border-white/20 opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none">
+      <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 text-white/90 text-xs font-medium text-center px-3 py-1.5 apple-control-panel opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none">
         {icon.name}
       </div>
       
