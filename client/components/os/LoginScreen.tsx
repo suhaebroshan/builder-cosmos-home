@@ -85,8 +85,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                     key={user.id}
                     onClick={() => {
                       setSelectedUser(user)
-                      setPassword('')
-                      setError('')
                       setShowUserSwitcher(false)
                     }}
                     className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors text-left ${
