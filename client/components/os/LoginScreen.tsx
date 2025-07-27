@@ -113,7 +113,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
         {/* Current User Button */}
         <motion.button
           onClick={() => setShowUserSwitcher(!showUserSwitcher)}
-          className="flex items-center gap-3 bg-black/60 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-3 hover:bg-black/70 transition-colors group"
+          className="flex items-center gap-3 liquid-glass-dark rounded-2xl p-3 hover:bg-black/20 transition-all duration-300 group liquid-reflection"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
