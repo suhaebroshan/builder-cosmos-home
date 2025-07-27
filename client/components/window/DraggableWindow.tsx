@@ -277,7 +277,7 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
       </div>
       
       {/* Window Content */}
-      <div className="flex-1 overflow-hidden bg-black/5 backdrop-blur-sm">
+      <div className="flex-1 overflow-hidden liquid-glass">
         {children}
       </div>
       
