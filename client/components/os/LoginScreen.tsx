@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { User, Lock, Eye, EyeOff, Users } from 'lucide-react'
+import { Users } from 'lucide-react'
 
 interface User {
   id: string
