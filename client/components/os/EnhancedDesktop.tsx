@@ -562,7 +562,7 @@ export const EnhancedDesktop: React.FC = () => {
       <AnimatePresence>
         {contextMenu && (
           <motion.div
-            className="fixed z-50 bg-black/80 backdrop-blur-xl border border-white/30 rounded-xl py-2 min-w-48"
+            className="fixed z-50 apple-control-panel py-2 min-w-48"
             style={{ left: contextMenu.x, top: contextMenu.y }}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
