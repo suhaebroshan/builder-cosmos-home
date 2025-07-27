@@ -182,53 +182,16 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
               </motion.div>
             </div>
 
-            {/* Password Input */}
+            {/* Sign In Button */}
             <div className="space-y-4">
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-400" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="Enter password"
-                  maxLength={8}
-                  className="w-full bg-black/30 border border-purple-500/30 rounded-xl pl-12 pr-12 py-3 text-white placeholder-purple-300/50 focus:border-purple-400/50 focus:outline-none transition-all"
-                />
-                <button
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-purple-400 hover:text-purple-300 transition-colors"
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
-
-              {error && (
-                <motion.div
-                  className="text-red-400 text-sm text-center"
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                >
-                  {error}
-                </motion.div>
-              )}
-
               <motion.button
                 onClick={handleLogin}
-                disabled={!password}
-                className="w-full bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 rounded-xl transition-all"
-                whileHover={{ scale: password ? 1.02 : 1 }}
-                whileTap={{ scale: password ? 0.98 : 1 }}
+                className="w-full bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white font-medium py-4 rounded-xl transition-all"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                Sign In
+                Sign In as {selectedUser.displayName}
               </motion.button>
-            </div>
-
-            {/* Help Text */}
-            <div className="mt-6 text-center">
-              <p className="text-purple-300/60 text-xs">
-                Demo: suhaeb/Suhaeb_1 or sloka/slayka@0
-              </p>
             </div>
           </>
         ) : (
