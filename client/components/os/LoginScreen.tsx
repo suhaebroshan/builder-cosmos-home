@@ -72,7 +72,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
         <AnimatePresence>
           {showUserSwitcher && (
             <motion.div
-              className="bg-black/80 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-4 mb-4 min-w-64"
+              className="liquid-glass-dark rounded-2xl p-4 mb-4 min-w-64 liquid-reflection"
               initial={{ opacity: 0, y: 20, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.9 }}
