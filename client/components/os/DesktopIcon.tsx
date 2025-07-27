@@ -156,12 +156,12 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
       {/* App Icon */}
       <div
         className={cn(
-          "relative rounded-2xl backdrop-blur-xl border flex items-center justify-center transition-all duration-200",
-          isOpen 
-            ? 'bg-blue-500/20 border-blue-400/60 shadow-xl shadow-blue-500/30' 
-            : 'bg-white/5 border-white/20 hover:bg-white/10 hover:border-white/40 hover:shadow-lg hover:shadow-white/10',
-          isEditMode && 'ring-2 ring-white/30',
-          isDragging && 'shadow-2xl shadow-black/50'
+          "relative flex items-center justify-center transition-all duration-200",
+          isOpen
+            ? 'apple-button bg-blue-500/20 border-blue-400/40 shadow-xl shadow-blue-500/20'
+            : 'apple-button',
+          isEditMode && 'ring-1 ring-white/20',
+          isDragging && 'shadow-2xl shadow-black/30'
         )}
         style={{
           width: customSize,
@@ -316,7 +316,7 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
       {/* Click/Long Press Instructions */}
       {!isEditMode && (
         <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-white/40 text-xs text-center opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none whitespace-nowrap">
-          Long press or 4× click to customize
+          Long press or 4���� click to customize
         </div>
       )}
     </motion.div>
