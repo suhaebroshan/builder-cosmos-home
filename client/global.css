@@ -117,50 +117,82 @@ input, textarea, select {
 }
 
 @layer utilities {
-  /* Apple Liquid Glass Effects */
+  /* Apple Liquid Glass Effects - Authentic Apple Design */
   .liquid-glass {
-    backdrop-filter: blur(40px) saturate(180%) brightness(110%);
-    -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(110%);
-    background: linear-gradient(135deg,
-      rgba(255, 255, 255, 0.12) 0%,
-      rgba(255, 255, 255, 0.08) 50%,
-      rgba(255, 255, 255, 0.04) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(20px) saturate(180%) brightness(120%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(120%);
+    background: rgba(255, 255, 255, 0.08);
+    border: 0.5px solid rgba(255, 255, 255, 0.15);
     box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.24),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15),
-      0 1px 3px rgba(0, 0, 0, 0.1);
+      0 1px 3px rgba(0, 0, 0, 0.12),
+      0 1px 2px rgba(0, 0, 0, 0.24),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
   .liquid-glass-dark {
-    backdrop-filter: blur(60px) saturate(200%) brightness(120%);
-    -webkit-backdrop-filter: blur(60px) saturate(200%) brightness(120%);
-    background: linear-gradient(135deg,
-      rgba(139, 92, 246, 0.15) 0%,
-      rgba(168, 85, 247, 0.10) 30%,
-      rgba(139, 92, 246, 0.08) 70%,
-      rgba(79, 70, 229, 0.12) 100%);
-    border: 1px solid rgba(139, 92, 246, 0.25);
+    backdrop-filter: blur(30px) saturate(180%) brightness(115%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%) brightness(115%);
+    background: rgba(255, 255, 255, 0.05);
+    border: 0.5px solid rgba(255, 255, 255, 0.12);
     box-shadow:
-      0 20px 60px rgba(139, 92, 246, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2),
-      0 2px 8px rgba(0, 0, 0, 0.3);
+      0 4px 16px rgba(0, 0, 0, 0.15),
+      0 2px 8px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 
   .liquid-glass-window {
-    backdrop-filter: blur(80px) saturate(180%) brightness(105%);
-    -webkit-backdrop-filter: blur(80px) saturate(180%) brightness(105%);
-    background: linear-gradient(145deg,
-      rgba(0, 0, 0, 0.6) 0%,
-      rgba(139, 92, 246, 0.12) 25%,
-      rgba(0, 0, 0, 0.4) 50%,
-      rgba(168, 85, 247, 0.08) 75%,
-      rgba(0, 0, 0, 0.5) 100%);
-    border: 1px solid rgba(139, 92, 246, 0.3);
+    backdrop-filter: blur(40px) saturate(180%) brightness(110%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(110%);
+    background: rgba(255, 255, 255, 0.03);
+    border: 0.5px solid rgba(255, 255, 255, 0.10);
     box-shadow:
-      0 25px 80px rgba(0, 0, 0, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15),
-      0 4px 16px rgba(139, 92, 246, 0.2);
+      0 8px 32px rgba(0, 0, 0, 0.20),
+      0 4px 16px rgba(0, 0, 0, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .apple-control-panel {
+    backdrop-filter: blur(25px) saturate(180%) brightness(110%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%) brightness(110%);
+    background: rgba(255, 255, 255, 0.06);
+    border: 0.5px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    box-shadow:
+      0 6px 24px rgba(0, 0, 0, 0.15),
+      0 2px 8px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .apple-button {
+    backdrop-filter: blur(20px) saturate(180%) brightness(120%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(120%);
+    background: rgba(255, 255, 255, 0.10);
+    border: 0.5px solid rgba(255, 255, 255, 0.18);
+    border-radius: 14px;
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.08),
+      0 1px 4px rgba(0, 0, 0, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .apple-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.12),
+      0 2px 8px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .apple-button:active {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow:
+      0 1px 4px rgba(0, 0, 0, 0.08),
+      inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    transform: translateY(0px);
   }
 
   .liquid-reflection {
