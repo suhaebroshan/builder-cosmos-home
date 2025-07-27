@@ -84,27 +84,33 @@ interface Download {
 }
 
 const predefinedSites = [
+  // Working demo sites that allow iframe embedding
+  { name: 'Example.com', url: 'https://example.com', favicon: '🌐', category: 'Demo' },
+  { name: 'HTTPBin', url: 'https://httpbin.org', favicon: '🔧', category: 'Demo' },
+  { name: 'JSONPlaceholder', url: 'https://jsonplaceholder.typicode.com', favicon: '📦', category: 'Demo' },
+  { name: 'Lorem Picsum', url: 'https://picsum.photos', favicon: '🖼️', category: 'Demo' },
+
+  // Development resources (some may work in iframe)
   { name: 'GitHub', url: 'https://github.com', favicon: '🐙', category: 'Development' },
   { name: 'Stack Overflow', url: 'https://stackoverflow.com', favicon: '📚', category: 'Development' },
   { name: 'MDN Web Docs', url: 'https://developer.mozilla.org', favicon: '📖', category: 'Development' },
   { name: 'React', url: 'https://reactjs.org', favicon: '⚛️', category: 'Development' },
   { name: 'TypeScript', url: 'https://typescriptlang.org', favicon: '🔷', category: 'Development' },
+
+  // Sites that will show restriction message
   { name: 'YouTube', url: 'https://youtube.com', favicon: '📺', category: 'Entertainment' },
-  { name: 'Spotify', url: 'https://spotify.com', favicon: '🎵', category: 'Entertainment' },
-  { name: 'Netflix', url: 'https://netflix.com', favicon: '🍿', category: 'Entertainment' },
-  { name: 'Twitter', url: 'https://twitter.com', favicon: '🐦', category: 'Social' },
-  { name: 'Discord', url: 'https://discord.com', favicon: '👾', category: 'Social' },
-  { name: 'Reddit', url: 'https://reddit.com', favicon: '🔥', category: 'Social' },
-  { name: 'LinkedIn', url: 'https://linkedin.com', favicon: '💼', category: 'Social' },
   { name: 'Google', url: 'https://google.com', favicon: '🔍', category: 'Search' },
+  { name: 'Twitter', url: 'https://twitter.com', favicon: '🐦', category: 'Social' },
+  { name: 'LinkedIn', url: 'https://linkedin.com', favicon: '💼', category: 'Social' },
+  { name: 'Facebook', url: 'https://facebook.com', favicon: '📘', category: 'Social' },
+
+  // Other useful sites
   { name: 'DuckDuckGo', url: 'https://duckduckgo.com', favicon: '🦆', category: 'Search' },
   { name: 'Wikipedia', url: 'https://wikipedia.org', favicon: '📚', category: 'Reference' },
-  { name: 'ChatGPT', url: 'https://chat.openai.com', favicon: '🤖', category: 'AI' },
-  { name: 'Claude', url: 'https://claude.ai', favicon: '🎭', category: 'AI' },
-  { name: 'Gmail', url: 'https://gmail.com', favicon: '📧', category: 'Productivity' },
-  { name: 'Notion', url: 'https://notion.so', favicon: '📝', category: 'Productivity' },
-  { name: 'Figma', url: 'https://figma.com', favicon: '🎨', category: 'Design' },
-  { name: 'Dribbble', url: 'https://dribbble.com', favicon: '🏀', category: 'Design' },
+  { name: 'Archive.org', url: 'https://archive.org', favicon: '📜', category: 'Reference' },
+  { name: 'Hacker News', url: 'https://news.ycombinator.com', favicon: '🔶', category: 'News' },
+  { name: 'Product Hunt', url: 'https://producthunt.com', favicon: '🚀', category: 'Tech' },
+  { name: 'CodePen', url: 'https://codepen.io', favicon: '✏️', category: 'Development' },
 ]
 
 export const WebBrowser: React.FC = () => {
