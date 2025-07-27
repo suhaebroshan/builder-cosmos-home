@@ -263,7 +263,7 @@ export const NyxTaskbar: React.FC = () => {
 
       {/* Main Taskbar */}
       <motion.div
-        className="h-12 bg-black/60 backdrop-blur-xl border-t border-purple-500/20 flex items-center px-2"
+        className="h-12 liquid-glass-dark border-t border-purple-500/20 flex items-center px-2 liquid-reflection"
         style={{ boxShadow: getEmotionGlow() }}
         initial={{ y: 48 }}
         animate={{ y: 0 }}
