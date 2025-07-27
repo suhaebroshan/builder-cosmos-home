@@ -533,7 +533,7 @@ export const EnhancedDesktop: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
           >
-            <div className="bg-black/60 backdrop-blur-xl border border-white/30 rounded-2xl px-4 py-2 flex items-center gap-3">
+            <div className="apple-control-panel px-4 py-2 flex items-center gap-3">
               <span className="text-white text-sm">Edit Mode</span>
               <div className="w-px h-6 bg-white/20" />
               
