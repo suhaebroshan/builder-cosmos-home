@@ -117,82 +117,184 @@ input, textarea, select {
 }
 
 @layer utilities {
-  /* Apple Liquid Glass Effects - Authentic Apple Design */
+  /* Liquid Filled Glass Effects - Vibrant & Transparent */
   .liquid-glass {
-    backdrop-filter: blur(20px) saturate(180%) brightness(120%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(120%);
-    background: rgba(255, 255, 255, 0.08);
-    border: 0.5px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px) saturate(200%) brightness(130%);
+    -webkit-backdrop-filter: blur(12px) saturate(200%) brightness(130%);
+    background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.25) 0%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(255, 255, 255, 0.05) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow:
-      0 1px 3px rgba(0, 0, 0, 0.12),
-      0 1px 2px rgba(0, 0, 0, 0.24),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.1);
   }
 
   .liquid-glass-dark {
-    backdrop-filter: blur(30px) saturate(180%) brightness(115%);
-    -webkit-backdrop-filter: blur(30px) saturate(180%) brightness(115%);
-    background: rgba(255, 255, 255, 0.05);
-    border: 0.5px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px) saturate(250%) brightness(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(250%) brightness(140%);
+    background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(139, 92, 246, 0.15) 25%,
+      rgba(168, 85, 247, 0.1) 50%,
+      rgba(255, 255, 255, 0.08) 75%,
+      rgba(79, 70, 229, 0.12) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     box-shadow:
-      0 4px 16px rgba(0, 0, 0, 0.15),
-      0 2px 8px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      0 12px 40px rgba(139, 92, 246, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.35),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+      0 4px 16px rgba(0, 0, 0, 0.1);
   }
 
   .liquid-glass-window {
-    backdrop-filter: blur(40px) saturate(180%) brightness(110%);
-    -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(110%);
-    background: rgba(255, 255, 255, 0.03);
-    border: 0.5px solid rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(20px) saturate(220%) brightness(125%);
+    -webkit-backdrop-filter: blur(20px) saturate(220%) brightness(125%);
+    background: linear-gradient(145deg,
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(139, 92, 246, 0.12) 20%,
+      rgba(255, 255, 255, 0.08) 40%,
+      rgba(168, 85, 247, 0.1) 60%,
+      rgba(255, 255, 255, 0.06) 80%,
+      rgba(79, 70, 229, 0.08) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow:
-      0 8px 32px rgba(0, 0, 0, 0.20),
-      0 4px 16px rgba(0, 0, 0, 0.12),
-      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      0 20px 60px rgba(0, 0, 0, 0.15),
+      inset 0 2px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+      0 8px 32px rgba(139, 92, 246, 0.1);
   }
 
   .apple-control-panel {
-    backdrop-filter: blur(25px) saturate(180%) brightness(110%);
-    -webkit-backdrop-filter: blur(25px) saturate(180%) brightness(110%);
-    background: rgba(255, 255, 255, 0.06);
-    border: 0.5px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(14px) saturate(200%) brightness(135%);
+    -webkit-backdrop-filter: blur(14px) saturate(200%) brightness(135%);
+    background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(139, 92, 246, 0.08) 30%,
+      rgba(255, 255, 255, 0.12) 70%,
+      rgba(168, 85, 247, 0.06) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.28);
     border-radius: 20px;
     box-shadow:
-      0 6px 24px rgba(0, 0, 0, 0.15),
-      0 2px 8px rgba(0, 0, 0, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      0 10px 30px rgba(0, 0, 0, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.1);
   }
 
   .apple-button {
-    backdrop-filter: blur(20px) saturate(180%) brightness(120%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(120%);
-    background: rgba(255, 255, 255, 0.10);
-    border: 0.5px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(10px) saturate(180%) brightness(130%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%) brightness(130%);
+    background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.25) 0%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(255, 255, 255, 0.1) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 14px;
     box-shadow:
-      0 2px 8px rgba(0, 0, 0, 0.08),
-      0 1px 4px rgba(0, 0, 0, 0.04),
-      inset 0 1px 0 rgba(255, 255, 255, 0.12);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      0 4px 16px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .apple-button:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.22);
+    background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.35) 0%,
+      rgba(255, 255, 255, 0.25) 50%,
+      rgba(255, 255, 255, 0.15) 100%);
+    border-color: rgba(255, 255, 255, 0.4);
     box-shadow:
-      0 4px 16px rgba(0, 0, 0, 0.12),
-      0 2px 8px rgba(0, 0, 0, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15);
-    transform: translateY(-1px);
+      0 8px 25px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
   }
 
   .apple-button:active {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.15);
+    background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.05) 100%);
+    border-color: rgba(255, 255, 255, 0.25);
     box-shadow:
-      0 1px 4px rgba(0, 0, 0, 0.08),
+      0 2px 8px rgba(0, 0, 0, 0.1),
       inset 0 1px 2px rgba(0, 0, 0, 0.1);
     transform: translateY(0px);
+  }
+
+  /* Liquid Flow Animation */
+  .liquid-reflection {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .liquid-reflection::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.3) 20%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0.3) 80%,
+      transparent 100%);
+    animation: liquidFlow 4s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes liquidFlow {
+    0% {
+      left: -100%;
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    50% {
+      left: 100%;
+      opacity: 1;
+    }
+    60% {
+      opacity: 0;
+    }
+    100% {
+      left: 100%;
+      opacity: 0;
+    }
+  }
+
+  /* Liquid Bubble Effect */
+  .liquid-bubble {
+    position: relative;
+  }
+
+  .liquid-bubble::after {
+    content: '';
+    position: absolute;
+    top: 10%;
+    right: 15%;
+    width: 6px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    animation: bubble 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes bubble {
+    0%, 100% {
+      transform: scale(1) translateY(0px);
+      opacity: 0.6;
+    }
+    50% {
+      transform: scale(1.2) translateY(-2px);
+      opacity: 0.8;
+    }
   }
 
   .liquid-reflection {
