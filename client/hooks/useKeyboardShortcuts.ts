@@ -66,7 +66,7 @@ export const useKeyboardShortcuts = () => {
       return
     }
 
-    if (cmdKey && key === 'Tab') {
+    if (cmdKey && key === 'shift') {
       // Alt+Tab window switching
       preventDefault()
       const visibleWindows = windows.filter(w => !w.isMinimized)
