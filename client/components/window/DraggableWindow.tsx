@@ -26,6 +26,7 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
   } = useWindowStore()
 
   const { currentEmotion, emotionIntensity } = useSamStore()
+  const { settings: themeSettings } = useThemeStore()
   const { deviceInfo, uiConfig, isPhone, isTablet } = useDeviceDetection()
   const windowRef = useRef<HTMLDivElement>(null)
   const [isResizing, setIsResizing] = useState(false)
