@@ -107,7 +107,7 @@ export const StableLiveWallpaper: React.FC = () => {
     rotation: Math.random() * 360,
     rotationSpeed: (Math.random() - 0.5) * 2,
     scale: Math.random() * 0.5 + 0.5,
-    emoji: nightEmojis[Math.floor(Math.random() * nightEmojis.length)],
+    emoji: emojis[Math.floor(Math.random() * emojis.length)],
     opacity: Math.random() * 0.6 + 0.3
   })
 
