@@ -213,22 +213,22 @@ interface MobileNavigationProps {
 export const MobileNavigation: React.FC<MobileNavigationProps> = ({ children }) => {
   const [showAppSwitcher, setShowAppSwitcher] = useState(false)
   const { isPhone } = useDeviceDetection()
-  const y = useMotionValue(0)
-  const opacity = useTransform(y, [-100, 0], [1, 0])
-  
+
   if (!isPhone) {
     return <>{children}</>
   }
-  
+
   const handleSwipeUp = () => {
     setShowAppSwitcher(true)
   }
-  
+
   const handleSwipeDown = () => {
     // Go back or minimize current app
-    window.history.back()
+    if (window.history.length > 1) {
+      window.history.back()
+    }
   }
-  
+
   return (
     <>
       <SwipeGesture
@@ -236,17 +236,14 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({ children }) 
         onSwipeDown={handleSwipeDown}
         threshold={80}
       >
-        <motion.div
-          className="h-full relative overflow-hidden"
-          style={{ y, opacity: opacity }}
-        >
+        <div className="h-full w-full relative">
           {children}
-          
-          {/* Bottom gesture indicator */}
-          <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-white/30 rounded-full pointer-events-none" />
-        </motion.div>
+
+          {/* Bottom gesture indicator - More visible on phone */}
+          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-white/50 rounded-full pointer-events-none z-50" />
+        </div>
       </SwipeGesture>
-      
+
       <AppSwitcher
         isVisible={showAppSwitcher}
         onClose={() => setShowAppSwitcher(false)}
