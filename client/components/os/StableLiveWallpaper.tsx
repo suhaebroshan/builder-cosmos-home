@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
+import { useThemeStore } from '@/store/theme-store'
 
 interface Particle {
   id: number
