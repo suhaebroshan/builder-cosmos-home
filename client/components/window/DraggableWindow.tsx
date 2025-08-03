@@ -289,40 +289,48 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
         </div>
         
         <div className="flex items-center gap-1">
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              togglePin(window.id)
-            }}
-            className="p-1.5 rounded-md hover:bg-white/20 transition-colors"
-          >
-            {window.isPinned ? (
-              <PinOff className="w-3 h-3 text-white/70" />
-            ) : (
-              <Pin className="w-3 h-3 text-white/70" />
-            )}
-          </button>
-          
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              minimizeWindow(window.id)
-            }}
-            className="p-1.5 rounded-md hover:bg-white/20 transition-colors"
-          >
-            <Minimize2 className="w-3 h-3 text-white/70" />
-          </button>
-          
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              maximizeWindow(window.id)
-            }}
-            className="p-1.5 rounded-md hover:bg-white/20 transition-colors"
-          >
-            <Maximize2 className="w-3 h-3 text-white/70" />
-          </button>
-          
+          {/* Mobile floating controls */}
+          {(isPhone || isTablet) && <FloatingWindowControls windowId={window.id} />}
+
+          {uiConfig.hasWindowControls && (
+            <>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  togglePin(window.id)
+                }}
+                className="p-1.5 rounded-md hover:bg-white/20 transition-colors"
+              >
+                {window.isPinned ? (
+                  <PinOff className="w-3 h-3 text-white/70" />
+                ) : (
+                  <Pin className="w-3 h-3 text-white/70" />
+                )}
+              </button>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  minimizeWindow(window.id)
+                }}
+                className="p-1.5 rounded-md hover:bg-white/20 transition-colors"
+              >
+                <Minimize2 className="w-3 h-3 text-white/70" />
+              </button>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  maximizeWindow(window.id)
+                }}
+                className="p-1.5 rounded-md hover:bg-white/20 transition-colors"
+              >
+                <Maximize2 className="w-3 h-3 text-white/70" />
+              </button>
+            </>
+          )}
+
+          {/* Close button always visible */}
           <button
             onClick={(e) => {
               e.stopPropagation()
@@ -340,8 +348,8 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
         {children}
       </div>
       
-      {/* Resize Handles */}
-      {!window.isMaximized && (
+      {/* Resize Handles - Only on desktop/tablet */}
+      {!window.isMaximized && uiConfig.allowWindowResize && (
         <>
           {/* Corner handles */}
           <div
