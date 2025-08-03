@@ -42,7 +42,12 @@ export const MobileHomeScreen: React.FC = () => {
       {/* Status bar for mobile */}
       {(isPhone || isTablet) && (
         <motion.div
-          className="absolute top-0 left-0 right-0 h-8 bg-black/20 backdrop-blur-sm flex items-center justify-between px-4 text-white/60 text-xs z-40"
+          className={cn(
+            "absolute top-0 left-0 right-0 h-8 backdrop-blur-sm flex items-center justify-between px-4 text-xs z-40",
+            settings.mode === 'dark'
+              ? "bg-black/20 text-white/60"
+              : "bg-white/30 text-gray-700/70"
+          )}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
