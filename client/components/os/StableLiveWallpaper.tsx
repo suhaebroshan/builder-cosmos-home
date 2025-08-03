@@ -214,8 +214,12 @@ export const StableLiveWallpaper: React.FC = () => {
 
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none">
-      {/* Stable gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900" />
+      {/* Theme-aware stable gradient background */}
+      <div className={`absolute inset-0 ${
+        settings.mode === 'dark'
+          ? 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900'
+          : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
+      }`} />
       
       {/* Animated canvas */}
       <canvas
