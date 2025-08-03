@@ -95,17 +95,18 @@ export const useDeviceDetection = () => {
         }
       case 'tablet':
         return {
-          hasWindowControls: true,
-          allowWindowResize: true,
-          allowWindowMove: true,
-          useGestures: true,
-          supportsSplitScreen: true,
-          supportsFloatingWindows: true,
-          maxWindows: 6,
-          defaultWindowMode: 'windowed' as const,
+          hasWindowControls: false, // 80% phone-like: no window controls
+          allowWindowResize: false, // 80% phone-like: no resizing
+          allowWindowMove: false,   // 80% phone-like: no moving
+          useGestures: true,        // Phone-like gestures
+          supportsSplitScreen: true, // Phone-like split screen
+          supportsFloatingWindows: true, // Phone-like floating
+          maxWindows: 4,            // Slightly more than phone
+          defaultWindowMode: 'fullscreen' as const, // 80% phone-like: fullscreen default
           taskbarPosition: 'bottom' as const,
-          showAppSwitcher: true,
-          useSwipeGestures: true
+          showAppSwitcher: true,    // Phone-like app switcher
+          useSwipeGestures: true,   // Phone-like swipes
+          showMinimalTaskbar: true  // 20% desktop: minimal taskbar
         }
       case 'desktop':
       default:
