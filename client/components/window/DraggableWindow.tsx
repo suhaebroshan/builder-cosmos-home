@@ -2,6 +2,8 @@ import React, { useRef, useState, useEffect, useCallback } from 'react'
 import { motion, PanInfo } from 'framer-motion'
 import { useWindowStore, Window } from '@/store/window-store'
 import { useSamStore } from '@/store/sam-store'
+import { useDeviceDetection } from '@/hooks/useDeviceDetection'
+import { FloatingWindowControls } from '@/components/mobile/MobileGestureSystem'
 import { X, Minimize2, Maximize2, Pin, PinOff } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
