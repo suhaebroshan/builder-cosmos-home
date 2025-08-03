@@ -313,10 +313,10 @@ export const EnhancedDesktop: React.FC = () => {
       windowSize = { width: deviceInfo.screenWidth, height: deviceInfo.screenHeight }
       windowPosition = { x: 0, y: 0 }
     } else if (isTablet) {
-      windowSize = {
-        width: Math.min(icon.defaultSize.width, deviceInfo.screenWidth * 0.9),
-        height: Math.min(icon.defaultSize.height, deviceInfo.screenHeight * 0.8)
-      }
+      // Tablet: 80% phone-like behavior (fullscreen by default)
+      windowMode = 'fullscreen'
+      windowSize = { width: deviceInfo.screenWidth, height: deviceInfo.screenHeight }
+      windowPosition = { x: 0, y: 0 }
     }
 
     openWindow({
