@@ -126,11 +126,17 @@ export const StableLiveWallpaper: React.FC = () => {
       const deltaTime = currentTime - lastTime
       lastTime = currentTime
 
-      // Clear canvas with night gradient
+      // Clear canvas with theme-aware gradient
       const gradient = ctx.createLinearGradient(0, 0, 0, dimensions.height)
-      gradient.addColorStop(0, 'rgba(10, 10, 35, 1)')
-      gradient.addColorStop(0.5, 'rgba(20, 20, 60, 1)')
-      gradient.addColorStop(1, 'rgba(5, 5, 25, 1)')
+      if (settings.mode === 'dark') {
+        gradient.addColorStop(0, 'rgba(10, 10, 35, 1)')
+        gradient.addColorStop(0.5, 'rgba(20, 20, 60, 1)')
+        gradient.addColorStop(1, 'rgba(5, 5, 25, 1)')
+      } else {
+        gradient.addColorStop(0, 'rgba(245, 250, 255, 1)')
+        gradient.addColorStop(0.5, 'rgba(230, 240, 255, 1)')
+        gradient.addColorStop(1, 'rgba(220, 235, 255, 1)')
+      }
       ctx.fillStyle = gradient
       ctx.fillRect(0, 0, dimensions.width, dimensions.height)
 
