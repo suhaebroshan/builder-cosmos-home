@@ -27,18 +27,18 @@ export const useDeviceDetection = () => {
     const width = window.innerWidth
     const height = window.innerHeight
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
-    
-    // Phone: < 768px width or height in portrait mode
-    if (width < 768 || (height > width && width < 1024)) {
+
+    // Phone: < 768px width in any orientation
+    if (width < 768) {
       return 'phone'
     }
-    
-    // Tablet: 768px - 1024px width and touch device
-    if (width >= 768 && width <= 1024 && isTouchDevice) {
+
+    // Tablet: 768px - 1200px width and touch device OR portrait orientation with touch
+    if ((width >= 768 && width <= 1200 && isTouchDevice) || (height > width && width < 1200 && isTouchDevice)) {
       return 'tablet'
     }
-    
-    // Desktop: > 1024px or no touch
+
+    // Desktop: > 1200px or no touch device
     return 'desktop'
   }
 
