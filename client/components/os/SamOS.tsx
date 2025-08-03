@@ -166,13 +166,14 @@ export const NyxOS: React.FC = () => {
         }}
       />
 
-      {/* User Info & Theme Toggle */}
-      <motion.div
-        className="absolute top-4 left-4 flex items-center gap-3 z-30"
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.2 }}
-      >
+      {/* User Info & Theme Toggle - Hidden on phone when in fullscreen apps */}
+      {!isPhone && (
+        <motion.div
+          className="absolute top-4 left-4 flex items-center gap-3 z-30"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+        >
         <div className="bg-black/40 backdrop-blur-xl border border-purple-500/30 rounded-2xl px-4 py-2 shadow-lg flex items-center gap-3">
           <div className="text-lg">{currentUser?.avatar}</div>
           <div>
@@ -187,7 +188,8 @@ export const NyxOS: React.FC = () => {
         >
           {themeSettings.mode === 'dark' ? '☀️' : '🌙'}
         </button>
-      </motion.div>
+        </motion.div>
+      )}
 
       {/* AI Status Indicator */}
       <motion.div
