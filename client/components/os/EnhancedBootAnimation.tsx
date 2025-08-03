@@ -22,7 +22,7 @@ export const EnhancedBootAnimation: React.FC<EnhancedBootAnimationProps> = ({ on
   const nyxFacts = [
     "Nyx is the Greek goddess of night, making this OS perfect for late-night coding sessions 🌙",
     "This is the smoothest web-based operating system ever created, running at 120fps on modern devices ⚡",
-    "Nyx OS features quantum-inspired animations that respond to your emotions and system state 🌌",
+    "Nyx OS features quantum-inspired animations that respond to your emotions and system state ���",
     "The entire OS is built with React 18, TypeScript, and Framer Motion for ultimate performance 🚀",
     "Nyx OS supports multiple instances of the same app - because sometimes you need 5 text editors open 📝",
     "The night theme isn't just aesthetic - it reduces eye strain and improves focus during extended use 👁️",
@@ -215,7 +215,7 @@ export const EnhancedBootAnimation: React.FC<EnhancedBootAnimationProps> = ({ on
             </div>
             
             {/* System status messages */}
-            <div className="space-y-2 text-xs text-purple-300/60 font-mono text-center">
+            <div className="space-y-2 text-xs text-purple-300/60 font-mono text-center mb-8">
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: progress > 20 ? 1 : 0 }}
@@ -251,6 +251,43 @@ export const EnhancedBootAnimation: React.FC<EnhancedBootAnimationProps> = ({ on
               >
                 ✓ System ready - Awaiting authentication
               </motion.div>
+            </div>
+
+            {/* Nyx OS Facts */}
+            <div className="max-w-2xl mx-auto px-8">
+              <div className="text-center">
+                <div className="text-xs text-purple-400/80 uppercase tracking-widest mb-3 font-semibold">
+                  Did you know?
+                </div>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentFact}
+                    className="text-sm text-purple-200/90 leading-relaxed min-h-[3rem] flex items-center justify-center"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                  >
+                    {nyxFacts[currentFact]}
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Fact indicators */}
+                <div className="flex justify-center gap-2 mt-4">
+                  {nyxFacts.map((_, index) => (
+                    <motion.div
+                      key={index}
+                      className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
+                        index === currentFact ? 'bg-purple-400' : 'bg-purple-700/50'
+                      }`}
+                      animate={{
+                        scale: index === currentFact ? 1.2 : 1,
+                      }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           </motion.div>
         )}
