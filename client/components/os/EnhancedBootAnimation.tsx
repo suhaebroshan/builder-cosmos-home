@@ -17,6 +17,20 @@ interface EnhancedBootAnimationProps {
 export const EnhancedBootAnimation: React.FC<EnhancedBootAnimationProps> = ({ onComplete }) => {
   const [phase, setPhase] = useState<'moon-drop' | 'logo-fade' | 'boot-sequence' | 'login' | 'complete'>('moon-drop')
   const [progress, setProgress] = useState(0)
+  const [currentFact, setCurrentFact] = useState(0)
+
+  const nyxFacts = [
+    "Nyx is the Greek goddess of night, making this OS perfect for late-night coding sessions 🌙",
+    "This is the smoothest web-based operating system ever created, running at 120fps on modern devices ⚡",
+    "Nyx OS features quantum-inspired animations that respond to your emotions and system state 🌌",
+    "The entire OS is built with React 18, TypeScript, and Framer Motion for ultimate performance 🚀",
+    "Nyx OS supports multiple instances of the same app - because sometimes you need 5 text editors open 📝",
+    "The night theme isn't just aesthetic - it reduces eye strain and improves focus during extended use 👁️",
+    "Nyx OS adapts to your device: desktop mode on PC, tablet mode on iPads, mobile mode on phones 📱",
+    "Sam AI is powered by advanced language models and can actually help you be more productive 🤖",
+    "Every animation in Nyx OS is physics-based for the most natural feel possible 🎯",
+    "The live wallpaper features real astronomical data and night sky phenomena ⭐"
+  ]
   
   useEffect(() => {
     const timeline = async () => {
