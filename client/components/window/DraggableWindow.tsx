@@ -189,11 +189,36 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
         }
       }
     } else if (isTablet) {
-      return {
-        x: window.isMaximized ? 0 : safePosition.x,
-        y: window.isMaximized ? 0 : safePosition.y,
-        width: window.isMaximized ? viewportWidth : Math.min(safeSize.width, viewportWidth * 0.9),
-        height: window.isMaximized ? viewportHeight : Math.min(safeSize.height, viewportHeight * 0.8)
+      // Tablet: 80% phone-like (fullscreen default) + 20% desktop features
+      if (window.mode === 'split-left') {
+        return {
+          x: 0,
+          y: 0,
+          width: viewportWidth / 2,
+          height: viewportHeight
+        }
+      } else if (window.mode === 'split-right') {
+        return {
+          x: viewportWidth / 2,
+          y: 0,
+          width: viewportWidth / 2,
+          height: viewportHeight
+        }
+      } else if (window.mode === 'floating') {
+        return {
+          x: safePosition.x,
+          y: safePosition.y,
+          width: Math.min(safeSize.width, viewportWidth * 0.7),
+          height: Math.min(safeSize.height, viewportHeight * 0.6)
+        }
+      } else {
+        // Default to fullscreen like phone (80% phone behavior)
+        return {
+          x: 0,
+          y: 0,
+          width: viewportWidth,
+          height: viewportHeight
+        }
       }
     } else {
       // Desktop mode
