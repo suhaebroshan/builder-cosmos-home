@@ -2,6 +2,8 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 import { useWindowStore } from '@/store/window-store'
+import { useThemeStore } from '@/store/theme-store'
+import { cn } from '@/lib/utils'
 
 export const MobileHomeScreen: React.FC = () => {
   const { isPhone, isTablet } = useDeviceDetection()
