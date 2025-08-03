@@ -42,7 +42,7 @@ export const EnhancedBootAnimation: React.FC<EnhancedBootAnimationProps> = ({ on
       await new Promise(resolve => setTimeout(resolve, 2000))
       setPhase('boot-sequence')
       
-      // Phase 3: Boot sequence with progress bar (2 seconds)
+      // Phase 3: Boot sequence with progress bar (4 seconds to show more facts)
       const progressInterval = setInterval(() => {
         setProgress(prev => {
           if (prev >= 100) {
@@ -50,9 +50,19 @@ export const EnhancedBootAnimation: React.FC<EnhancedBootAnimationProps> = ({ on
             setTimeout(() => setPhase('login'), 500)
             return 100
           }
-          return prev + 2 // Increment by 2% every 40ms (2000ms total)
+          return prev + 1 // Increment by 1% every 40ms (4000ms total)
         })
       }, 40)
+
+      // Cycle through facts every 1.2 seconds during boot
+      const factInterval = setInterval(() => {
+        setCurrentFact(prev => (prev + 1) % nyxFacts.length)
+      }, 1200)
+
+      // Clear fact interval when boot is complete
+      setTimeout(() => {
+        clearInterval(factInterval)
+      }, 4500)
     }
     
     timeline()
