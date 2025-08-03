@@ -8,7 +8,8 @@ import { cn } from '@/lib/utils'
 export const MobileHomeScreen: React.FC = () => {
   const { isPhone, isTablet } = useDeviceDetection()
   const { windows } = useWindowStore()
-  
+  const { settings } = useThemeStore()
+
   // Only show on mobile when no fullscreen apps are running
   if (!isPhone && !isTablet) return null
   if (windows.some(w => w.mode === 'fullscreen' && !w.isMinimized)) return null
