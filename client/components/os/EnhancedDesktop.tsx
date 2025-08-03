@@ -295,21 +295,36 @@ export const EnhancedDesktop: React.FC = () => {
   }
   
   const openApp = (icon: any) => {
-    // Check if app is already open
-    const existingWindow = windows.find(w => w.title === icon.name)
-    if (existingWindow) {
-      if (existingWindow.isMinimized) {
-        minimizeWindow(existingWindow.id)
-      }
-      focusWindow(existingWindow.id)
+    // For mobile: check if we're at the window limit
+    const appWindows = getWindowsByApp(icon.appId)
+    if (isPhone && appWindows.length >= uiConfig.maxWindows) {
+      addMessage("Window limit reached for mobile mode. Close some apps first!", 'sam', 'annoyed')
       return
     }
-    
+
+    // Determine window mode based on device
+    let windowMode = uiConfig.defaultWindowMode
+    let windowSize = icon.defaultSize
+    let windowPosition = icon.defaultPosition
+
+    if (isPhone) {
+      windowMode = 'fullscreen'
+      windowSize = { width: deviceInfo.screenWidth, height: deviceInfo.screenHeight }
+      windowPosition = { x: 0, y: 0 }
+    } else if (isTablet) {
+      windowSize = {
+        width: Math.min(icon.defaultSize.width, deviceInfo.screenWidth * 0.9),
+        height: Math.min(icon.defaultSize.height, deviceInfo.screenHeight * 0.8)
+      }
+    }
+
     openWindow({
+      appId: icon.appId,
       title: icon.name,
       component: icon.component,
-      position: icon.defaultPosition,
-      size: icon.defaultSize,
+      position: windowPosition,
+      size: windowSize,
+      mode: windowMode,
     })
     
     // Sam reacts to app opening
