@@ -220,7 +220,12 @@ export const NyxOS: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-        <div className="flex items-center gap-2 bg-black/40 backdrop-blur-xl border border-purple-500/30 rounded-2xl px-4 py-2 shadow-lg">
+        <div className={cn(
+          "flex items-center gap-2 backdrop-blur-xl rounded-2xl px-4 py-2 shadow-lg",
+          themeSettings.mode === 'dark'
+            ? "bg-black/40 border border-purple-500/30"
+            : "bg-white/40 border border-blue-300/40"
+        )}>
           <div
             className="w-3 h-3 rounded-full transition-all duration-300"
             style={{
@@ -234,8 +239,14 @@ export const NyxOS: React.FC = () => {
               boxShadow: `0 0 10px currentColor`,
             }}
           />
-          <span className="capitalize text-purple-200">{currentEmotion}</span>
-          <div className="text-xs text-purple-300/70 ml-2">AI Active</div>
+          <span className={cn(
+            "capitalize",
+            themeSettings.mode === 'dark' ? "text-purple-200" : "text-blue-700"
+          )}>{currentEmotion}</span>
+          <div className={cn(
+            "text-xs ml-2",
+            themeSettings.mode === 'dark' ? "text-purple-300/70" : "text-blue-600/70"
+          )}>AI Active</div>
         </div>
         </motion.div>
       )}
