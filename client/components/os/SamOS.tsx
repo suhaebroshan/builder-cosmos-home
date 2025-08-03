@@ -125,7 +125,8 @@ export const NyxOS: React.FC = () => {
   }, [openWindow, setEmotion, addMessage])
   
   const getBackgroundGradient = () => {
-    const intensity = emotionIntensity * 0.3
+    const baseIntensity = themeSettings.mode === 'dark' ? 0.3 : 0.15
+    const intensity = emotionIntensity * baseIntensity
     switch (currentEmotion) {
       case 'happy':
         return `radial-gradient(circle at 20% 50%, rgba(34, 197, 94, ${intensity}) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(59, 130, 246, ${intensity * 0.5}) 0%, transparent 50%)`
