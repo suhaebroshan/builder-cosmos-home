@@ -218,15 +218,16 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
       style={{
         zIndex: window.zIndex,
         borderColor: getEmotionBorderColor(),
+        opacity: window.opacity || 1,
       }}
-      initial={{ scale: 0.8, opacity: 0, x: safePosition.x, y: safePosition.y, width: safeSize.width, height: safeSize.height }}
+      initial={{ scale: 0.8, opacity: 0, x: windowConfig.x, y: windowConfig.y, width: windowConfig.width, height: windowConfig.height }}
       animate={{
         scale: 1,
-        opacity: 1,
-        x: window.isMaximized ? 0 : safePosition.x,
-        y: window.isMaximized ? 0 : safePosition.y,
-        width: window.isMaximized ? viewportWidth : safeSize.width,
-        height: window.isMaximized ? viewportHeight : safeSize.height,
+        opacity: window.opacity || 1,
+        x: windowConfig.x,
+        y: windowConfig.y,
+        width: windowConfig.width,
+        height: windowConfig.height,
       }}
       exit={{ scale: 0.8, opacity: 0 }}
       transition={{
