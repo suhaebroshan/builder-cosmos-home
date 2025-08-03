@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useSamStore } from '@/store/sam-store'
+import { aiService } from '@/services/ai-service'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
