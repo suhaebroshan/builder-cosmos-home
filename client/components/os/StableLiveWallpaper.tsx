@@ -273,12 +273,21 @@ export const StableLiveWallpaper: React.FC = () => {
         />
       </div>
 
-      {/* Constellation lines */}
-      <svg className="absolute inset-0 w-full h-full opacity-30">
+      {/* Theme-aware constellation lines */}
+      <svg className={`absolute inset-0 w-full h-full ${settings.mode === 'dark' ? 'opacity-30' : 'opacity-40'}`}>
         <defs>
           <linearGradient id="constellation" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="rgba(138, 43, 226, 0.5)" />
-            <stop offset="100%" stopColor="rgba(75, 0, 130, 0.5)" />
+            {settings.mode === 'dark' ? (
+              <>
+                <stop offset="0%" stopColor="rgba(138, 43, 226, 0.5)" />
+                <stop offset="100%" stopColor="rgba(75, 0, 130, 0.5)" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="rgba(59, 130, 246, 0.6)" />
+                <stop offset="100%" stopColor="rgba(168, 85, 247, 0.6)" />
+              </>
+            )}
           </linearGradient>
         </defs>
         {Array.from({ length: 15 }, (_, i) => {
