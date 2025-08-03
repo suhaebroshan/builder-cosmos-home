@@ -237,8 +237,10 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
     <motion.div
       ref={windowRef}
       className={cn(
-        "absolute rounded-2xl overflow-hidden cursor-move liquid-glass-window liquid-reflection liquid-bubble",
-        isFocused && "ring-2 ring-purple-400/50 shadow-xl shadow-purple-500/30"
+        "absolute overflow-hidden",
+        isPhone ? "rounded-none bg-black/40 backdrop-blur-sm" : isTablet ? "rounded-xl liquid-glass-window" : "rounded-2xl liquid-glass-window liquid-reflection liquid-bubble",
+        !isPhone && "cursor-move",
+        isFocused && !isPhone && "ring-2 ring-purple-400/50 shadow-xl shadow-purple-500/30"
       )}
       style={{
         zIndex: window.zIndex,
