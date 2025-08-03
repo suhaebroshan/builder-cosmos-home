@@ -223,8 +223,8 @@ export const NyxOS: React.FC = () => {
       {/* Window Manager */}
       <WindowManager />
 
-      {/* Nyx Taskbar */}
-      <NyxTaskbar />
+      {/* Nyx Taskbar - Hidden on phone */}
+      {!isPhone && <NyxTaskbar />}
     </motion.div>
   )
 }
