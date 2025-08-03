@@ -493,9 +493,13 @@ export const EnhancedDesktop: React.FC = () => {
   }, [isEditMode])
 
   return (
-    <div
-      {...desktopFocusable.focusableProps}
-      className="absolute inset-0 p-8 select-none focus:outline-none"
+    <MobileNavigation>
+      <div
+        {...desktopFocusable.focusableProps}
+        className={cn(
+          "absolute inset-0 select-none focus:outline-none",
+          isPhone ? "p-4" : isTablet ? "p-6" : "p-8"
+        )}
       onClick={handleDesktopClick}
       onContextMenu={handleDesktopRightClick}
       onMouseDown={(e) => {
@@ -630,6 +634,7 @@ export const EnhancedDesktop: React.FC = () => {
       </AnimatePresence>
       
 
-    </div>
+      </div>
+    </MobileNavigation>
   )
 }
