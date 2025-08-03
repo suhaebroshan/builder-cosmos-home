@@ -13,6 +13,7 @@ import { useThemeStore, updateCSSVariables } from '@/store/theme-store'
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 import { aiService } from '@/services/ai-service'
+import { cn } from '@/lib/utils'
 
 interface User {
   id: string
