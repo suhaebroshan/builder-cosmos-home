@@ -25,11 +25,14 @@ export const NyxOS: React.FC = () => {
   const { currentEmotion, emotionIntensity, addMessage, setEmotion } = useSamStore()
   const { openWindow } = useWindowStore()
   const { settings: themeSettings, setThemeMode } = useThemeStore()
+  const { deviceInfo, uiConfig, isPhone, isTablet } = useDeviceDetection()
   const [isBooted, setIsBooted] = useState(false)
   const [currentUser, setCurrentUser] = useState<User | null>(null)
 
-  // Enable global keyboard shortcuts
-  useKeyboardShortcuts()
+  // Enable global keyboard shortcuts (disabled on phone)
+  if (!isPhone) {
+    useKeyboardShortcuts()
+  }
 
   // Update CSS variables when theme changes
   useEffect(() => {
