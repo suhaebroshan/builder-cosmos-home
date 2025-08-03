@@ -240,9 +240,11 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
       ref={windowRef}
       className={cn(
         "absolute overflow-hidden",
-        isPhone ? "rounded-none bg-black/40 backdrop-blur-sm" : isTablet ? "rounded-xl liquid-glass-window" : "rounded-2xl liquid-glass-window liquid-reflection liquid-bubble",
+        isPhone ? `rounded-none ${themeSettings.mode === 'dark' ? 'bg-black/40' : 'bg-white/40'} backdrop-blur-sm` :
+        isTablet ? "rounded-xl liquid-glass-window" :
+        "rounded-2xl liquid-glass-window liquid-reflection liquid-bubble",
         !isPhone && "cursor-move",
-        isFocused && !isPhone && "ring-2 ring-purple-400/50 shadow-xl shadow-purple-500/30"
+        isFocused && !isPhone && `ring-2 ${themeSettings.mode === 'dark' ? 'ring-purple-400/50 shadow-xl shadow-purple-500/30' : 'ring-blue-400/50 shadow-xl shadow-blue-500/30'}`
       )}
       style={{
         zIndex: window.zIndex,
