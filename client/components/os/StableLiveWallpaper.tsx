@@ -29,21 +29,37 @@ interface FloatingObject {
 }
 
 export const StableLiveWallpaper: React.FC = () => {
+  const { settings } = useThemeStore()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const animationRef = useRef<number>()
   const [particles, setParticles] = useState<Particle[]>([])
   const [floatingObjects, setFloatingObjects] = useState<FloatingObject[]>([])
   const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight })
 
+  // Theme-aware emojis and colors
   const nightEmojis = ['🌙', '⭐', '✨', '🌟', '💫', '🌌', '🦇', '🔮', '🌠', '🪐']
-  const colors = [
+  const dayEmojis = ['☀️', '🌤️', '⛅', '🌈', '🦋', '🌸', '🌺', '🍃', '🐝', '🌻']
+
+  const darkColors = [
     'rgba(139, 69, 19, 0.6)',   // Dark blue
-    'rgba(75, 0, 130, 0.8)',    // Indigo  
+    'rgba(75, 0, 130, 0.8)',    // Indigo
     'rgba(138, 43, 226, 0.7)',  // Blue violet
     'rgba(72, 61, 139, 0.6)',   // Dark slate blue
     'rgba(123, 104, 238, 0.5)',  // Medium slate blue
     'rgba(147, 112, 219, 0.4)',  // Medium purple
   ]
+
+  const lightColors = [
+    'rgba(59, 130, 246, 0.4)',   // Blue
+    'rgba(168, 85, 247, 0.5)',   // Purple
+    'rgba(236, 72, 153, 0.4)',   // Pink
+    'rgba(34, 197, 94, 0.3)',    // Green
+    'rgba(251, 191, 36, 0.4)',   // Yellow
+    'rgba(249, 115, 22, 0.3)',   // Orange
+  ]
+
+  const emojis = settings.mode === 'dark' ? nightEmojis : dayEmojis
+  const colors = settings.mode === 'dark' ? darkColors : lightColors
 
   useEffect(() => {
     const handleResize = () => {
