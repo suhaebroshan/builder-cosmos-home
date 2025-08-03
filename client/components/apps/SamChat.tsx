@@ -42,33 +42,42 @@ export const SamChat: React.FC<SamChatProps> = ({ windowId }) => {
     setThinking(true)
     setEmotion('focused', 0.7)
     
-    setTimeout(async () => {
-      // Simulate API call or local AI processing
-      const responses = [
-        "Yo, I feel you on that one, bruv. Let's figure this out together.",
-        "Damn, that's actually pretty interesting. Tell me more about what's going through your head.",
-        "Bro, you're overthinking this shit. Sometimes the simplest solution is the right one.",
-        "I hear you, my man. That sounds like something we can definitely work on.",
-        "Hold up, let me think about this for a sec... Yeah, I got some ideas for you.",
-        "Nah bro, that ain't it. Let me break it down for you real quick.",
-        "Honestly? That's fucking brilliant. Why didn't I think of that?",
-        "You know what? I'm feeling some good energy about this whole thing.",
-      ]
-      
-      const randomResponse = responses[Math.floor(Math.random() * responses.length)]
-      
-      // Set Sam's emotion based on response content
-      if (randomResponse.includes('brilliant') || randomResponse.includes('good energy')) {
-        setEmotion('excited', 0.8)
-      } else if (randomResponse.includes('overthinking') || randomResponse.includes("ain't it")) {
-        setEmotion('annoyed', 0.6)
+    try {
+      // Use real AI service
+      const response = await aiService.sendMessage(userMessage)
+
+      // Set Sam's emotion based on response content or use emotion from AI
+      if (response.emotion) {
+        setEmotion(response.emotion as any, 0.8)
       } else {
-        setEmotion('happy', 0.7)
+        // Analyze response text for emotion cues
+        const text = response.text.toLowerCase()
+        if (text.includes('brilliant') || text.includes('awesome') || text.includes('amazing')) {
+          setEmotion('excited', 0.8)
+        } else if (text.includes('frustrated') || text.includes('annoying') || text.includes('damn')) {
+          setEmotion('annoyed', 0.6)
+        } else if (text.includes('focused') || text.includes('thinking') || text.includes('analyzing')) {
+          setEmotion('focused', 0.7)
+        } else {
+          setEmotion('happy', 0.7)
+        }
       }
-      
-      addMessage(randomResponse, 'sam', currentEmotion)
+
+      addMessage(response.text, 'sam', currentEmotion)
+
+      // Play audio if available
+      if (response.audio) {
+        const audio = new Audio(response.audio)
+        audio.play().catch(console.warn)
+      }
+
+    } catch (error) {
+      console.error('Error sending message to AI:', error)
+      setEmotion('confused', 0.6)
+      addMessage("Sorry bruv, I'm having some technical difficulties right now. Give me a sec to get my shit together.", 'sam', 'confused')
+    } finally {
       setThinking(false)
-    }, 1500 + Math.random() * 1000)
+    }
   }
   
   const handleKeyPress = (e: React.KeyboardEvent) => {
