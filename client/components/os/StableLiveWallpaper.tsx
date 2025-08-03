@@ -255,15 +255,19 @@ export const StableLiveWallpaper: React.FC = () => {
         </motion.div>
       ))}
 
-      {/* Subtle overlay patterns */}
-      <div className="absolute inset-0 opacity-20">
-        <div 
+      {/* Theme-aware subtle overlay patterns */}
+      <div className={`absolute inset-0 ${settings.mode === 'dark' ? 'opacity-20' : 'opacity-30'}`}>
+        <div
           className="w-full h-full"
           style={{
-            backgroundImage: `
+            backgroundImage: settings.mode === 'dark' ? `
               radial-gradient(circle at 20% 20%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
               radial-gradient(circle at 80% 80%, rgba(75, 0, 130, 0.1) 0%, transparent 50%),
               radial-gradient(circle at 40% 60%, rgba(138, 43, 226, 0.1) 0%, transparent 50%)
+            ` : `
+              radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 40% 60%, rgba(236, 72, 153, 0.15) 0%, transparent 50%)
             `
           }}
         />
