@@ -23,15 +23,16 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
     togglePin,
     focusedWindowId,
   } = useWindowStore()
-  
+
   const { currentEmotion, emotionIntensity } = useSamStore()
+  const { deviceInfo, uiConfig, isPhone, isTablet } = useDeviceDetection()
   const windowRef = useRef<HTMLDivElement>(null)
   const [isResizing, setIsResizing] = useState(false)
   const [resizeHandle, setResizeHandle] = useState<string | null>(null)
   const [isAnimating, setIsAnimating] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [dragTimeout, setDragTimeout] = useState<NodeJS.Timeout | null>(null)
-  
+
   const isFocused = focusedWindowId === window.id
 
   // Ensure valid position and size values
