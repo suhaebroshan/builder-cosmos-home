@@ -176,17 +176,33 @@ export const NyxOS: React.FC = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
         >
-        <div className="bg-black/40 backdrop-blur-xl border border-purple-500/30 rounded-2xl px-4 py-2 shadow-lg flex items-center gap-3">
+        <div className={cn(
+          "backdrop-blur-xl rounded-2xl px-4 py-2 shadow-lg flex items-center gap-3",
+          themeSettings.mode === 'dark'
+            ? "bg-black/40 border border-purple-500/30"
+            : "bg-white/40 border border-blue-300/40"
+        )}>
           <div className="text-lg">{currentUser?.avatar}</div>
           <div>
-            <div className="text-white text-sm font-medium">{currentUser?.displayName}</div>
-            <div className="text-purple-300/70 text-xs">@{currentUser?.username}</div>
+            <div className={cn(
+              "text-sm font-medium",
+              themeSettings.mode === 'dark' ? "text-white" : "text-gray-800"
+            )}>{currentUser?.displayName}</div>
+            <div className={cn(
+              "text-xs",
+              themeSettings.mode === 'dark' ? "text-purple-300/70" : "text-blue-600/70"
+            )}>@{currentUser?.username}</div>
           </div>
         </div>
 
         <button
           onClick={() => setThemeMode(themeSettings.mode === 'dark' ? 'light' : 'dark')}
-          className="bg-black/40 backdrop-blur-xl border border-purple-500/30 rounded-xl p-3 hover:bg-black/50 transition-all shadow-lg"
+          className={cn(
+            "backdrop-blur-xl rounded-xl p-3 transition-all shadow-lg hover:scale-105",
+            themeSettings.mode === 'dark'
+              ? "bg-black/40 border border-purple-500/30 hover:bg-black/50"
+              : "bg-white/40 border border-blue-300/40 hover:bg-white/50"
+          )}
         >
           {themeSettings.mode === 'dark' ? '☀️' : '🌙'}
         </button>
