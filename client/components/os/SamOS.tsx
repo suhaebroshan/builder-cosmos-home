@@ -226,6 +226,9 @@ export const NyxOS: React.FC = () => {
       {/* Enhanced Desktop with App Icons */}
       <EnhancedDesktop />
 
+      {/* Mobile Home Screen */}
+      <MobileHomeScreen />
+
       {/* Window Manager */}
       <WindowManager />
 
