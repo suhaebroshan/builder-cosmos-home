@@ -24,8 +24,14 @@ export const MobileHomeScreen: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <div className="flex flex-col items-center gap-2 text-white/60">
-            <div className="w-1 h-1 bg-white/50 rounded-full" />
+          <div className={cn(
+            "flex flex-col items-center gap-2",
+            settings.mode === 'dark' ? "text-white/60" : "text-gray-800/70"
+          )}>
+            <div className={cn(
+              "w-1 h-1 rounded-full",
+              settings.mode === 'dark' ? "bg-white/50" : "bg-gray-600/50"
+            )} />
             <div className="text-xs text-center">
               Swipe up for apps
             </div>
