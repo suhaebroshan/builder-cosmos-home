@@ -268,7 +268,10 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
       {/* Window Header */}
       <div
         className={cn(
-          "flex items-center justify-between p-3 liquid-glass-dark border-b border-white/10 select-none hover:bg-white/10 transition-all duration-300 liquid-reflection liquid-bubble",
+          "flex items-center justify-between select-none transition-all duration-300",
+          isPhone ? "p-2 bg-black/60 backdrop-blur-sm border-b border-white/5" :
+          isTablet ? "p-2.5 liquid-glass-dark border-b border-white/10" :
+          "p-3 liquid-glass-dark border-b border-white/10 hover:bg-white/10 liquid-reflection liquid-bubble",
           !isPhone && "cursor-grab",
           isDragging && "cursor-grabbing",
           isPhone && "cursor-default"
