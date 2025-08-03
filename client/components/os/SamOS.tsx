@@ -155,8 +155,8 @@ export const NyxOS: React.FC = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
-      {/* Lively Wallpaper System */}
-      <LivelyWallpaper theme={themeSettings.mode} />
+      {/* Stable Live Wallpaper System */}
+      <StableLiveWallpaper />
 
       {/* Emotional Overlay */}
       <div
