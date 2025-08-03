@@ -241,11 +241,13 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
       {/* Window Header */}
       <div
         className={cn(
-          "flex items-center justify-between p-3 liquid-glass-dark border-b border-white/10 select-none hover:bg-white/10 transition-all duration-300 cursor-grab liquid-reflection liquid-bubble",
-          isDragging && "cursor-grabbing"
+          "flex items-center justify-between p-3 liquid-glass-dark border-b border-white/10 select-none hover:bg-white/10 transition-all duration-300 liquid-reflection liquid-bubble",
+          !isPhone && "cursor-grab",
+          isDragging && "cursor-grabbing",
+          isPhone && "cursor-default"
         )}
         onMouseDown={(e) => {
-          if (window.isMaximized) return
+          if (window.isMaximized || isPhone || !uiConfig.allowWindowMove) return
 
           // Don't start dragging if clicking on buttons
           const target = e.target as HTMLElement
