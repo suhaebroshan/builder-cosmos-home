@@ -191,13 +191,17 @@ export const NyxOS: React.FC = () => {
         </motion.div>
       )}
 
-      {/* AI Status Indicator */}
-      <motion.div
-        className="absolute top-4 right-4 text-white/80 text-sm z-30"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-      >
+      {/* AI Status Indicator - Smaller on tablet, hidden on phone */}
+      {!isPhone && (
+        <motion.div
+          className={cn(
+            "absolute top-4 right-4 text-white/80 z-30",
+            isTablet ? "text-xs" : "text-sm"
+          )}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
         <div className="flex items-center gap-2 bg-black/40 backdrop-blur-xl border border-purple-500/30 rounded-2xl px-4 py-2 shadow-lg">
           <div
             className="w-3 h-3 rounded-full transition-all duration-300"
@@ -215,7 +219,8 @@ export const NyxOS: React.FC = () => {
           <span className="capitalize text-purple-200">{currentEmotion}</span>
           <div className="text-xs text-purple-300/70 ml-2">AI Active</div>
         </div>
-      </motion.div>
+        </motion.div>
+      )}
 
       {/* Enhanced Desktop with App Icons */}
       <EnhancedDesktop />
