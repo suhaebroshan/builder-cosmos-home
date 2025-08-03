@@ -50,31 +50,52 @@ export const useWindowStore = create<WindowStore>((set, get) => ({
   windows: [],
   focusedWindowId: null,
   nextZIndex: 1000,
+  appInstances: {},
+  splitScreenWindows: {},
+  recentApps: [],
 
   openWindow: (windowData) => {
-    const id = `window-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    const state = get()
+    const instanceCount = state.appInstances[windowData.appId] || 0
+    const id = `${windowData.appId}-${instanceCount + 1}-${Date.now()}`
+
     const window: Window = {
       ...windowData,
       id,
-      zIndex: get().nextZIndex,
+      zIndex: state.nextZIndex,
       isMinimized: false,
       isMaximized: false,
       isPinned: false,
+      mode: windowData.mode || 'windowed',
+      opacity: windowData.opacity || 1,
     }
-    
-    set((state) => ({
-      windows: [...state.windows, window],
+
+    set((prevState) => ({
+      windows: [...prevState.windows, window],
       focusedWindowId: id,
-      nextZIndex: state.nextZIndex + 1,
+      nextZIndex: prevState.nextZIndex + 1,
+      appInstances: {
+        ...prevState.appInstances,
+        [windowData.appId]: instanceCount + 1
+      }
     }))
-    
+
+    get().addToRecents(windowData.appId)
     return id
   },
 
   closeWindow: (id) => {
-    set((state) => ({
-      windows: state.windows.filter((w) => w.id !== id),
-      focusedWindowId: state.focusedWindowId === id ? null : state.focusedWindowId,
+    const state = get()
+    const window = state.windows.find(w => w.id === id)
+
+    // Clear split screen if this window was part of it
+    if (state.splitScreenWindows.left === id || state.splitScreenWindows.right === id) {
+      get().clearSplitScreen()
+    }
+
+    set((prevState) => ({
+      windows: prevState.windows.filter((w) => w.id !== id),
+      focusedWindowId: prevState.focusedWindowId === id ? null : prevState.focusedWindowId,
     }))
   },
 
