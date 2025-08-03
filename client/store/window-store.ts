@@ -160,7 +160,67 @@ export const useWindowStore = create<WindowStore>((set, get) => ({
     }))
   },
 
+  updateWindowMode: (id, mode) => {
+    set((state) => ({
+      windows: state.windows.map((w) =>
+        w.id === id ? { ...w, mode } : w
+      ),
+    }))
+  },
+
+  setSplitScreen: (leftWindowId, rightWindowId) => {
+    set((state) => ({
+      splitScreenWindows: { left: leftWindowId, right: rightWindowId },
+      windows: state.windows.map((w) => {
+        if (w.id === leftWindowId) {
+          return { ...w, mode: 'split-left', size: { width: window.innerWidth / 2, height: window.innerHeight - 80 } }
+        }
+        if (w.id === rightWindowId) {
+          return { ...w, mode: 'split-right', size: { width: window.innerWidth / 2, height: window.innerHeight - 80 } }
+        }
+        return w
+      }),
+    }))
+  },
+
+  clearSplitScreen: () => {
+    set((state) => ({
+      splitScreenWindows: {},
+      windows: state.windows.map((w) => ({
+        ...w,
+        mode: w.mode.startsWith('split-') ? 'windowed' : w.mode
+      })),
+    }))
+  },
+
+  makeFloating: (id, floating) => {
+    set((state) => ({
+      windows: state.windows.map((w) =>
+        w.id === id ? { ...w, isFloating: floating, mode: floating ? 'floating' : 'windowed' } : w
+      ),
+    }))
+  },
+
+  setWindowOpacity: (id, opacity) => {
+    set((state) => ({
+      windows: state.windows.map((w) =>
+        w.id === id ? { ...w, opacity: Math.max(0.1, Math.min(1, opacity)) } : w
+      ),
+    }))
+  },
+
   getWindow: (id) => {
     return get().windows.find((w) => w.id === id)
+  },
+
+  getWindowsByApp: (appId) => {
+    return get().windows.filter((w) => w.appId === appId)
+  },
+
+  addToRecents: (appId) => {
+    set((state) => {
+      const newRecents = [appId, ...state.recentApps.filter(id => id !== appId)].slice(0, 10)
+      return { recentApps: newRecents }
+    })
   },
 }))
