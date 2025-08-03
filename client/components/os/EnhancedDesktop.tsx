@@ -49,24 +49,25 @@ import { cn } from '@/lib/utils'
 import { DesktopIcon } from './DesktopIcon'
 
 export const EnhancedDesktop: React.FC = () => {
-  const { openWindow, windows, minimizeWindow, focusWindow } = useWindowStore()
-  const { 
-    icons, 
-    folders, 
-    isEditMode, 
-    selectedIcons, 
-    setEditMode, 
-    addIcon, 
-    updateIconPosition, 
-    updateIconSize, 
-    selectIcon, 
-    clearSelection, 
-    duplicateIcon, 
-    removeIcon, 
+  const { openWindow, windows, minimizeWindow, focusWindow, getWindowsByApp } = useWindowStore()
+  const {
+    icons,
+    folders,
+    isEditMode,
+    selectedIcons,
+    setEditMode,
+    addIcon,
+    updateIconPosition,
+    updateIconSize,
+    selectIcon,
+    clearSelection,
+    duplicateIcon,
+    removeIcon,
     createFolder,
-    getFreeIcons 
+    getFreeIcons
   } = useDesktopStore()
   const { setEmotion, addMessage } = useSamStore()
+  const { deviceInfo, uiConfig, isPhone, isTablet, isDesktop } = useDeviceDetection()
   
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; iconId?: string } | null>(null)
   const [editModeTimeout, setEditModeTimeout] = useState<NodeJS.Timeout | null>(null)
