@@ -1,7 +1,10 @@
 import { create } from 'zustand'
 
+export type WindowMode = 'windowed' | 'fullscreen' | 'split-left' | 'split-right' | 'floating' | 'pip'
+
 export interface Window {
   id: string
+  appId: string
   title: string
   component: React.ComponentType<any>
   props?: any
@@ -11,13 +14,20 @@ export interface Window {
   isMaximized: boolean
   isPinned: boolean
   zIndex: number
+  mode: WindowMode
+  splitPartner?: string
+  isFloating?: boolean
+  opacity?: number
 }
 
 interface WindowStore {
   windows: Window[]
   focusedWindowId: string | null
   nextZIndex: number
-  
+  appInstances: Record<string, number>
+  splitScreenWindows: { left?: string; right?: string }
+  recentApps: string[]
+
   openWindow: (window: Omit<Window, 'id' | 'zIndex'>) => string
   closeWindow: (id: string) => void
   focusWindow: (id: string) => void
@@ -25,8 +35,15 @@ interface WindowStore {
   maximizeWindow: (id: string) => void
   updateWindowPosition: (id: string, position: { x: number; y: number }) => void
   updateWindowSize: (id: string, size: { width: number; height: number }) => void
+  updateWindowMode: (id: string, mode: WindowMode) => void
   togglePin: (id: string) => void
+  setSplitScreen: (leftWindowId: string, rightWindowId?: string) => void
+  clearSplitScreen: () => void
+  makeFloating: (id: string, floating: boolean) => void
+  setWindowOpacity: (id: string, opacity: number) => void
   getWindow: (id: string) => Window | undefined
+  getWindowsByApp: (appId: string) => Window[]
+  addToRecents: (appId: string) => void
 }
 
 export const useWindowStore = create<WindowStore>((set, get) => ({
