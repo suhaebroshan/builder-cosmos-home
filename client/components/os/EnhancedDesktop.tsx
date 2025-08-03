@@ -80,11 +80,12 @@ export const EnhancedDesktop: React.FC = () => {
   // Initialize default apps if none exist
   useEffect(() => {
     if (icons.length === 0) {
-      // Calculate grid positions
-      const gridSize = 80
-      const iconsPerRow = Math.floor((window.innerWidth || 1200) / gridSize)
-      const startX = 40
-      const startY = 40
+      // Calculate device-aware grid positions
+      const gridSize = isPhone ? 90 : isTablet ? 85 : 80
+      const padding = isPhone ? 20 : isTablet ? 30 : 40
+      const iconsPerRow = Math.floor((window.innerWidth - padding * 2) / gridSize)
+      const startX = padding
+      const startY = isPhone ? 60 : padding // More top spacing on phone for status bar
 
       const getGridPosition = (index: number) => ({
         x: startX + (index % iconsPerRow) * gridSize,
