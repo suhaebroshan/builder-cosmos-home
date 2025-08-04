@@ -2,7 +2,8 @@ import React, { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSamStore } from '@/store/sam-store'
 import { useWindowStore } from '@/store/window-store'
-import { Zap, Code, Play, Save, Trash2, Loader2 } from 'lucide-react'
+import { aiService } from '@/services/ai-service'
+import { Zap, Code, Play, Save, Trash2, Loader2, AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface AppForgeProps {
