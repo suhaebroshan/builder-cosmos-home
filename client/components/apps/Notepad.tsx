@@ -175,11 +175,18 @@ Start typing and let your ideas flow!`,
   }, [])
 
   const addToHistory = (newContent: string) => {
-    const newHistory = undoHistory.slice(0, historyIndex + 1)
-    newHistory.push(newContent)
-    setUndoHistory(newHistory)
-    setHistoryIndex(newHistory.length - 1)
-    setRedoHistory([])
+    // Debounce history updates to prevent performance issues
+    if (historyTimerRef.current) {
+      clearTimeout(historyTimerRef.current)
+    }
+
+    historyTimerRef.current = setTimeout(() => {
+      const newHistory = undoHistory.slice(0, historyIndex + 1)
+      newHistory.push(newContent)
+      setUndoHistory(newHistory)
+      setHistoryIndex(newHistory.length - 1)
+      setRedoHistory([])
+    }, 500) // Wait 500ms before adding to history
   }
 
   const undo = () => {
