@@ -320,10 +320,17 @@ export const EnhancedDesktop: React.FC = () => {
       windowPosition = { x: 0, y: 0 }
     }
 
+    // Wrap component with error boundary
+    const WrappedComponent = (props: any) => (
+      <AppErrorBoundary appName={icon.name}>
+        <icon.component {...props} />
+      </AppErrorBoundary>
+    )
+
     openWindow({
       appId: icon.appId,
       title: icon.name,
-      component: icon.component,
+      component: WrappedComponent,
       position: windowPosition,
       size: windowSize,
       mode: windowMode,
