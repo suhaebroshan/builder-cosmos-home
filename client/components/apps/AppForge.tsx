@@ -29,162 +29,113 @@ export const AppForge: React.FC<AppForgeProps> = ({ windowId }) => {
   
   const generateApp = async () => {
     if (!prompt.trim() || isGenerating) return
-    
+
     setIsGenerating(true)
     setThinking(true)
     setEmotion('focused', 0.9)
-    
-    // Simulate app generation
-    setTimeout(() => {
-      const appTemplates = [
-        {
-          name: 'Todo App',
-          description: 'A simple todo list with checkboxes and dark mode',
-          code: `
-const TodoApp = () => {
-  const [todos, setTodos] = useState([])
-  const [input, setInput] = useState('')
-  
-  const addTodo = () => {
-    if (input.trim()) {
-      setTodos([...todos, { id: Date.now(), text: input, done: false }])
-      setInput('')
-    }
-  }
-  
+
+    try {
+      // Use AI service to generate the app
+      const aiPrompt = `Create a React functional component for: ${prompt}
+
+Requirements:
+- Use React hooks (useState, useEffect as needed)
+- Return a complete functional component
+- Use dark theme styling with Tailwind CSS classes
+- Make it interactive and functional
+- Include proper JSX structure
+- Component should be self-contained
+
+Example format:
+const MyApp = () => {
+  // hooks and logic here
   return (
     <div className="p-4 text-white h-full bg-gray-900">
-      <h2 className="text-xl mb-4">My Todos</h2>
-      <div className="flex gap-2 mb-4">
-        <input 
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="flex-1 p-2 bg-gray-800 rounded border border-gray-600"
-          placeholder="Add a todo..."
-        />
-        <button onClick={addTodo} className="px-4 py-2 bg-blue-600 rounded">Add</button>
-      </div>
-      <div className="space-y-2">
-        {todos.map(todo => (
-          <div key={todo.id} className="flex items-center gap-2">
-            <input type="checkbox" checked={todo.done} onChange={() => {
-              setTodos(todos.map(t => t.id === todo.id ? {...t, done: !t.done} : t))
-            }} />
-            <span className={todo.done ? 'line-through opacity-60' : ''}>{todo.text}</span>
-          </div>
-        ))}
-      </div>
+      {/* UI here */}
     </div>
   )
 }`
-        },
-        {
-          name: 'Calculator',
-          description: 'Basic calculator with number operations',
-          code: `
-const Calculator = () => {
-  const [display, setDisplay] = useState('0')
-  const [operation, setOperation] = useState(null)
-  const [waitingForValue, setWaitingForValue] = useState(false)
-  
-  const inputNumber = (num) => {
-    if (waitingForValue) {
-      setDisplay(String(num))
-      setWaitingForValue(false)
-    } else {
-      setDisplay(display === '0' ? String(num) : display + num)
-    }
-  }
-  
-  const calculate = () => {
-    // Calculator logic here
-    setDisplay('42') // Placeholder result
-  }
-  
-  return (
-    <div className="p-4 bg-gray-900 text-white h-full">
-      <div className="max-w-xs mx-auto">
-        <div className="bg-black p-4 rounded mb-4 text-right text-2xl font-mono">
-          {display}
-        </div>
-        <div className="grid grid-cols-4 gap-2">
-          {[7,8,9,'/'].map(btn => (
-            <button key={btn} className="p-3 bg-gray-700 rounded hover:bg-gray-600">
-              {btn}
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}`
-        },
-        {
-          name: 'Notes App',
-          description: 'Simple note-taking app with save functionality',
-          code: `
-const NotesApp = () => {
-  const [notes, setNotes] = useState([])
-  const [currentNote, setCurrentNote] = useState('')
-  const [title, setTitle] = useState('')
-  
-  const saveNote = () => {
-    if (title && currentNote) {
-      setNotes([...notes, { id: Date.now(), title, content: currentNote, date: new Date() }])
-      setTitle('')
-      setCurrentNote('')
-    }
-  }
-  
-  return (
-    <div className="p-4 text-white h-full bg-gray-900 flex">
-      <div className="w-1/3 border-r border-gray-700 pr-4">
-        <h3 className="text-lg mb-4">Notes</h3>
-        {notes.map(note => (
-          <div key={note.id} className="p-2 bg-gray-800 rounded mb-2 cursor-pointer hover:bg-gray-700">
-            <div className="font-medium">{note.title}</div>
-            <div className="text-sm text-gray-400">{note.date.toLocaleDateString()}</div>
-          </div>
-        ))}
-      </div>
-      <div className="flex-1 pl-4">
-        <input 
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Note title..."
-          className="w-full p-2 bg-gray-800 rounded mb-4 border border-gray-600"
-        />
-        <textarea 
-          value={currentNote}
-          onChange={(e) => setCurrentNote(e.target.value)}
-          placeholder="Write your note here..."
-          className="w-full h-64 p-2 bg-gray-800 rounded border border-gray-600 resize-none"
-        />
-        <button onClick={saveNote} className="mt-4 px-4 py-2 bg-green-600 rounded">Save Note</button>
-      </div>
-    </div>
-  )
-}`
-        }
-      ]
-      
-      const randomTemplate = appTemplates[Math.floor(Math.random() * appTemplates.length)]
+
+      const response = await aiService.sendMessage(aiPrompt, true) // Use code model
+
+      // Parse app name from prompt
+      const appName = prompt.split(' ').map(word =>
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).slice(0, 3).join(' ') + ' App'
+
       const newApp: GeneratedApp = {
         id: `app-${Date.now()}`,
-        name: randomTemplate.name,
-        description: randomTemplate.description,
-        code: randomTemplate.code,
-        timestamp: new Date(),
+        name: appName,
+        description: prompt,
+        code: response.text,
+        timestamp: new Date()
       }
-      
-      setGeneratedApps(prev => [newApp, ...prev])
+
+      setGeneratedApps(prev => [...prev, newApp])
       setSelectedApp(newApp)
+      setPrompt('')
       setIsGenerating(false)
       setThinking(false)
       setEmotion('excited', 0.8)
-      
-      addMessage(`Yo! I just built you a ${randomTemplate.name}. Check it out in the preview and tell me what you think, bruv!`, 'sam', 'excited')
-    }, 2000 + Math.random() * 1000)
+
+      addMessage(`Generated ${appName}! Check out the code and hit launch to see it in action.`, 'sam', 'excited')
+
+    } catch (error) {
+      console.error('Error generating app:', error)
+      setIsGenerating(false)
+      setThinking(false)
+      setEmotion('confused', 0.7)
+      addMessage("Damn, something went wrong with the app generation. Let me try a template instead.", 'sam', 'confused')
+
+      // Fallback to working template
+      const appName = prompt.split(' ').slice(0, 2).join(' ') + ' App'
+      const newApp: GeneratedApp = {
+        id: `app-${Date.now()}`,
+        name: appName,
+        description: prompt,
+        code: `const ${appName.replace(/\s+/g, '')} = () => {
+  const [items, setItems] = React.useState([])
+  const [input, setInput] = React.useState('')
+
+  const addItem = () => {
+    if (input.trim()) {
+      setItems([...items, { id: Date.now(), text: input }])
+      setInput('')
+    }
+  }
+
+  return (
+    <div className="p-4 text-white h-full bg-gray-900">
+      <h2 className="text-xl mb-4">${appName}</h2>
+      <div className="flex gap-2 mb-4">
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className="flex-1 p-2 bg-gray-800 rounded border border-gray-600"
+          placeholder="Enter something..."
+          onKeyPress={(e) => e.key === 'Enter' && addItem()}
+        />
+        <button onClick={addItem} className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700">
+          Add
+        </button>
+      </div>
+      <div className="space-y-2">
+        {items.map(item => (
+          <div key={item.id} className="p-2 bg-gray-800 rounded">
+            {item.text}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}`,
+        timestamp: new Date()
+      }
+
+      setGeneratedApps(prev => [...prev, newApp])
+      setSelectedApp(newApp)
+      setPrompt('')
+    }
   }
   
   const launchApp = (app: GeneratedApp) => {
