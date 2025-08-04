@@ -33,15 +33,15 @@ export const SamChat: React.FC<SamChatProps> = ({ windowId }) => {
   
   const handleSendMessage = async () => {
     if (!input.trim() || isThinking) return
-    
+
     const userMessage = input.trim()
     setInput('')
     addMessage(userMessage, 'user')
-    
+
     // Simulate Sam's thinking and response
     setThinking(true)
     setEmotion('focused', 0.7)
-    
+
     try {
       // Use real AI service
       const response = await aiService.sendMessage(userMessage)
@@ -74,7 +74,7 @@ export const SamChat: React.FC<SamChatProps> = ({ windowId }) => {
     } catch (error) {
       console.error('Error sending message to AI:', error)
       setEmotion('confused', 0.6)
-      addMessage("Sorry bruv, I'm having some technical difficulties right now. Give me a sec to get my shit together.", 'sam', 'confused')
+      addMessage("Sorry bruv, I'm having some technical difficulties right now. My AI brain needs a moment to reboot.", 'sam', 'confused')
     } finally {
       setThinking(false)
     }
