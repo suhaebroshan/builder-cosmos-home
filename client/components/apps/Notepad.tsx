@@ -90,10 +90,11 @@ Start typing and let your ideas flow!`,
   const [undoHistory, setUndoHistory] = useState<string[]>([currentNote.content])
   const [redoHistory, setRedoHistory] = useState<string[]>([])
   const [historyIndex, setHistoryIndex] = useState(0)
-  
+
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const historyTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   // Auto-save functionality
   useEffect(() => {
