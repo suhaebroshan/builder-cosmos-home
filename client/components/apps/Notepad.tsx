@@ -597,6 +597,7 @@ Start typing and let your ideas flow!`,
             value={content}
             onChange={(e) => {
               setContent(e.target.value)
+              // Only add to history after user stops typing
               addToHistory(e.target.value)
             }}
             onSelect={getTextSelection}
