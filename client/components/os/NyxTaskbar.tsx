@@ -192,7 +192,100 @@ export const NyxTaskbar: React.FC = () => {
     { icon: Monitor, label: 'Display', action: () => {} },
     { icon: systemStats.wifi ? Wifi : WifiOff, label: 'Network', action: () => {} },
     { icon: systemStats.bluetooth ? Bluetooth : BluetoothOff, label: 'Bluetooth', action: () => {} },
-    { icon: Power, label: 'Power', action: () => {} },
+    { icon: LogOut, label: 'Shutdown', action: () => {} },
+  ]
+
+  const frequentApps = [
+    {
+      icon: MessageCircle,
+      label: 'Sam Chat',
+      action: async () => {
+        const { SamChat } = await import('@/components/apps/SamChat')
+        openWindow({
+          appId: 'sam-chat',
+          title: 'Sam Chat',
+          component: SamChat,
+          position: { x: 100, y: 100 },
+          size: { width: 450, height: 650 }
+        })
+        setIsLauncherOpen(false)
+      }
+    },
+    {
+      icon: Music,
+      label: 'ResoNyx',
+      action: async () => {
+        const { ResoNyx } = await import('@/components/apps/ResoNyx')
+        openWindow({
+          appId: 'resonyx',
+          title: 'ResoNyx',
+          component: ResoNyx,
+          position: { x: 180, y: 80 },
+          size: { width: 1200, height: 800 }
+        })
+        setIsLauncherOpen(false)
+      }
+    },
+    {
+      icon: Folder,
+      label: 'Files',
+      action: async () => {
+        const { Files } = await import('@/components/apps/Files')
+        openWindow({
+          appId: 'files',
+          title: 'Files',
+          component: Files,
+          position: { x: 150, y: 120 },
+          size: { width: 800, height: 600 }
+        })
+        setIsLauncherOpen(false)
+      }
+    },
+    {
+      icon: Globe,
+      label: 'Browser',
+      action: async () => {
+        const { NyxBrowser } = await import('@/components/apps/NyxBrowser')
+        openWindow({
+          appId: 'nyx-browser',
+          title: 'Nyx Browser',
+          component: NyxBrowser,
+          position: { x: 50, y: 50 },
+          size: { width: 1200, height: 800 }
+        })
+        setIsLauncherOpen(false)
+      }
+    },
+    {
+      icon: CalculatorIcon,
+      label: 'Calculator',
+      action: async () => {
+        const { Calculator } = await import('@/components/apps/Calculator')
+        openWindow({
+          appId: 'calculator',
+          title: 'Calculator',
+          component: Calculator,
+          position: { x: 300, y: 150 },
+          size: { width: 350, height: 500 }
+        })
+        setIsLauncherOpen(false)
+      }
+    },
+    {
+      icon: CalendarIcon,
+      label: 'Calendar',
+      action: async () => {
+        const { Calendar } = await import('@/components/apps/Calendar')
+        openWindow({
+          appId: 'calendar',
+          title: 'Chrono',
+          component: Calendar,
+          position: { x: 200, y: 50 },
+          size: { width: 900, height: 600 }
+        })
+        setIsLauncherOpen(false)
+      }
+    }
   ]
 
   const notifications = [
