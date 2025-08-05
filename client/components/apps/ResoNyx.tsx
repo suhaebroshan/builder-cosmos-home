@@ -205,25 +205,25 @@ export const ResoNyx: React.FC<ResoNyxProps> = ({ windowId }) => {
   const samplePlaylists: Playlist[] = [
     {
       id: '1',
-      name: 'Night Mode',
-      description: 'Perfect for late-night coding sessions',
-      tracks: sampleTracks.slice(0, 3),
+      name: 'Featured Tracks',
+      description: 'High-quality free music from the internet',
+      tracks: featuredTracks.slice(0, 3),
       coverUrl: '/api/placeholder/300/300',
       isFollowing: true
     },
     {
       id: '2',
-      name: 'Cosmic Chill',
-      description: 'Relaxing space ambient sounds',
-      tracks: sampleTracks.slice(1, 4),
+      name: 'Internet Radio',
+      description: 'Live radio stations from around the world',
+      tracks: popularRadioStations,
       coverUrl: '/api/placeholder/300/300',
       isFollowing: false
     },
     {
       id: '3',
-      name: 'Nyx Vibes',
-      description: 'Feel the music, live the vibe',
-      tracks: sampleTracks,
+      name: 'Free Music',
+      description: 'Creative Commons and royalty-free music',
+      tracks: featuredTracks,
       coverUrl: '/api/placeholder/300/300',
       isFollowing: true
     }
