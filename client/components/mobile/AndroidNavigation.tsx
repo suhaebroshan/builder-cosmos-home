@@ -34,10 +34,11 @@ export const AndroidNavigation: React.FC<AndroidNavigationProps> = ({
   const { windows, focusedWindowId, closeWindow, openWindow } = useWindowStore()
   const { deviceInfo, uiConfig } = useDeviceDetection()
   const { addMessage } = useSamStore()
+  const { showStatusBar, deviceType } = useDeviceAuthStore()
+  const quickSettings = useQuickSettings()
   const [showRecentApps, setShowRecentApps] = useState(false)
   const [showAppDrawer, setShowAppDrawer] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
-  const [showQuickSettings, setShowQuickSettings] = useState(false)
 
   const handleBack = () => {
     if (focusedWindowId) {
