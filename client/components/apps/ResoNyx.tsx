@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Play, 
-  Pause, 
-  SkipBack, 
-  SkipForward, 
-  Volume2, 
+import {
+  Play,
+  Pause,
+  SkipBack,
+  SkipForward,
+  Volume2,
   VolumeX,
-  Shuffle, 
+  Shuffle,
   Repeat,
   Heart,
   MoreHorizontal,
@@ -24,7 +24,12 @@ import {
   Star,
   ChevronLeft,
   ChevronRight,
-  Radio
+  Radio,
+  ExternalLink,
+  Upload,
+  Loader2,
+  AlertCircle,
+  Mic
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useThemeStore } from '@/store/theme-store'
