@@ -979,29 +979,38 @@ export const ResoNyx: React.FC<ResoNyxProps> = ({ windowId }) => {
                 <Shuffle className="w-4 h-4" />
               </button>
               
-              <button className={cn(
-                "w-8 h-8 flex items-center justify-center",
-                isDark ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900"
-              )}>
+              <button
+                onClick={handleSkipBackward}
+                className={cn(
+                  "w-8 h-8 flex items-center justify-center",
+                  isDark ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900"
+                )}
+              >
                 <SkipBack className="w-5 h-5" />
               </button>
-              
+
               <motion.button
                 onClick={handlePlayPause}
-                className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:scale-105 transition-transform"
+                disabled={isLoading || !currentTrack}
+                className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:scale-105 transition-transform disabled:opacity-50"
                 whileTap={{ scale: 0.95 }}
               >
-                {isPlaying ? (
+                {isLoading ? (
+                  <Loader2 className="w-5 h-5 text-black animate-spin" />
+                ) : isPlaying ? (
                   <Pause className="w-5 h-5 text-black" />
                 ) : (
                   <Play className="w-5 h-5 text-black ml-0.5" />
                 )}
               </motion.button>
-              
-              <button className={cn(
-                "w-8 h-8 flex items-center justify-center",
-                isDark ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900"
-              )}>
+
+              <button
+                onClick={handleSkipForward}
+                className={cn(
+                  "w-8 h-8 flex items-center justify-center",
+                  isDark ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900"
+                )}
+              >
                 <SkipForward className="w-5 h-5" />
               </button>
               
