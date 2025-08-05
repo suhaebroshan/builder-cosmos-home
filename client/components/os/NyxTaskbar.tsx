@@ -489,14 +489,36 @@ export const NyxTaskbar: React.FC = () => {
       <AnimatePresence>
         {isLauncherOpen && (
           <motion.div
-            className="absolute bottom-12 left-2 w-80 bg-black/80 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-4 shadow-2xl"
+            className="absolute bottom-12 left-2 w-96 bg-black/80 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-4 shadow-2xl"
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ duration: 0.2 }}
           >
-            <h3 className="text-white font-medium mb-3 text-sm">Quick Actions</h3>
+            <h3 className="text-white font-medium mb-3 text-sm">Frequently Used</h3>
             <div className="grid grid-cols-3 gap-2 mb-4">
+              {frequentApps.map((app, index) => {
+                const Icon = app.icon
+                return (
+                  <motion.button
+                    key={app.label}
+                    className="p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all duration-200 flex flex-col items-center gap-1"
+                    onClick={app.action}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                  >
+                    <Icon className="w-5 h-5 text-purple-400" />
+                    <span className="text-xs text-white/70">{app.label}</span>
+                  </motion.button>
+                )
+              })}
+            </div>
+
+            <h3 className="text-white font-medium mb-3 text-sm">Quick Actions</h3>
+            <div className="grid grid-cols-5 gap-2 mb-4">
               {quickActions.map((action, index) => {
                 const Icon = action.icon
                 return (
@@ -508,27 +530,24 @@ export const NyxTaskbar: React.FC = () => {
                     whileTap={{ scale: 0.95 }}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
+                    transition={{ delay: (frequentApps.length + index) * 0.05 }}
                   >
-                    <Icon className="w-5 h-5 text-purple-400" />
+                    <Icon className="w-4 h-4 text-gray-400" />
                     <span className="text-xs text-white/70">{action.label}</span>
                   </motion.button>
                 )
               })}
             </div>
-            
+
             <div className="border-t border-white/10 pt-3">
               <button
                 className="w-full p-2 text-left text-sm text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all"
-                onClick={() => setEditMode(true)}
+                onClick={() => {
+                  setEditMode(true)
+                  setIsLauncherOpen(false)
+                }}
               >
                 Customize Desktop
-              </button>
-              <button
-                className="w-full p-2 text-left text-sm text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all"
-                onClick={() => window.dispatchEvent(new CustomEvent('nyx:open-browser'))}
-              >
-                Open Browser
               </button>
             </div>
           </motion.div>
