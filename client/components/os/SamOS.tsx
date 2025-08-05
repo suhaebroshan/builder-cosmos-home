@@ -21,8 +21,10 @@ interface User {
   id: string
   username: string
   displayName: string
-  password: string
   avatar?: string
+  passcode?: string
+  pattern?: number[]
+  authMethod: 'none' | 'passcode' | 'pattern'
 }
 
 export const NyxOS: React.FC = () => {
@@ -31,10 +33,13 @@ export const NyxOS: React.FC = () => {
   const { settings: themeSettings, setThemeMode } = useThemeStore()
   const { deviceInfo, uiConfig, isPhone, isTablet } = useDeviceDetection()
   const [isBooted, setIsBooted] = useState(false)
+  const [isSetupComplete, setIsSetupComplete] = useState(false)
   const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [selectedDeviceType, setSelectedDeviceType] = useState<DeviceType | null>(null)
+  const [navigationStyle, setNavigationStyle] = useState<'gestures' | 'buttons'>('gestures')
 
   // Enable global keyboard shortcuts (disabled on phone)
-  if (!isPhone) {
+  if (!isPhone && selectedDeviceType !== 'phone') {
     useKeyboardShortcuts()
   }
 
