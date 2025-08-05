@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useWindowStore } from '@/store/window-store'
 import { useSamStore } from '@/store/sam-store'
 import { useDesktopStore } from '@/store/desktop-store'
-import { 
+import {
   Menu,
   Wifi,
   WifiOff,
@@ -21,7 +21,20 @@ import {
   Sun,
   Moon,
   Maximize2,
-  Minimize2
+  Minimize2,
+  MessageCircle,
+  Phone,
+  Folder,
+  Wrench,
+  Calendar as CalendarIcon,
+  Globe,
+  Calculator as CalculatorIcon,
+  FileText,
+  Crown,
+  Gamepad2,
+  HelpCircle,
+  Music,
+  LogOut
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
