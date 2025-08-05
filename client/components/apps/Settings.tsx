@@ -2,12 +2,13 @@ import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSamStore } from '@/store/sam-store'
 import { useThemeStore } from '@/store/theme-store'
-import { 
-  Settings as SettingsIcon, 
-  Palette, 
-  Volume2, 
-  Monitor, 
-  User, 
+import { useDeviceAuthStore, AuthMethod, DeviceType } from '@/store/device-auth-store'
+import {
+  Settings as SettingsIcon,
+  Palette,
+  Volume2,
+  Monitor,
+  User,
   Shield,
   Accessibility,
   Wifi,
@@ -30,7 +31,18 @@ import {
   Speaker,
   SpeakerX,
   Zap,
-  ZapOff
+  ZapOff,
+  Smartphone,
+  Tablet,
+  Lock,
+  Fingerprint,
+  Key,
+  Grid3X3,
+  Unlock,
+  Timer,
+  Hand,
+  Vibrate,
+  Gauge
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
