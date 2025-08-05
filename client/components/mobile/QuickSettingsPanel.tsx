@@ -98,7 +98,7 @@ export const QuickSettingsPanel: React.FC<QuickSettingsPanelProps> = ({
     },
     airplane: {
       id: 'airplane',
-      icon: Airplane,
+      icon: Plane,
       label: 'Airplane',
       description: systemStates.airplane ? 'On' : 'Off'
     },
