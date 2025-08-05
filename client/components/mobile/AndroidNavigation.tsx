@@ -90,19 +90,12 @@ export const AndroidNavigation: React.FC<AndroidNavigationProps> = ({
 
   return (
     <>
-      {/* Status Bar */}
-      {uiConfig.androidStyle && (
-        <div className="fixed top-0 left-0 right-0 h-6 bg-black/40 backdrop-blur-sm flex items-center justify-between px-4 text-white text-xs z-50">
-          <div className="flex items-center gap-2">
-            <span>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Signal className="w-3 h-3" />
-            <Wifi className="w-3 h-3" />
-            <Battery className="w-3 h-3" />
-            <span>100%</span>
-          </div>
-        </div>
+      {/* Android Status Bar */}
+      {showStatusBar && uiConfig.androidStyle && (
+        <AndroidStatusBar
+          onNotificationsPull={() => setShowNotifications(true)}
+          onQuickSettingsPull={quickSettings.open}
+        />
       )}
 
       {/* Gesture Area */}
