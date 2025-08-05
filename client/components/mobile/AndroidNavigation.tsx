@@ -388,6 +388,12 @@ export const AndroidNavigation: React.FC<AndroidNavigationProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Quick Settings Panel */}
+      <QuickSettingsPanel
+        isOpen={quickSettings.isOpen}
+        onClose={quickSettings.close}
+      />
     </>
   )
 }
