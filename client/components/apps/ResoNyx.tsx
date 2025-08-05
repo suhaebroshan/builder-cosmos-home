@@ -1024,10 +1024,13 @@ export const ResoNyx: React.FC<ResoNyxProps> = ({ windowId }) => {
                 "text-xs w-10 text-right",
                 isDark ? "text-gray-400" : "text-gray-600"
               )}>
-                {Math.floor(progress * 0.01 * 242 / 60)}:{String(Math.floor(progress * 0.01 * 242 % 60)).padStart(2, '0')}
+                {formatTime(currentTime)}
               </span>
-              <div className="flex-1 h-1 bg-gray-600 rounded-full overflow-hidden group cursor-pointer">
-                <div 
+              <div
+                className="flex-1 h-1 bg-gray-600 rounded-full overflow-hidden group cursor-pointer"
+                onClick={handleSeek}
+              >
+                <div
                   className="h-full bg-gradient-to-r from-purple-400 to-violet-400 transition-all group-hover:from-purple-300 group-hover:to-violet-300"
                   style={{ width: `${progress}%` }}
                 />
@@ -1036,7 +1039,7 @@ export const ResoNyx: React.FC<ResoNyxProps> = ({ windowId }) => {
                 "text-xs w-10",
                 isDark ? "text-gray-400" : "text-gray-600"
               )}>
-                {currentTrack.duration}
+                {currentTrack?.source === 'radio' ? '∞' : formatTime(duration)}
               </span>
             </div>
           </div>
