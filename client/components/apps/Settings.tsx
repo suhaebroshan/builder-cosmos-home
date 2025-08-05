@@ -51,20 +51,49 @@ interface SettingsProps {
 }
 
 export const Settings: React.FC<SettingsProps> = ({ windowId }) => {
-  const { 
-    currentEmotion, 
-    setEmotion, 
-    currentTheme, 
-    setTheme, 
+  const {
+    currentEmotion,
+    setEmotion,
+    currentTheme,
+    setTheme,
     addMessage,
     userName,
     setUserName,
     userMemories,
     alarms,
-    schedule 
+    schedule
   } = useSamStore()
-  
+
   const { isDarkMode, setDarkMode } = useThemeStore()
+
+  const {
+    authMethod,
+    passcode,
+    pattern,
+    biometricEnabled,
+    autoLockTimeout,
+    deviceType,
+    navigationStyle,
+    showStatusBar,
+    statusBarStyle,
+    showNotificationDots,
+    enableHapticFeedback,
+    animationSpeed,
+    quickSettingsEnabled,
+    quickSettingsTiles,
+    setAuthMethod,
+    setPasscode,
+    setPattern,
+    setBiometric,
+    setAutoLockTimeout,
+    setDeviceType,
+    setNavigationStyle,
+    setStatusBarPreferences,
+    setNotificationDots,
+    setHapticFeedback,
+    setAnimationSpeed,
+    setQuickSettings
+  } = useDeviceAuthStore()
   
   const [activeSection, setActiveSection] = useState('profile')
   const [profilePicture, setProfilePicture] = useState(() => {
