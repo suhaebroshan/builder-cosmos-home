@@ -11,7 +11,7 @@ import {
   FlashlightOff,
   Sun,
   Moon,
-  Airplane,
+  Plane,
   AirplayIcon,
   RotateCcw,
   RotateCw,
