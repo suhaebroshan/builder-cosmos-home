@@ -28,12 +28,121 @@ import {
 
 export const MobileHomeScreen: React.FC = () => {
   const { isPhone, isTablet } = useDeviceDetection()
-  const { windows } = useWindowStore()
+  const { windows, openWindow } = useWindowStore()
   const { settings } = useThemeStore()
+  const [showAppDrawer, setShowAppDrawer] = useState(false)
 
   // Only show on mobile when no fullscreen apps are running
   if (!isPhone && !isTablet) return null
   if (windows.some(w => w.mode === 'fullscreen' && !w.isMinimized)) return null
+
+  // Mobile app definitions
+  const mobileApps = [
+    {
+      id: 'sam-chat',
+      name: 'Sam Chat',
+      icon: MessageCircle,
+      color: 'bg-gradient-to-br from-purple-500 to-violet-600',
+      component: () => import('@/components/apps/SamChat').then(m => m.SamChat)
+    },
+    {
+      id: 'call-sam',
+      name: 'Call Sam',
+      icon: Phone,
+      color: 'bg-gradient-to-br from-green-500 to-emerald-600',
+      component: () => import('@/components/apps/CallSam').then(m => m.CallSam)
+    },
+    {
+      id: 'files',
+      name: 'Files',
+      icon: Folder,
+      color: 'bg-gradient-to-br from-blue-500 to-cyan-600',
+      component: () => import('@/components/apps/Files').then(m => m.Files)
+    },
+    {
+      id: 'app-forge',
+      name: 'App Forge',
+      icon: Wrench,
+      color: 'bg-gradient-to-br from-orange-500 to-red-600',
+      component: () => import('@/components/apps/AppForge').then(m => m.AppForge)
+    },
+    {
+      id: 'calendar',
+      name: 'Calendar',
+      icon: CalendarIcon,
+      color: 'bg-gradient-to-br from-indigo-500 to-purple-600',
+      component: () => import('@/components/apps/Calendar').then(m => m.Calendar)
+    },
+    {
+      id: 'settings',
+      name: 'Settings',
+      icon: SettingsIcon,
+      color: 'bg-gradient-to-br from-gray-500 to-slate-600',
+      component: () => import('@/components/apps/Settings').then(m => m.Settings)
+    },
+    {
+      id: 'nyx-browser',
+      name: 'Browser',
+      icon: Globe,
+      color: 'bg-gradient-to-br from-teal-500 to-cyan-600',
+      component: () => import('@/components/apps/NyxBrowser').then(m => m.NyxBrowser)
+    },
+    {
+      id: 'calculator',
+      name: 'Calculator',
+      icon: CalculatorIcon,
+      color: 'bg-gradient-to-br from-slate-600 to-gray-700',
+      component: () => import('@/components/apps/Calculator').then(m => m.Calculator)
+    },
+    {
+      id: 'notepad',
+      name: 'Notepad',
+      icon: FileText,
+      color: 'bg-gradient-to-br from-yellow-500 to-amber-600',
+      component: () => import('@/components/apps/Notepad').then(m => m.Notepad)
+    },
+    {
+      id: 'chess',
+      name: 'Chess',
+      icon: Crown,
+      color: 'bg-gradient-to-br from-amber-700 to-yellow-800',
+      component: () => import('@/components/apps/ChessGame').then(m => m.ChessGame)
+    },
+    {
+      id: 'flappy',
+      name: 'Flappy',
+      icon: Gamepad2,
+      color: 'bg-gradient-to-br from-pink-500 to-rose-600',
+      component: () => import('@/components/apps/FlappyGame').then(m => m.FlappyGame)
+    },
+    {
+      id: 'manual',
+      name: 'Manual',
+      icon: HelpCircle,
+      color: 'bg-gradient-to-br from-violet-500 to-purple-600',
+      component: () => import('@/components/apps/NyxManual').then(m => m.NyxManual)
+    }
+  ]
+
+  const handleAppLaunch = async (app: typeof mobileApps[0]) => {
+    try {
+      const AppComponent = await app.component()
+      openWindow({
+        appId: app.id,
+        title: app.name,
+        component: AppComponent,
+        position: { x: 0, y: 0 },
+        size: {
+          width: isPhone ? window.innerWidth : window.innerWidth * 0.8,
+          height: isPhone ? window.innerHeight : window.innerHeight * 0.8
+        },
+        mode: isPhone ? 'fullscreen' : 'windowed'
+      })
+      setShowAppDrawer(false)
+    } catch (error) {
+      console.error('Failed to load app:', error)
+    }
+  }
   
   return (
     <div className="absolute inset-0 pointer-events-none">
