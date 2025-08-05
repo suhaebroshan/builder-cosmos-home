@@ -232,6 +232,18 @@ export const Settings: React.FC<SettingsProps> = ({ windowId }) => {
       description: 'Personal information and avatar'
     },
     {
+      id: 'device',
+      name: 'Device & Interface',
+      icon: Smartphone,
+      description: 'Device type, navigation, and gestures'
+    },
+    {
+      id: 'security',
+      name: 'Security & Lock',
+      icon: Lock,
+      description: 'Authentication methods and lock screen'
+    },
+    {
       id: 'appearance',
       name: 'Appearance',
       icon: Palette,
