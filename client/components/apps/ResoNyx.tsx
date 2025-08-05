@@ -67,7 +67,7 @@ export const ResoNyx: React.FC<ResoNyxProps> = ({ windowId }) => {
   const { settings } = useThemeStore()
   const audioRef = useRef<HTMLAudioElement>(null)
   
-  const [currentView, setCurrentView] = useState<'home' | 'search' | 'library' | 'playlist'>('home')
+  const [currentView, setCurrentView] = useState<'home' | 'search' | 'library' | 'playlist' | 'url-input'>('home')
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [volume, setVolume] = useState(70)
@@ -75,7 +75,16 @@ export const ResoNyx: React.FC<ResoNyxProps> = ({ windowId }) => {
   const [shuffle, setShuffle] = useState(false)
   const [repeat, setRepeat] = useState<'off' | 'all' | 'one'>('off')
   const [progress, setProgress] = useState(0)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
   const [selectedPlaylist, setSelectedPlaylist] = useState<Playlist | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<Track[]>([])
+  const [customUrl, setCustomUrl] = useState('')
+  const [radioStations, setRadioStations] = useState<Track[]>([])
+  const [isLoadingSearch, setIsLoadingSearch] = useState(false)
 
   // Sample tracks with Nyx/space theme
   const sampleTracks: Track[] = [
