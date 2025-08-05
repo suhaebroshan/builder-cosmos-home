@@ -218,35 +218,35 @@ export const EnhancedBootAnimation: React.FC<EnhancedBootAnimationProps> = ({ on
             <div className="space-y-2 text-xs text-purple-300/60 font-mono text-center mb-8">
               <motion.div
                 initial={{ opacity: 0 }}
-                animate={{ opacity: progress > 20 ? 1 : 0 }}
+                animate={{ opacity: progress > 200 ? 1 : 0 }}
                 transition={{ duration: 0.3 }}
               >
                 ✓ Quantum processors: Online
               </motion.div>
               <motion.div
                 initial={{ opacity: 0 }}
-                animate={{ opacity: progress > 40 ? 1 : 0 }}
+                animate={{ opacity: progress > 400 ? 1 : 0 }}
                 transition={{ duration: 0.3 }}
               >
                 ✓ Neural networks: Synchronized
               </motion.div>
               <motion.div
                 initial={{ opacity: 0 }}
-                animate={{ opacity: progress > 60 ? 1 : 0 }}
+                animate={{ opacity: progress > 600 ? 1 : 0 }}
                 transition={{ duration: 0.3 }}
               >
                 ✓ AI subsystems: Active
               </motion.div>
               <motion.div
                 initial={{ opacity: 0 }}
-                animate={{ opacity: progress > 80 ? 1 : 0 }}
+                animate={{ opacity: progress > 800 ? 1 : 0 }}
                 transition={{ duration: 0.3 }}
               >
                 ✓ Security protocols: Enabled
               </motion.div>
               <motion.div
                 initial={{ opacity: 0 }}
-                animate={{ opacity: progress >= 100 ? 1 : 0 }}
+                animate={{ opacity: progress >= 1000 ? 1 : 0 }}
                 transition={{ duration: 0.3 }}
               >
                 ✓ System ready - Awaiting authentication
