@@ -273,6 +273,17 @@ export const EnhancedDesktop: React.FC = () => {
           description: 'Complete Nyx OS manual with shortcuts and tips',
           position: getGridPosition(15),
           size: { width: 64, height: 64 }
+        },
+        {
+          appId: 'resonyx',
+          name: 'ResoNyx',
+          icon: Music,
+          component: ResoNyx,
+          defaultSize: { width: 1200, height: 800 },
+          defaultPosition: { x: 180, y: 80 },
+          description: 'Feel the music, live the vibe - Your cosmic music player',
+          position: getGridPosition(16),
+          size: { width: 64, height: 64 }
         }
       ]
       
