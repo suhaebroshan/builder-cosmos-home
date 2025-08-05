@@ -222,7 +222,7 @@ export const NyxManual: React.FC = () => {
           <div className="space-y-4">
             <div className="bg-black/20 border border-white/10 rounded-xl p-4">
               <h3 className="text-purple-300 font-semibold mb-3 flex items-center gap-2">
-                <Gesture className="w-5 h-5" />
+                <Hand className="w-5 h-5" />
                 Gesture Navigation
               </h3>
               <div className="grid gap-3 text-sm">
