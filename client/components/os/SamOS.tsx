@@ -39,9 +39,7 @@ export const NyxOS: React.FC = () => {
   const [navigationStyle, setNavigationStyle] = useState<'gestures' | 'buttons'>('gestures')
 
   // Enable global keyboard shortcuts (disabled on phone)
-  if (!isPhone && selectedDeviceType !== 'phone') {
-    useKeyboardShortcuts()
-  }
+  useKeyboardShortcuts(!isPhone && selectedDeviceType !== 'phone')
 
   // Update CSS variables when theme changes
   useEffect(() => {
