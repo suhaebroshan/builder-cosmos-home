@@ -275,13 +275,13 @@ export const EnhancedDesktop: React.FC = () => {
           size: { width: 64, height: 64 }
         },
         {
-          appId: 'resonyx',
-          name: 'ResoNyx',
+          appId: 'media-player',
+          name: 'Media Player',
           icon: Music,
-          component: ResoNyx,
-          defaultSize: { width: 1200, height: 800 },
+          component: WindowsMediaPlayer,
+          defaultSize: { width: 1000, height: 700 },
           defaultPosition: { x: 180, y: 80 },
-          description: 'Feel the music, live the vibe - Your cosmic music player',
+          description: 'Windows-style media player for all your audio needs',
           position: getGridPosition(16),
           size: { width: 64, height: 64 }
         }
