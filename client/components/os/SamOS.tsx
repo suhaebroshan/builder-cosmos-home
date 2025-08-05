@@ -76,35 +76,7 @@ export const NyxOS: React.FC = () => {
     return () => document.removeEventListener('keydown', handleKeyDown, true)
   }, [])
 
-  const handleDeviceSetupComplete = (user: User, deviceType: DeviceType) => {
-    setCurrentUser(user)
-    setSelectedDeviceType(deviceType)
-    setIsSetupComplete(true)
-    setIsBooted(true)
 
-    // Initialize AI service
-    aiService.setVoiceMode(true)
-
-    // Device-specific welcome message
-    setTimeout(() => {
-      setEmotion('excited', 0.9)
-      let welcomeMessage = `Welcome to Nyx OS, ${user.displayName}! `
-
-      switch (deviceType) {
-        case 'phone':
-          welcomeMessage += "Your Android-style mobile experience is ready with smooth gestures and bouncy animations!"
-          break
-        case 'tablet':
-          welcomeMessage += "Your hybrid tablet experience combines the best of mobile and desktop - enjoy 80% mobile smoothness with 20% desktop power!"
-          break
-        case 'desktop':
-          welcomeMessage += "Your full desktop experience is ready with advanced multitasking and all the pro features you need!"
-          break
-      }
-
-      addMessage(welcomeMessage, 'sam', 'excited')
-    }, 1500)
-  }
 
   const handleBootComplete = (user: User) => {
     // Auto-detect device type and set up user
