@@ -1,9 +1,30 @@
-import React from 'react'
-import { motion } from 'framer-motion'
+import React, { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 import { useWindowStore } from '@/store/window-store'
 import { useThemeStore } from '@/store/theme-store'
 import { cn } from '@/lib/utils'
+import {
+  MessageCircle,
+  Phone,
+  Folder,
+  Wrench,
+  Calendar as CalendarIcon,
+  Settings as SettingsIcon,
+  Globe,
+  Gamepad2,
+  Crown,
+  Zap,
+  Brain,
+  FileText,
+  Calculator as CalculatorIcon,
+  Chrome,
+  Grid3x3,
+  HelpCircle,
+  Music,
+  ChevronUp,
+  Search
+} from 'lucide-react'
 
 export const MobileHomeScreen: React.FC = () => {
   const { isPhone, isTablet } = useDeviceDetection()
