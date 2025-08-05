@@ -170,7 +170,7 @@ export const AndroidStatusBar: React.FC<AndroidStatusBarProps> = ({
       <div className="flex items-center gap-1">
         {/* Active Status Icons */}
         {statusState.airplaneMode && (
-          <Airplane className={cn(iconSize, "text-orange-400")} />
+          <Plane className={cn(iconSize, "text-orange-400")} />
         )}
         
         {statusState.doNotDisturb && (
