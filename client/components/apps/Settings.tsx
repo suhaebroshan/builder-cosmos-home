@@ -361,6 +361,316 @@ export const Settings: React.FC<SettingsProps> = ({ windowId }) => {
     </div>
   )
 
+  const renderDeviceSection = () => (
+    <div className="space-y-6">
+      <h3 className="text-xl font-semibold text-white mb-4">Device & Interface Settings</h3>
+
+      {/* Device Type */}
+      <div className="bg-black/40 border border-purple-500/30 rounded-lg p-6">
+        <h4 className="text-white font-medium mb-4">Device Type</h4>
+        <div className="grid grid-cols-3 gap-3">
+          {(['phone', 'tablet', 'desktop'] as DeviceType[]).map((type) => {
+            const Icon = type === 'phone' ? Smartphone : type === 'tablet' ? Tablet : Monitor
+            return (
+              <button
+                key={type}
+                onClick={() => setDeviceType(type)}
+                className={cn(
+                  "p-4 rounded-lg border transition-all",
+                  deviceType === type
+                    ? "bg-purple-500/30 border-purple-400 text-white"
+                    : "bg-black/20 border-purple-500/20 text-purple-300 hover:bg-purple-500/20"
+                )}
+              >
+                <Icon className="w-8 h-8 mx-auto mb-2" />
+                <div className="text-sm font-medium capitalize">{type}</div>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Navigation Style (Mobile/Tablet only) */}
+      {(deviceType === 'phone' || deviceType === 'tablet') && (
+        <div className="bg-black/40 border border-purple-500/30 rounded-lg p-6">
+          <h4 className="text-white font-medium mb-4">Navigation Style</h4>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => setNavigationStyle('gestures')}
+              className={cn(
+                "p-4 rounded-lg border transition-all flex flex-col items-center gap-2",
+                navigationStyle === 'gestures'
+                  ? "bg-purple-500/30 border-purple-400 text-white"
+                  : "bg-black/20 border-purple-500/20 text-purple-300 hover:bg-purple-500/20"
+              )}
+            >
+              <Hand className="w-6 h-6" />
+              <span className="text-sm">Gestures</span>
+            </button>
+            <button
+              onClick={() => setNavigationStyle('buttons')}
+              className={cn(
+                "p-4 rounded-lg border transition-all flex flex-col items-center gap-2",
+                navigationStyle === 'buttons'
+                  ? "bg-purple-500/30 border-purple-400 text-white"
+                  : "bg-black/20 border-purple-500/20 text-purple-300 hover:bg-purple-500/20"
+              )}
+            >
+              <Grid3X3 className="w-6 h-6" />
+              <span className="text-sm">Buttons</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Status Bar Settings */}
+      <div className="bg-black/40 border border-purple-500/30 rounded-lg p-6 space-y-4">
+        <h4 className="text-white font-medium">Status Bar</h4>
+
+        <Toggle
+          label="Show Status Bar"
+          description="Display system information at the top"
+          checked={showStatusBar}
+          onChange={(checked) => setStatusBarPreferences(checked, statusBarStyle)}
+        />
+
+        <Select
+          label="Status Bar Style"
+          value={statusBarStyle}
+          onChange={(value) => setStatusBarPreferences(showStatusBar, value as 'light' | 'dark' | 'auto')}
+          options={[
+            { value: 'light', label: 'Light' },
+            { value: 'dark', label: 'Dark' },
+            { value: 'auto', label: 'Auto' }
+          ]}
+        />
+
+        <Toggle
+          label="Notification Dots"
+          description="Show dots for pending notifications"
+          checked={showNotificationDots}
+          onChange={setNotificationDots}
+        />
+      </div>
+
+      {/* Interaction Settings */}
+      <div className="bg-black/40 border border-purple-500/30 rounded-lg p-6 space-y-4">
+        <h4 className="text-white font-medium">Interaction</h4>
+
+        <Toggle
+          label="Haptic Feedback"
+          description="Vibration feedback for touch interactions"
+          checked={enableHapticFeedback}
+          onChange={setHapticFeedback}
+        />
+
+        <Select
+          label="Animation Speed"
+          value={animationSpeed}
+          onChange={(value) => setAnimationSpeed(value as 'slow' | 'normal' | 'fast')}
+          options={[
+            { value: 'slow', label: 'Slow' },
+            { value: 'normal', label: 'Normal' },
+            { value: 'fast', label: 'Fast' }
+          ]}
+        />
+      </div>
+
+      {/* Quick Settings */}
+      <div className="bg-black/40 border border-purple-500/30 rounded-lg p-6 space-y-4">
+        <h4 className="text-white font-medium">Quick Settings</h4>
+
+        <Toggle
+          label="Enable Quick Settings"
+          description="Access quick toggles from status bar"
+          checked={quickSettingsEnabled}
+          onChange={(checked) => setQuickSettings(checked, quickSettingsTiles)}
+        />
+
+        {quickSettingsEnabled && (
+          <div className="mt-4">
+            <label className="text-white text-sm mb-2 block">Available Tiles ({quickSettingsTiles.length})</label>
+            <div className="text-purple-300 text-xs">
+              Wi-Fi, Bluetooth, Airplane Mode, Brightness, Volume, Battery Saver,
+              Do Not Disturb, Hotspot, Location, Auto Rotate, Flashlight, Dark Mode
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+
+  const renderSecuritySection = () => {
+    const [tempPasscode, setTempPasscode] = useState('')
+    const [tempPattern, setTempPattern] = useState<number[]>([])
+    const [showPasscode, setShowPasscode] = useState(false)
+
+    return (
+      <div className="space-y-6">
+        <h3 className="text-xl font-semibold text-white mb-4">Security & Lock Screen</h3>
+
+        {/* Authentication Method */}
+        <div className="bg-black/40 border border-purple-500/30 rounded-lg p-6">
+          <h4 className="text-white font-medium mb-4">Lock Screen Authentication</h4>
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            {([
+              { method: 'none' as AuthMethod, icon: Unlock, label: 'None', desc: 'No lock screen' },
+              { method: 'swipe' as AuthMethod, icon: Hand, label: 'Swipe', desc: 'Swipe to unlock' },
+              { method: 'passcode' as AuthMethod, icon: Key, label: 'Passcode', desc: 'Numeric passcode' },
+              { method: 'pattern' as AuthMethod, icon: Grid3X3, label: 'Pattern', desc: 'Draw pattern' }
+            ]).map(({ method, icon: Icon, label, desc }) => (
+              <button
+                key={method}
+                onClick={() => setAuthMethod(method)}
+                className={cn(
+                  "p-4 rounded-lg border transition-all",
+                  authMethod === method
+                    ? "bg-purple-500/30 border-purple-400 text-white"
+                    : "bg-black/20 border-purple-500/20 text-purple-300 hover:bg-purple-500/20"
+                )}
+              >
+                <Icon className="w-6 h-6 mx-auto mb-2" />
+                <div className="text-sm font-medium">{label}</div>
+                <div className="text-xs opacity-70">{desc}</div>
+              </button>
+            ))}
+          </div>
+
+          {/* Passcode Setup */}
+          {authMethod === 'passcode' && (
+            <div className="mt-4 space-y-3">
+              <label className="text-white text-sm">Passcode (4-8 digits)</label>
+              <div className="relative">
+                <input
+                  type={showPasscode ? "text" : "password"}
+                  value={tempPasscode}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '').slice(0, 8)
+                    setTempPasscode(value)
+                  }}
+                  placeholder="Enter passcode"
+                  className="w-full px-3 py-2 pr-10 bg-black/40 border border-purple-500/30 rounded-lg text-white focus:border-purple-400/50 focus:outline-none"
+                />
+                <button
+                  onClick={() => setShowPasscode(!showPasscode)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-purple-300 hover:text-white"
+                >
+                  {showPasscode ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+              <button
+                onClick={() => {
+                  if (tempPasscode.length >= 4) {
+                    setPasscode(tempPasscode)
+                    addMessage('Passcode updated successfully!', 'sam', 'happy')
+                  }
+                }}
+                disabled={tempPasscode.length < 4}
+                className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/40 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors text-purple-300 text-sm"
+              >
+                Set Passcode
+              </button>
+              {passcode && (
+                <div className="text-green-400 text-xs">✓ Passcode is set</div>
+              )}
+            </div>
+          )}
+
+          {/* Pattern Setup */}
+          {authMethod === 'pattern' && (
+            <div className="mt-4 space-y-3">
+              <label className="text-white text-sm">Draw Pattern (Tap dots in order)</label>
+              <div className="grid grid-cols-3 gap-2 max-w-48 mx-auto">
+                {Array.from({ length: 9 }, (_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      if (!tempPattern.includes(i)) {
+                        setTempPattern([...tempPattern, i])
+                      }
+                    }}
+                    className={cn(
+                      "w-12 h-12 rounded-full border-2 transition-all",
+                      tempPattern.includes(i)
+                        ? "bg-purple-500 border-purple-400"
+                        : "border-purple-500/30 hover:border-purple-400"
+                    )}
+                  >
+                    {tempPattern.includes(i) && (
+                      <span className="text-white text-sm">{tempPattern.indexOf(i) + 1}</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+              <div className="flex gap-2 justify-center">
+                <button
+                  onClick={() => setTempPattern([])}
+                  className="px-3 py-1 bg-red-500/20 hover:bg-red-500/40 rounded text-red-300 text-sm"
+                >
+                  Clear
+                </button>
+                <button
+                  onClick={() => {
+                    if (tempPattern.length >= 4) {
+                      setPattern(tempPattern)
+                      addMessage('Pattern updated successfully!', 'sam', 'happy')
+                      setTempPattern([])
+                    }
+                  }}
+                  disabled={tempPattern.length < 4}
+                  className="px-3 py-1 bg-purple-500/20 hover:bg-purple-500/40 disabled:opacity-50 disabled:cursor-not-allowed rounded text-purple-300 text-sm"
+                >
+                  Set Pattern
+                </button>
+              </div>
+              {pattern.length > 0 && (
+                <div className="text-green-400 text-xs text-center">✓ Pattern is set ({pattern.length} points)</div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Auto Lock */}
+        <div className="bg-black/40 border border-purple-500/30 rounded-lg p-6 space-y-4">
+          <h4 className="text-white font-medium">Auto Lock</h4>
+
+          <Select
+            label="Auto Lock Timeout"
+            value={autoLockTimeout.toString()}
+            onChange={(value) => setAutoLockTimeout(Number(value))}
+            options={[
+              { value: '0', label: 'Never' },
+              { value: '1', label: '1 minute' },
+              { value: '5', label: '5 minutes' },
+              { value: '10', label: '10 minutes' },
+              { value: '30', label: '30 minutes' },
+              { value: '60', label: '1 hour' }
+            ]}
+          />
+        </div>
+
+        {/* Biometric */}
+        <div className="bg-black/40 border border-purple-500/30 rounded-lg p-6 space-y-4">
+          <h4 className="text-white font-medium">Biometric Authentication</h4>
+
+          <Toggle
+            label="Enable Biometric"
+            description="Use fingerprint or face recognition (simulated)"
+            checked={biometricEnabled}
+            onChange={setBiometric}
+          />
+
+          {biometricEnabled && (
+            <div className="flex items-center gap-2 text-green-400 text-sm">
+              <Fingerprint className="w-4 h-4" />
+              <span>Biometric authentication enabled</span>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   const renderProfileSection = () => (
     <div className="space-y-6">
       <h3 className="text-xl font-semibold text-white mb-4">Profile Settings</h3>
