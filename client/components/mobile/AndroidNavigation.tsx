@@ -81,7 +81,7 @@ export const AndroidNavigation: React.FC<AndroidNavigationProps> = ({
     if (info.offset.y > 100 && info.point.y < 100) {
       // Swipe down from top - show notifications/quick settings
       if (info.point.x > deviceInfo.screenWidth * 0.7) {
-        setShowQuickSettings(true)
+        quickSettings.open()
       } else {
         setShowNotifications(true)
       }
