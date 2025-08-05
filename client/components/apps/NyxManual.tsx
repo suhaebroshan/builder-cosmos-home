@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Book, 
-  Smartphone, 
-  Monitor, 
+import {
+  Book,
+  Smartphone,
+  Monitor,
   Tablet,
   Keyboard,
-  Gesture,
+  Hand,
   Zap,
   Settings,
   Search,
