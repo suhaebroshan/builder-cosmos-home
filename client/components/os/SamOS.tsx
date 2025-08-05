@@ -31,12 +31,13 @@ export const NyxOS: React.FC = () => {
   const { currentEmotion, emotionIntensity, addMessage, setEmotion } = useSamStore()
   const { openWindow } = useWindowStore()
   const { settings: themeSettings, setThemeMode } = useThemeStore()
-  const { deviceInfo, uiConfig, isPhone, isTablet } = useDeviceDetection()
+  const { deviceInfo, uiConfig, isPhone, isTablet, isDesktop } = useDeviceDetection()
   const [isBooted, setIsBooted] = useState(false)
-  const [isSetupComplete, setIsSetupComplete] = useState(false)
   const [currentUser, setCurrentUser] = useState<User | null>(null)
-  const [selectedDeviceType, setSelectedDeviceType] = useState<DeviceType | null>(null)
   const [navigationStyle, setNavigationStyle] = useState<'gestures' | 'buttons'>('gestures')
+
+  // Auto-detect device type
+  const selectedDeviceType: DeviceType = isPhone ? 'phone' : isTablet ? 'tablet' : 'desktop'
 
   // Enable global keyboard shortcuts (disabled on phone)
   useKeyboardShortcuts(!isPhone && selectedDeviceType !== 'phone')
