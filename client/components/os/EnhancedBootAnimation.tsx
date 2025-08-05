@@ -45,14 +45,14 @@ export const EnhancedBootAnimation: React.FC<EnhancedBootAnimationProps> = ({ on
       // Phase 3: Boot sequence with progress bar (4 seconds to show more facts)
       const progressInterval = setInterval(() => {
         setProgress(prev => {
-          if (prev >= 100) {
+          if (prev >= 1000) {
             clearInterval(progressInterval)
             setTimeout(() => setPhase('login'), 500)
-            return 100
+            return 1000
           }
-          return prev + 1 // Increment by 1% every 40ms (4000ms total)
+          return prev + 1 // Increment by 1 every 4ms (4000ms total)
         })
-      }, 40)
+      }, 4)
 
       // Cycle through facts every 1.2 seconds during boot
       const factInterval = setInterval(() => {
