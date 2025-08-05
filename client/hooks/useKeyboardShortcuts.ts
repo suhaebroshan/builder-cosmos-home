@@ -3,7 +3,7 @@ import { useWindowStore } from '@/store/window-store'
 import { useDesktopStore } from '@/store/desktop-store'
 import { useSamStore } from '@/store/sam-store'
 
-export const useKeyboardShortcuts = () => {
+export const useKeyboardShortcuts = (enabled: boolean = true) => {
   const { 
     windows, 
     focusedWindowId, 
