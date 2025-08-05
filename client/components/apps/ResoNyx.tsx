@@ -44,10 +44,14 @@ interface Track {
   artist: string
   album: string
   duration: string
+  durationSeconds: number
   coverUrl: string
-  audioUrl?: string
+  audioUrl: string
   isLiked: boolean
   plays: number
+  source: 'jamendo' | 'freemusicarchive' | 'url' | 'radio'
+  genre?: string
+  license?: string
 }
 
 interface Playlist {
