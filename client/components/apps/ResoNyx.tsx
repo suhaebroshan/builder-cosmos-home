@@ -669,7 +669,7 @@ export const ResoNyx: React.FC<ResoNyxProps> = ({ windowId }) => {
           Trending now
         </h2>
         <div className="space-y-2">
-          {sampleTracks.slice(0, 5).map((track, index) => (
+          {featuredTracks.slice(0, 5).map((track, index) => (
             <motion.div
               key={track.id}
               onClick={() => handleTrackSelect(track)}
