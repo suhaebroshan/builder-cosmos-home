@@ -196,12 +196,12 @@ export const EnhancedBootAnimation: React.FC<EnhancedBootAnimationProps> = ({ on
             <div className="w-96 mb-8">
               <div className="flex justify-between text-xs text-purple-300/70 mb-3">
                 <span>System initialization...</span>
-                <span>{progress}%</span>
+                <span>{progress}/1000</span>
               </div>
               <div className="w-full bg-purple-900/30 rounded-full h-2 overflow-hidden border border-purple-500/30">
                 <motion.div
                   className="h-full bg-gradient-to-r from-purple-500 via-violet-400 to-purple-400 relative"
-                  style={{ width: `${progress}%` }}
+                  style={{ width: `${(progress / 1000) * 100}%` }}
                   transition={{ duration: 0.1, ease: 'easeOut' }}
                 >
                   {/* Animated shimmer effect */}
