@@ -229,28 +229,84 @@ export const ResoNyx: React.FC<ResoNyxProps> = ({ windowId }) => {
     }
   ]
 
+  // Audio player setup
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) return
+
+    const handleLoadedMetadata = () => {
+      setDuration(audio.duration)
+      setError(null)
+    }
+
+    const handleTimeUpdate = () => {
+      setCurrentTime(audio.currentTime)
+      if (duration > 0) {
+        setProgress((audio.currentTime / duration) * 100)
+      }
+    }
+
+    const handleEnded = () => {
+      if (repeat === 'one') {
+        audio.currentTime = 0
+        audio.play()
+      } else {
+        // Auto-play next track
+        const currentIndex = featuredTracks.findIndex(t => t.id === currentTrack?.id)
+        if (currentIndex < featuredTracks.length - 1) {
+          handleTrackSelect(featuredTracks[currentIndex + 1])
+        } else if (repeat === 'all') {
+          handleTrackSelect(featuredTracks[0])
+        } else {
+          setIsPlaying(false)
+        }
+      }
+    }
+
+    const handleError = (e: Event) => {
+      setError('Failed to load audio. Please try a different source.')
+      setIsPlaying(false)
+      setIsLoading(false)
+    }
+
+    const handleLoadStart = () => {
+      setIsLoading(true)
+    }
+
+    const handleCanPlay = () => {
+      setIsLoading(false)
+    }
+
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata)
+    audio.addEventListener('timeupdate', handleTimeUpdate)
+    audio.addEventListener('ended', handleEnded)
+    audio.addEventListener('error', handleError)
+    audio.addEventListener('loadstart', handleLoadStart)
+    audio.addEventListener('canplay', handleCanPlay)
+
+    return () => {
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata)
+      audio.removeEventListener('timeupdate', handleTimeUpdate)
+      audio.removeEventListener('ended', handleEnded)
+      audio.removeEventListener('error', handleError)
+      audio.removeEventListener('loadstart', handleLoadStart)
+      audio.removeEventListener('canplay', handleCanPlay)
+    }
+  }, [currentTrack, repeat, featuredTracks])
+
+  // Set volume
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = isMuted ? 0 : volume / 100
+    }
+  }, [volume, isMuted])
+
   // Set default current track
   useEffect(() => {
-    if (!currentTrack && sampleTracks.length > 0) {
-      setCurrentTrack(sampleTracks[0])
+    if (!currentTrack && featuredTracks.length > 0) {
+      setCurrentTrack(featuredTracks[0])
     }
-  }, [])
-
-  // Simulate progress
-  useEffect(() => {
-    if (isPlaying) {
-      const interval = setInterval(() => {
-        setProgress(prev => {
-          if (prev >= 100) {
-            setIsPlaying(false)
-            return 0
-          }
-          return prev + 0.5
-        })
-      }, 1000)
-      return () => clearInterval(interval)
-    }
-  }, [isPlaying])
+  }, [currentTrack, featuredTracks])
 
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying)
