@@ -23,6 +23,7 @@ import { Notepad } from '@/components/apps/Notepad'
 import { Calculator } from '@/components/apps/Calculator'
 import { WebBrowser } from '@/components/apps/WebBrowser'
 import { Game2048 } from '@/components/apps/Game2048'
+import { NyxManual } from '@/components/apps/NyxManual'
 import { AppErrorBoundary } from '@/components/apps/AppErrorBoundary'
 import {
   MessageCircle,
