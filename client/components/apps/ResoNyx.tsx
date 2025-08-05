@@ -1050,6 +1050,115 @@ export const ResoNyx: React.FC<ResoNyxProps> = ({ windowId }) => {
             )}
           </div>
         )}
+        {currentView === 'url-input' && (
+          <div className="max-w-2xl mx-auto">
+            <button
+              onClick={() => setCurrentView('search')}
+              className={cn(
+                "flex items-center gap-2 mb-6 text-sm",
+                isDark ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900"
+              )}
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Back to Search
+            </button>
+
+            <div className="text-center mb-8">
+              <Upload className={cn(
+                "w-16 h-16 mx-auto mb-4",
+                isDark ? "text-purple-400" : "text-purple-600"
+              )} />
+              <h1 className={cn(
+                "text-3xl font-bold mb-2",
+                isDark ? "text-white" : "text-gray-900"
+              )}>
+                Add Audio URL
+              </h1>
+              <p className={cn(
+                "text-lg",
+                isDark ? "text-gray-400" : "text-gray-600"
+              )}>
+                Play any audio file from the internet
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <div>
+                <label className={cn(
+                  "block text-sm font-medium mb-2",
+                  isDark ? "text-white" : "text-gray-900"
+                )}>
+                  Audio URL
+                </label>
+                <input
+                  type="url"
+                  value={customUrl}
+                  onChange={(e) => setCustomUrl(e.target.value)}
+                  placeholder="https://example.com/audio.mp3"
+                  className={cn(
+                    "w-full px-4 py-3 rounded-xl border text-lg",
+                    isDark
+                      ? "bg-gray-800 border-gray-700 text-white placeholder-gray-400"
+                      : "bg-gray-100 border-gray-200 text-gray-900 placeholder-gray-500"
+                  )}
+                />
+              </div>
+
+              <div className={cn(
+                "p-4 rounded-xl border",
+                isDark ? "bg-gray-800/50 border-gray-700" : "bg-gray-100 border-gray-200"
+              )}>
+                <h3 className={cn(
+                  "font-medium mb-2",
+                  isDark ? "text-white" : "text-gray-900"
+                )}>
+                  Supported formats:
+                </h3>
+                <ul className={cn(
+                  "text-sm space-y-1",
+                  isDark ? "text-gray-400" : "text-gray-600"
+                )}>
+                  <li>• MP3, OGG, WAV, AAC audio files</li>
+                  <li>• Direct streaming URLs</li>
+                  <li>• Internet radio stations</li>
+                  <li>• Podcast feeds</li>
+                </ul>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={addCustomUrl}
+                  disabled={!customUrl.trim()}
+                  className="flex-1 py-3 px-6 bg-purple-500 text-white rounded-xl font-medium hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Add & Play
+                </button>
+                <button
+                  onClick={() => {
+                    setCustomUrl('')
+                    setCurrentView('search')
+                  }}
+                  className={cn(
+                    "px-6 py-3 rounded-xl font-medium transition-colors",
+                    isDark
+                      ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  )}
+                >
+                  Cancel
+                </button>
+              </div>
+
+              <div className={cn(
+                "text-xs text-center",
+                isDark ? "text-gray-500" : "text-gray-500"
+              )}>
+                Make sure the URL is publicly accessible and CORS-enabled
+              </div>
+            </div>
+          </div>
+        )}
+
         {currentView === 'library' && (
           <div className="text-center py-12">
             <Library className={cn(
