@@ -74,7 +74,20 @@ export const SamChat: React.FC<SamChatProps> = ({ windowId }) => {
     } catch (error) {
       console.error('Error sending message to AI:', error)
       setEmotion('confused', 0.6)
-      addMessage("Sorry bruv, I'm having some technical difficulties right now. My AI brain needs a moment to reboot.", 'sam', 'confused')
+      addMessage("Damn, my quantum processors are having a moment. Let me try that again, bruv.", 'sam', 'confused')
+
+      // Retry with a fallback response
+      setTimeout(() => {
+        const fallbackResponses = [
+          "Alright, I'm back online! What were we talking about?",
+          "Sorry about that glitch. My neural networks needed a quick refresh. What's up?",
+          "I'm good now! That was just a quantum fluctuation. How can I help you?",
+          "Back to normal! Sometimes even AI needs a coffee break. What's on your mind?"
+        ]
+        const fallback = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)]
+        addMessage(fallback, 'sam', 'happy')
+        setEmotion('happy', 0.7)
+      }, 1000)
     } finally {
       setThinking(false)
     }
