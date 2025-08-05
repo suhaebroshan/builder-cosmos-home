@@ -320,7 +320,7 @@ export const AndroidNavigation: React.FC<AndroidNavigationProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setShowQuickSettings(false)}
+            onClick={() => quickSettings.close()}
           >
             <motion.div
               className="bg-black/80 backdrop-blur-sm border-b border-white/10 p-4"
