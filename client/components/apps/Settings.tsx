@@ -1144,6 +1144,8 @@ export const Settings: React.FC<SettingsProps> = ({ windowId }) => {
   const renderSection = () => {
     switch (activeSection) {
       case 'profile': return renderProfileSection()
+      case 'device': return renderDeviceSection()
+      case 'security': return renderSecuritySection()
       case 'appearance': return renderAppearanceSection()
       case 'audio': return renderAudioSection()
       case 'display': return renderDisplaySection()
