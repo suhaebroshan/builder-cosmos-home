@@ -1349,7 +1349,28 @@ export const ResoNyx: React.FC<ResoNyxProps> = ({ windowId }) => {
       </div>
       <PlayerControls />
       
-      <audio ref={audioRef} />
+      <audio
+        ref={audioRef}
+        crossOrigin="anonymous"
+        preload="metadata"
+        onError={() => setError('Failed to load audio. Please check the URL and your internet connection.')}
+      />
+
+      {/* Error Display */}
+      {error && (
+        <motion.div
+          className="fixed top-4 right-4 bg-red-500/90 text-white px-4 py-2 rounded-lg shadow-lg z-50"
+          initial={{ opacity: 0, x: 100 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 100 }}
+          onClick={() => setError(null)}
+        >
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4" />
+            <span className="text-sm">{error}</span>
+          </div>
+        </motion.div>
+      )}
     </div>
   )
 }
