@@ -213,15 +213,15 @@ export const NyxTaskbar: React.FC = () => {
     },
     {
       icon: Music,
-      label: 'ResoNyx',
+      label: 'Media Player',
       action: async () => {
-        const { ResoNyx } = await import('@/components/apps/ResoNyx')
+        const { WindowsMediaPlayer } = await import('@/components/apps/WindowsMediaPlayer')
         openWindow({
-          appId: 'resonyx',
-          title: 'ResoNyx',
-          component: ResoNyx,
+          appId: 'media-player',
+          title: 'Windows Media Player',
+          component: WindowsMediaPlayer,
           position: { x: 180, y: 80 },
-          size: { width: 1200, height: 800 }
+          size: { width: 1000, height: 700 }
         })
         setIsLauncherOpen(false)
       }
