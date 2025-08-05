@@ -145,29 +145,120 @@ export const MobileHomeScreen: React.FC = () => {
   }
   
   return (
-    <div className="absolute inset-0 pointer-events-none">
-      {/* Phone home indicator */}
-      {isPhone && (
-        <motion.div
-          className="absolute bottom-4 left-1/2 transform -translate-x-1/2"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <div className={cn(
-            "flex flex-col items-center gap-2",
-            settings.mode === 'dark' ? "text-white/60" : "text-gray-800/70"
-          )}>
-            <div className={cn(
-              "w-1 h-1 rounded-full",
-              settings.mode === 'dark' ? "bg-white/50" : "bg-gray-600/50"
-            )} />
-            <div className="text-xs text-center">
-              Swipe up for apps
-            </div>
-          </div>
-        </motion.div>
-      )}
+    <div className="absolute inset-0">
+      {/* Main App Grid (visible on phones and tablets) */}
+      <div className="p-6 pt-12">
+        <div className="grid grid-cols-4 gap-4 mb-8">
+          {mobileApps.slice(0, isPhone ? 8 : 12).map((app) => (
+            <motion.button
+              key={app.id}
+              onClick={() => handleAppLaunch(app)}
+              className={cn(
+                "aspect-square rounded-2xl p-4 flex flex-col items-center justify-center text-white shadow-lg",
+                app.color,
+                "hover:scale-105 active:scale-95 transition-transform pointer-events-auto"
+              )}
+              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.05 }}
+            >
+              <app.icon className="w-8 h-8 mb-2" />
+              <span className="text-xs font-medium text-center">{app.name}</span>
+            </motion.button>
+          ))}
+        </div>
+
+        {/* App Drawer Toggle for phones */}
+        {isPhone && (
+          <motion.button
+            onClick={() => setShowAppDrawer(true)}
+            className={cn(
+              "w-full py-4 rounded-2xl backdrop-blur-md border flex items-center justify-center gap-2 pointer-events-auto",
+              settings.mode === 'dark'
+                ? "bg-black/40 border-white/10 text-white"
+                : "bg-white/40 border-black/10 text-gray-800"
+            )}
+            whileTap={{ scale: 0.98 }}
+          >
+            <ChevronUp className="w-5 h-5" />
+            <span className="text-sm font-medium">More Apps</span>
+          </motion.button>
+        )}
+      </div>
+
+      {/* App Drawer (slide up from bottom) */}
+      <AnimatePresence>
+        {showAppDrawer && (
+          <motion.div
+            className="fixed inset-0 z-50 pointer-events-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {/* Backdrop */}
+            <div
+              className="absolute inset-0 bg-black/50"
+              onClick={() => setShowAppDrawer(false)}
+            />
+
+            {/* Drawer */}
+            <motion.div
+              className={cn(
+                "absolute bottom-0 left-0 right-0 rounded-t-3xl p-6 max-h-[80vh] overflow-y-auto",
+                settings.mode === 'dark'
+                  ? "bg-gray-900/95 backdrop-blur-xl"
+                  : "bg-white/95 backdrop-blur-xl"
+              )}
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+            >
+              {/* Handle */}
+              <div className={cn(
+                "w-12 h-1 rounded-full mx-auto mb-6",
+                settings.mode === 'dark' ? "bg-white/30" : "bg-gray-400/50"
+              )} />
+
+              {/* Search Bar */}
+              <div className="relative mb-6">
+                <Search className={cn(
+                  "absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5",
+                  settings.mode === 'dark' ? "text-gray-400" : "text-gray-500"
+                )} />
+                <input
+                  type="text"
+                  placeholder="Search apps..."
+                  className={cn(
+                    "w-full pl-12 pr-4 py-3 rounded-2xl border",
+                    settings.mode === 'dark'
+                      ? "bg-gray-800 border-gray-700 text-white placeholder-gray-400"
+                      : "bg-gray-100 border-gray-200 text-gray-900 placeholder-gray-500"
+                  )}
+                />
+              </div>
+
+              {/* All Apps Grid */}
+              <div className="grid grid-cols-4 gap-4">
+                {mobileApps.map((app) => (
+                  <motion.button
+                    key={app.id}
+                    onClick={() => handleAppLaunch(app)}
+                    className={cn(
+                      "aspect-square rounded-2xl p-4 flex flex-col items-center justify-center text-white shadow-lg",
+                      app.color
+                    )}
+                    whileTap={{ scale: 0.9 }}
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    <app.icon className="w-8 h-8 mb-2" />
+                    <span className="text-xs font-medium text-center">{app.name}</span>
+                  </motion.button>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       
       {/* Status bar for mobile */}
       {(isPhone || isTablet) && (
