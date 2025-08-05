@@ -121,6 +121,13 @@ export const MobileHomeScreen: React.FC = () => {
       icon: HelpCircle,
       color: 'bg-gradient-to-br from-violet-500 to-purple-600',
       component: () => import('@/components/apps/NyxManual').then(m => m.NyxManual)
+    },
+    {
+      id: 'resonyx',
+      name: 'ResoNyx',
+      icon: Music,
+      color: 'bg-gradient-to-br from-purple-600 to-indigo-700',
+      component: () => import('@/components/apps/ResoNyx').then(m => m.ResoNyx)
     }
   ]
 
