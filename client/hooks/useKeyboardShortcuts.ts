@@ -27,6 +27,9 @@ export const useKeyboardShortcuts = (enabled: boolean = true) => {
   const { addMessage, setEmotion } = useSamStore()
 
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    // Return early if shortcuts are disabled
+    if (!enabled) return
+
     const { key, ctrlKey, metaKey, altKey, shiftKey } = event
     const cmdKey = ctrlKey || metaKey // Support both Ctrl (Windows/Linux) and Cmd (Mac)
 
