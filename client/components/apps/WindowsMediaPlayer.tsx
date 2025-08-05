@@ -471,16 +471,16 @@ export const WindowsMediaPlayer: React.FC<WindowsMediaPlayerProps> = ({ windowId
                 {currentTrack && (
                   <div className="text-center">
                     <div className={cn(
-                      "mx-auto rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mb-4",
-                      isCompact ? "w-32 h-32" : "w-48 h-48"
+                      "mx-auto rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mb-4 shadow-lg",
+                      isMobile ? "w-48 h-48" : isCompact ? "w-32 h-32" : "w-64 h-64"
                     )}>
-                      <Music className={cn("text-white", isCompact ? "w-16 h-16" : "w-24 h-24")} />
+                      <Music className={cn("text-white", isMobile ? "w-24 h-24" : isCompact ? "w-16 h-16" : "w-32 h-32")} />
                     </div>
-                    <h2 className={cn("font-bold mb-1", isCompact ? "text-lg" : "text-2xl")}>{currentTrack.title}</h2>
-                    <p className={cn("mb-1", isCompact ? "text-sm" : "text-lg")}>{currentTrack.artist}</p>
-                    <p className={cn("text-gray-500", isCompact ? "text-xs" : "text-sm")}>{currentTrack.album}</p>
+                    <h2 className={cn("font-bold mb-2 px-4", isMobile ? "text-xl" : isCompact ? "text-lg" : "text-3xl")}>{currentTrack.title}</h2>
+                    <p className={cn("mb-2 px-4", isMobile ? "text-lg" : isCompact ? "text-sm" : "text-xl")}>{currentTrack.artist}</p>
+                    <p className={cn("text-gray-500 px-4", isMobile ? "text-sm" : isCompact ? "text-xs" : "text-lg")}>{currentTrack.album}</p>
                     {currentTrack.year && (
-                      <p className="text-xs text-gray-400 mt-2">
+                      <p className={cn("text-gray-400 mt-2 px-4", isMobile ? "text-sm" : "text-xs")}>
                         {currentTrack.year} • {currentTrack.genre} • {currentTrack.format}
                       </p>
                     )}
