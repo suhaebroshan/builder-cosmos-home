@@ -187,6 +187,7 @@ export const useKeyboardShortcuts = (enabled: boolean = true) => {
     }
 
   }, [
+    enabled,
     windows,
     focusedWindowId,
     closeWindow,
