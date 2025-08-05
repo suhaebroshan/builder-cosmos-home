@@ -609,101 +609,182 @@ export const WindowsMediaPlayer: React.FC<WindowsMediaPlayerProps> = ({ windowId
 
           {/* Controls Bar */}
           <div className={cn(
-            "border-t p-3",
-            settings.mode === 'dark' ? "bg-gray-800 border-gray-700" : "bg-gray-100 border-gray-300"
+            "border-t",
+            settings.mode === 'dark' ? "bg-gray-800 border-gray-700" : "bg-gray-100 border-gray-300",
+            isMobile ? "p-4" : "p-3"
           )}>
             {/* Progress Bar */}
-            <div className="mb-3">
-              <div className="flex items-center space-x-2 text-xs">
-                <span className="w-12 text-right">{formatTime(currentTime)}</span>
+            <div className={cn("mb-3", isMobile && "mb-4")}>
+              <div className={cn("flex items-center space-x-2", isMobile ? "text-sm" : "text-xs")}>
+                <span className={cn("text-right", isMobile ? "w-14" : "w-12")}>{formatTime(currentTime)}</span>
                 <div
-                  className="flex-1 h-2 bg-gray-300 dark:bg-gray-600 rounded cursor-pointer"
+                  className={cn("flex-1 bg-gray-300 dark:bg-gray-600 rounded cursor-pointer", isMobile ? "h-3" : "h-2")}
                   onClick={seek}
                 >
                   <div
-                    className="h-full bg-blue-500 rounded"
+                    className="h-full bg-blue-500 rounded transition-all"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
-                <span className="w-12">{formatTime(duration)}</span>
+                <span className={cn(isMobile ? "w-14" : "w-12")}>{formatTime(duration)}</span>
               </div>
             </div>
 
-            {/* Control Buttons */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                {/* Transport Controls */}
-                <button
-                  onClick={skipPrevious}
-                  className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"
-                >
-                  <SkipBack className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={togglePlayback}
-                  disabled={!currentTrack || isLoading}
-                  className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 disabled:opacity-50"
-                >
-                  {isLoading ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : isPlaying ? (
-                    <Pause className="w-5 h-5" />
-                  ) : (
-                    <Play className="w-5 h-5" />
-                  )}
-                </button>
-                <button
-                  onClick={skipNext}
-                  className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"
-                >
-                  <SkipForward className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Additional Controls */}
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => setShuffle(!shuffle)}
-                  className={cn(
-                    "p-1 rounded",
-                    shuffle ? "bg-blue-500 text-white" : "hover:bg-gray-200 dark:hover:bg-gray-700"
-                  )}
-                >
-                  <Shuffle className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setRepeat(repeat === 'none' ? 'all' : repeat === 'all' ? 'one' : 'none')}
-                  className={cn(
-                    "p-1 rounded",
-                    repeat !== 'none' ? "bg-blue-500 text-white" : "hover:bg-gray-200 dark:hover:bg-gray-700"
-                  )}
-                >
-                  <Repeat className="w-4 h-4" />
-                </button>
-
-                {/* Volume */}
-                <div className="flex items-center space-x-1">
+            {isMobile ? (
+              /* Mobile Layout - Stacked */
+              <div className="space-y-4">
+                {/* Main Transport Controls */}
+                <div className="flex items-center justify-center space-x-6">
                   <button
-                    onClick={() => setIsMuted(!isMuted)}
-                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"
+                    onClick={skipPrevious}
+                    className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full"
                   >
-                    {isMuted || volume === 0 ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                    <SkipBack className="w-6 h-6" />
                   </button>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.1"
-                    value={isMuted ? 0 : volume}
-                    onChange={(e) => {
-                      setVolume(Number(e.target.value))
-                      setIsMuted(false)
-                    }}
-                    className="w-16"
-                  />
+                  <button
+                    onClick={togglePlayback}
+                    disabled={!currentTrack || isLoading}
+                    className="p-4 bg-blue-500 text-white rounded-full hover:bg-blue-600 disabled:opacity-50 shadow-lg"
+                  >
+                    {isLoading ? (
+                      <Loader2 className="w-8 h-8 animate-spin" />
+                    ) : isPlaying ? (
+                      <Pause className="w-8 h-8" />
+                    ) : (
+                      <Play className="w-8 h-8" />
+                    )}
+                  </button>
+                  <button
+                    onClick={skipNext}
+                    className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full"
+                  >
+                    <SkipForward className="w-6 h-6" />
+                  </button>
+                </div>
+
+                {/* Secondary Controls */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <button
+                      onClick={() => setShuffle(!shuffle)}
+                      className={cn(
+                        "p-2 rounded-full",
+                        shuffle ? "bg-blue-500 text-white" : "hover:bg-gray-200 dark:hover:bg-gray-700"
+                      )}
+                    >
+                      <Shuffle className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => setRepeat(repeat === 'none' ? 'all' : repeat === 'all' ? 'one' : 'none')}
+                      className={cn(
+                        "p-2 rounded-full",
+                        repeat !== 'none' ? "bg-blue-500 text-white" : "hover:bg-gray-200 dark:hover:bg-gray-700"
+                      )}
+                    >
+                      <Repeat className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  {/* Volume */}
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => setIsMuted(!isMuted)}
+                      className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full"
+                    >
+                      {isMuted || volume === 0 ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                    </button>
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      value={isMuted ? 0 : volume}
+                      onChange={(e) => {
+                        setVolume(Number(e.target.value))
+                        setIsMuted(false)
+                      }}
+                      className="w-20"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              /* Desktop Layout - Single Row */
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  {/* Transport Controls */}
+                  <button
+                    onClick={skipPrevious}
+                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"
+                  >
+                    <SkipBack className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={togglePlayback}
+                    disabled={!currentTrack || isLoading}
+                    className="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 disabled:opacity-50"
+                  >
+                    {isLoading ? (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : isPlaying ? (
+                      <Pause className="w-5 h-5" />
+                    ) : (
+                      <Play className="w-5 h-5" />
+                    )}
+                  </button>
+                  <button
+                    onClick={skipNext}
+                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"
+                  >
+                    <SkipForward className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Additional Controls */}
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => setShuffle(!shuffle)}
+                    className={cn(
+                      "p-1 rounded",
+                      shuffle ? "bg-blue-500 text-white" : "hover:bg-gray-200 dark:hover:bg-gray-700"
+                    )}
+                  >
+                    <Shuffle className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setRepeat(repeat === 'none' ? 'all' : repeat === 'all' ? 'one' : 'none')}
+                    className={cn(
+                      "p-1 rounded",
+                      repeat !== 'none' ? "bg-blue-500 text-white" : "hover:bg-gray-200 dark:hover:bg-gray-700"
+                    )}
+                  >
+                    <Repeat className="w-4 h-4" />
+                  </button>
+
+                  {/* Volume */}
+                  <div className="flex items-center space-x-1">
+                    <button
+                      onClick={() => setIsMuted(!isMuted)}
+                      className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"
+                    >
+                      {isMuted || volume === 0 ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                    </button>
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      value={isMuted ? 0 : volume}
+                      onChange={(e) => {
+                        setVolume(Number(e.target.value))
+                        setIsMuted(false)
+                      }}
+                      className="w-16"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
