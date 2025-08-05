@@ -3,10 +3,13 @@ import { motion, AnimatePresence, PanInfo } from 'framer-motion'
 import { useWindowStore } from '@/store/window-store'
 import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 import { useSamStore } from '@/store/sam-store'
-import { 
-  Home, 
-  ArrowLeft, 
-  Square, 
+import { useDeviceAuthStore } from '@/store/device-auth-store'
+import { AndroidStatusBar } from './AndroidStatusBar'
+import { QuickSettingsPanel, useQuickSettings } from './QuickSettingsPanel'
+import {
+  Home,
+  ArrowLeft,
+  Square,
   Triangle,
   MoreHorizontal,
   Wifi,
