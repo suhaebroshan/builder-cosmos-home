@@ -192,7 +192,7 @@ export const NyxTaskbar: React.FC = () => {
     { icon: Monitor, label: 'Display', action: () => {} },
     { icon: systemStats.wifi ? Wifi : WifiOff, label: 'Network', action: () => {} },
     { icon: systemStats.bluetooth ? Bluetooth : BluetoothOff, label: 'Bluetooth', action: () => {} },
-    { icon: LogOut, label: 'Shutdown', action: () => {} },
+    { icon: LogOut, label: 'Shutdown', action: () => window.dispatchEvent(new CustomEvent('nyx:shutdown')) },
   ]
 
   const frequentApps = [
