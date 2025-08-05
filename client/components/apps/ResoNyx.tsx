@@ -308,14 +308,63 @@ export const ResoNyx: React.FC<ResoNyxProps> = ({ windowId }) => {
     }
   }, [currentTrack, featuredTracks])
 
-  const handlePlayPause = () => {
-    setIsPlaying(!isPlaying)
+  const handlePlayPause = async () => {
+    const audio = audioRef.current
+    if (!audio || !currentTrack) return
+
+    try {
+      if (isPlaying) {
+        audio.pause()
+        setIsPlaying(false)
+      } else {
+        await audio.play()
+        setIsPlaying(true)
+      }
+    } catch (error) {
+      setError('Failed to play audio. Please check your internet connection.')
+      setIsPlaying(false)
+    }
   }
 
-  const handleTrackSelect = (track: Track) => {
+  const handleTrackSelect = async (track: Track) => {
+    if (!audioRef.current) return
+
     setCurrentTrack(track)
     setProgress(0)
-    setIsPlaying(true)
+    setCurrentTime(0)
+    setError(null)
+    setIsLoading(true)
+
+    // Stop current audio
+    audioRef.current.pause()
+    audioRef.current.currentTime = 0
+
+    // Load new track
+    audioRef.current.src = track.audioUrl
+
+    try {
+      await audioRef.current.load()
+      if (track.source !== 'radio') {
+        await audioRef.current.play()
+        setIsPlaying(true)
+      }
+    } catch (error) {
+      setError('Failed to load track. Please try another.')
+      setIsLoading(false)
+    }
+  }
+
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    const audio = audioRef.current
+    if (!audio || !duration) return
+
+    const rect = e.currentTarget.getBoundingClientRect()
+    const percent = (e.clientX - rect.left) / rect.width
+    const newTime = percent * duration
+
+    audio.currentTime = newTime
+    setCurrentTime(newTime)
+    setProgress((newTime / duration) * 100)
   }
 
   const handleVolumeChange = (newVolume: number) => {
@@ -325,6 +374,106 @@ export const ResoNyx: React.FC<ResoNyxProps> = ({ windowId }) => {
 
   const toggleMute = () => {
     setIsMuted(!isMuted)
+  }
+
+  const handleSkipForward = () => {
+    const currentIndex = featuredTracks.findIndex(t => t.id === currentTrack?.id)
+    if (currentIndex < featuredTracks.length - 1) {
+      handleTrackSelect(featuredTracks[currentIndex + 1])
+    }
+  }
+
+  const handleSkipBackward = () => {
+    const currentIndex = featuredTracks.findIndex(t => t.id === currentTrack?.id)
+    if (currentIndex > 0) {
+      handleTrackSelect(featuredTracks[currentIndex - 1])
+    }
+  }
+
+  // Search for music (Free Music Archive API simulation)
+  const searchMusic = async (query: string) => {
+    if (!query.trim()) return
+
+    setIsLoadingSearch(true)
+    setError(null)
+
+    try {
+      // Simulate API call - in real implementation, use actual music APIs
+      const mockResults: Track[] = [
+        {
+          id: `search-${Date.now()}-1`,
+          title: `${query} - Song 1`,
+          artist: 'Independent Artist',
+          album: 'Free Music',
+          duration: '3:45',
+          durationSeconds: 225,
+          audioUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Broke_For_Free/Directionless_EP/Broke_For_Free_-_01_-_Night_Owl.mp3',
+          coverUrl: '/api/placeholder/300/300',
+          isLiked: false,
+          plays: Math.floor(Math.random() * 100000),
+          source: 'freemusicarchive',
+          genre: 'Various',
+          license: 'CC BY'
+        },
+        {
+          id: `search-${Date.now()}-2`,
+          title: `${query} - Song 2`,
+          artist: 'Free Music Artist',
+          album: 'Open Source',
+          duration: '4:20',
+          durationSeconds: 260,
+          audioUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Broke_For_Free/Directionless_EP/Broke_For_Free_-_02_-_Something_Elated.mp3',
+          coverUrl: '/api/placeholder/300/300',
+          isLiked: false,
+          plays: Math.floor(Math.random() * 100000),
+          source: 'freemusicarchive',
+          genre: 'Various',
+          license: 'CC BY'
+        }
+      ]
+
+      setSearchResults(mockResults)
+    } catch (error) {
+      setError('Failed to search for music. Please try again.')
+    } finally {
+      setIsLoadingSearch(false)
+    }
+  }
+
+  // Add custom URL
+  const addCustomUrl = async () => {
+    if (!customUrl.trim()) return
+
+    const customTrack: Track = {
+      id: `custom-${Date.now()}`,
+      title: 'Custom Audio',
+      artist: 'Unknown Artist',
+      album: 'Custom',
+      duration: '?:??',
+      durationSeconds: 0,
+      audioUrl: customUrl,
+      coverUrl: '/api/placeholder/300/300',
+      isLiked: false,
+      plays: 0,
+      source: 'url',
+      genre: 'Unknown',
+      license: 'Unknown'
+    }
+
+    setFeaturedTracks(prev => [...prev, customTrack])
+    setCustomUrl('')
+    setCurrentView('home')
+
+    // Try to play it
+    await handleTrackSelect(customTrack)
+  }
+
+  // Format time
+  const formatTime = (seconds: number) => {
+    if (!isFinite(seconds)) return '0:00'
+    const mins = Math.floor(seconds / 60)
+    const secs = Math.floor(seconds % 60)
+    return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
   const isDark = settings.mode === 'dark'
