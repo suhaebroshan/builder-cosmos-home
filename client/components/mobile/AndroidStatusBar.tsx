@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { 
-  Wifi, 
-  WifiOff, 
-  Battery, 
-  Bluetooth, 
-  Volume2, 
+import {
+  Wifi,
+  WifiOff,
+  Battery,
+  Bluetooth,
+  Volume2,
   VolumeX,
   Signal,
-  Airplane,
+  Plane,
   MoreHorizontal,
   BellOff,
   RotateCcw,
