@@ -198,10 +198,6 @@ export const NyxOS: React.FC = () => {
     }
   }
   
-  if (!isSetupComplete) {
-    return <DeviceSetupScreen onComplete={handleDeviceSetupComplete} />
-  }
-
   if (!isBooted) {
     return <EnhancedBootAnimation onComplete={handleBootComplete} />
   }
