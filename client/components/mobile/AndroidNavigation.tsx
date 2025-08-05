@@ -333,7 +333,7 @@ export const AndroidNavigation: React.FC<AndroidNavigationProps> = ({
                 <h3 className="text-white font-semibold">Quick Settings</h3>
                 <button
                   onClick={() => {
-                    setShowQuickSettings(false)
+                    quickSettings.close()
                     // Open settings app
                   }}
                   className="p-2 rounded-full hover:bg-white/10 transition-colors"
