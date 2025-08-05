@@ -884,22 +884,170 @@ export const ResoNyx: React.FC<ResoNyxProps> = ({ windowId }) => {
         {currentView === 'home' && <HomeView />}
         {currentView === 'playlist' && <PlaylistView />}
         {currentView === 'search' && (
-          <div className="text-center py-12">
-            <Search className={cn(
-              "w-16 h-16 mx-auto mb-4",
-              isDark ? "text-gray-600" : "text-gray-400"
-            )} />
-            <h2 className={cn(
-              "text-xl font-semibold mb-2",
-              isDark ? "text-white" : "text-gray-900"
-            )}>
-              Search for music
-            </h2>
-            <p className={cn(
-              isDark ? "text-gray-400" : "text-gray-600"
-            )}>
-              Find your favorite songs, artists, and playlists
-            </p>
+          <div className="space-y-6">
+            <div>
+              <h1 className={cn(
+                "text-3xl font-bold mb-6",
+                isDark ? "text-white" : "text-gray-900"
+              )}>
+                Search Music
+              </h1>
+
+              <div className="relative mb-6">
+                <Search className={cn(
+                  "absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5",
+                  isDark ? "text-gray-400" : "text-gray-500"
+                )} />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && searchMusic(searchQuery)}
+                  placeholder="Search for free music..."
+                  className={cn(
+                    "w-full pl-12 pr-4 py-3 rounded-2xl border text-lg",
+                    isDark
+                      ? "bg-gray-800 border-gray-700 text-white placeholder-gray-400"
+                      : "bg-gray-100 border-gray-200 text-gray-900 placeholder-gray-500"
+                  )}
+                />
+                <button
+                  onClick={() => searchMusic(searchQuery)}
+                  disabled={isLoadingSearch || !searchQuery.trim()}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 px-4 py-1 bg-purple-500 text-white rounded-lg hover:bg-purple-600 disabled:opacity-50"
+                >
+                  {isLoadingSearch ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Search'}
+                </button>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <button
+                  onClick={() => setCurrentView('url-input')}
+                  className={cn(
+                    "p-4 rounded-xl border transition-colors text-left",
+                    isDark
+                      ? "bg-gray-800 border-gray-700 hover:bg-gray-700"
+                      : "bg-gray-100 border-gray-200 hover:bg-gray-200"
+                  )}
+                >
+                  <ExternalLink className={cn(
+                    "w-6 h-6 mb-2",
+                    isDark ? "text-purple-400" : "text-purple-600"
+                  )} />
+                  <h3 className={cn(
+                    "font-medium mb-1",
+                    isDark ? "text-white" : "text-gray-900"
+                  )}>
+                    Add URL
+                  </h3>
+                  <p className={cn(
+                    "text-sm",
+                    isDark ? "text-gray-400" : "text-gray-600"
+                  )}>
+                    Play audio from any URL
+                  </p>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setSearchResults(popularRadioStations)
+                    setSearchQuery('radio stations')
+                  }}
+                  className={cn(
+                    "p-4 rounded-xl border transition-colors text-left",
+                    isDark
+                      ? "bg-gray-800 border-gray-700 hover:bg-gray-700"
+                      : "bg-gray-100 border-gray-200 hover:bg-gray-200"
+                  )}
+                >
+                  <Radio className={cn(
+                    "w-6 h-6 mb-2",
+                    isDark ? "text-green-400" : "text-green-600"
+                  )} />
+                  <h3 className={cn(
+                    "font-medium mb-1",
+                    isDark ? "text-white" : "text-gray-900"
+                  )}>
+                    Radio Stations
+                  </h3>
+                  <p className={cn(
+                    "text-sm",
+                    isDark ? "text-gray-400" : "text-gray-600"
+                  )}>
+                    Listen to live radio
+                  </p>
+                </button>
+              </div>
+            </div>
+
+            {/* Search Results */}
+            {searchResults.length > 0 && (
+              <div>
+                <h2 className={cn(
+                  "text-xl font-semibold mb-4",
+                  isDark ? "text-white" : "text-gray-900"
+                )}>
+                  Search Results
+                </h2>
+                <div className="space-y-2">
+                  {searchResults.map((track) => (
+                    <motion.div
+                      key={track.id}
+                      onClick={() => handleTrackSelect(track)}
+                      className={cn(
+                        "flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors group",
+                        currentTrack?.id === track.id
+                          ? "bg-purple-500/20"
+                          : isDark
+                            ? "hover:bg-white/5"
+                            : "hover:bg-black/5"
+                      )}
+                      whileHover={{ x: 4 }}
+                    >
+                      <div className="w-12 h-12 rounded bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center">
+                        {track.source === 'radio' ? (
+                          <Radio className="w-6 h-6 text-white" />
+                        ) : (
+                          <Music className="w-6 h-6 text-white" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <div className={cn(
+                          "font-medium",
+                          currentTrack?.id === track.id
+                            ? "text-purple-400"
+                            : isDark ? "text-white" : "text-gray-900"
+                        )}>
+                          {track.title}
+                        </div>
+                        <div className={cn(
+                          "text-sm",
+                          isDark ? "text-gray-400" : "text-gray-600"
+                        )}>
+                          {track.artist} • {track.genre}
+                        </div>
+                      </div>
+                      <div className={cn(
+                        "text-sm",
+                        isDark ? "text-gray-400" : "text-gray-600"
+                      )}>
+                        {track.duration}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {error && (
+              <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-4">
+                <div className="flex items-center gap-2 text-red-400">
+                  <AlertCircle className="w-5 h-5" />
+                  <span>{error}</span>
+                </div>
+              </div>
+            )}
           </div>
         )}
         {currentView === 'library' && (
