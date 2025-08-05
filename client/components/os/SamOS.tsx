@@ -290,11 +290,22 @@ export const NyxOS: React.FC = () => {
       {/* Mobile Home Screen */}
       <MobileHomeScreen />
 
+      {/* Android Navigation - For mobile and tablet */}
+      {(selectedDeviceType === 'phone' || selectedDeviceType === 'tablet') && (
+        <AndroidNavigation
+          navigationStyle={navigationStyle}
+          onNavigationStyleChange={setNavigationStyle}
+        />
+      )}
+
       {/* Window Manager */}
       <WindowManager />
 
-      {/* Nyx Taskbar - Hidden on phone */}
-      {!isPhone && <NyxTaskbar />}
+      {/* Nyx Taskbar - Hidden on phone, minimal on tablet */}
+      {selectedDeviceType === 'desktop' && <NyxTaskbar />}
+      {selectedDeviceType === 'tablet' && uiConfig.showMinimalTaskbar && (
+        <div className="fixed bottom-0 left-0 right-0 h-8 bg-black/40 backdrop-blur-sm border-t border-white/5 z-30" />
+      )}
     </motion.div>
   )
 }
