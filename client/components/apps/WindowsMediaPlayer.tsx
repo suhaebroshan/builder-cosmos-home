@@ -521,19 +521,23 @@ export const WindowsMediaPlayer: React.FC<WindowsMediaPlayerProps> = ({ windowId
                       key={track.id}
                       onClick={() => playTrack(track)}
                       className={cn(
-                        "flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700",
-                        currentTrack?.id === track.id && "bg-blue-100 dark:bg-blue-900"
+                        "flex items-center rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors",
+                        currentTrack?.id === track.id && "bg-blue-100 dark:bg-blue-900",
+                        isMobile ? "p-3" : "p-2"
                       )}
                     >
-                      <div className="w-8 text-center text-sm">{index + 1}</div>
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center mr-3">
-                        <Music className="w-5 h-5 text-white" />
+                      {!isMobile && <div className="w-8 text-center text-sm">{index + 1}</div>}
+                      <div className={cn(
+                        "bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center mr-3",
+                        isMobile ? "w-12 h-12" : "w-10 h-10"
+                      )}>
+                        <Music className={cn("text-white", isMobile ? "w-6 h-6" : "w-5 h-5")} />
                       </div>
-                      <div className="flex-1">
-                        <div className="font-medium">{track.title}</div>
-                        <div className="text-sm text-gray-500">{track.artist}</div>
+                      <div className="flex-1 min-w-0">
+                        <div className={cn("font-medium truncate", isMobile && "text-lg")}>{track.title}</div>
+                        <div className={cn("text-gray-500 truncate", isMobile ? "text-base" : "text-sm")}>{track.artist}</div>
                       </div>
-                      <div className="text-sm text-gray-500">{formatTime(track.duration)}</div>
+                      <div className={cn("text-gray-500 ml-2", isMobile ? "text-base" : "text-sm")}>{formatTime(track.duration)}</div>
                     </div>
                   ))}
                 </div>
