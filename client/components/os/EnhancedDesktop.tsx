@@ -260,6 +260,17 @@ export const EnhancedDesktop: React.FC = () => {
           description: 'Classic 2048 puzzle game',
           position: getGridPosition(14),
           size: { width: 64, height: 64 }
+        },
+        {
+          appId: 'nyx-manual',
+          name: 'Manual',
+          icon: HelpCircle,
+          component: NyxManual,
+          defaultSize: { width: 1000, height: 700 },
+          defaultPosition: { x: 260, y: 60 },
+          description: 'Complete Nyx OS manual with shortcuts and tips',
+          position: getGridPosition(15),
+          size: { width: 64, height: 64 }
         }
       ]
       
