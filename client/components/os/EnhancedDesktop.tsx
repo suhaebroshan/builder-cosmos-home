@@ -24,7 +24,7 @@ import { Calculator } from '@/components/apps/Calculator'
 import { WebBrowser } from '@/components/apps/WebBrowser'
 import { Game2048 } from '@/components/apps/Game2048'
 import { NyxManual } from '@/components/apps/NyxManual'
-import { ResoNyx } from '@/components/apps/ResoNyx'
+import { WindowsMediaPlayer } from '@/components/apps/WindowsMediaPlayer'
 import { AppErrorBoundary } from '@/components/apps/AppErrorBoundary'
 import {
   MessageCircle,
