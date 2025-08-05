@@ -123,11 +123,11 @@ export const MobileHomeScreen: React.FC = () => {
       component: () => import('@/components/apps/NyxManual').then(m => m.NyxManual)
     },
     {
-      id: 'resonyx',
-      name: 'ResoNyx',
+      id: 'media-player',
+      name: 'Media Player',
       icon: Music,
-      color: 'bg-gradient-to-br from-purple-600 to-indigo-700',
-      component: () => import('@/components/apps/ResoNyx').then(m => m.ResoNyx)
+      color: 'bg-gradient-to-br from-blue-600 to-indigo-700',
+      component: () => import('@/components/apps/WindowsMediaPlayer').then(m => m.WindowsMediaPlayer)
     }
   ]
 
