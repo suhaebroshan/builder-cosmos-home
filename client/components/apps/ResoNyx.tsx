@@ -86,57 +86,119 @@ export const ResoNyx: React.FC<ResoNyxProps> = ({ windowId }) => {
   const [radioStations, setRadioStations] = useState<Track[]>([])
   const [isLoadingSearch, setIsLoadingSearch] = useState(false)
 
-  // Sample tracks with Nyx/space theme
-  const sampleTracks: Track[] = [
+  // Real music tracks from various internet sources
+  const [featuredTracks, setFeaturedTracks] = useState<Track[]>([
+    // Free Music Archive samples
     {
-      id: '1',
-      title: 'Lunar Eclipse',
-      artist: 'Cosmic Vibes',
-      album: 'Night Sky',
-      duration: '3:42',
-      coverUrl: '/api/placeholder/300/300',
-      isLiked: true,
-      plays: 1250000
-    },
-    {
-      id: '2', 
-      title: 'Stardust Dreams',
-      artist: 'Galactic Sound',
-      album: 'Beyond the Horizon',
-      duration: '4:15',
+      id: 'fma-1',
+      title: 'Chill Abstract',
+      artist: 'Lakey Inspired',
+      album: 'Free Music',
+      duration: '2:38',
+      durationSeconds: 158,
+      audioUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Broke_For_Free/Directionless_EP/Broke_For_Free_-_01_-_Night_Owl.mp3',
       coverUrl: '/api/placeholder/300/300',
       isLiked: false,
-      plays: 890000
+      plays: 125000,
+      source: 'freemusicarchive',
+      genre: 'Electronic',
+      license: 'CC BY'
     },
     {
-      id: '3',
-      title: 'Nyx Rising',
-      artist: 'Dark Matter',
-      album: 'Goddess of Night',
-      duration: '5:23',
+      id: 'fma-2',
+      title: 'Something Elated',
+      artist: 'Broke For Free',
+      album: 'Directionless EP',
+      duration: '4:12',
+      durationSeconds: 252,
+      audioUrl: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Broke_For_Free/Directionless_EP/Broke_For_Free_-_02_-_Something_Elated.mp3',
       coverUrl: '/api/placeholder/300/300',
       isLiked: true,
-      plays: 2100000
+      plays: 89000,
+      source: 'freemusicarchive',
+      genre: 'Electronic',
+      license: 'CC BY'
     },
+    // Internet Radio Stations
     {
-      id: '4',
-      title: 'Binary Sunset',
-      artist: 'Digital Cosmos',
-      album: 'Virtual Reality',
-      duration: '3:58',
+      id: 'radio-1',
+      title: 'Lofi Hip Hop Radio',
+      artist: 'ChilledCow',
+      album: 'Live Stream',
+      duration: '∞',
+      durationSeconds: 0,
+      audioUrl: 'https://www.youtube.com/watch?v=jfKfPfyJRdk', // Will be converted to audio stream
+      coverUrl: '/api/placeholder/300/300',
+      isLiked: true,
+      plays: 0,
+      source: 'radio',
+      genre: 'Lo-Fi',
+      license: 'Streaming'
+    },
+    // Sample high-quality free tracks
+    {
+      id: 'sample-1',
+      title: 'Cosmic Journey',
+      artist: 'Space Ambient',
+      album: 'Universe Sounds',
+      duration: '5:30',
+      durationSeconds: 330,
+      audioUrl: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav', // Placeholder - will be replaced with real music APIs
       coverUrl: '/api/placeholder/300/300',
       isLiked: false,
-      plays: 756000
+      plays: 45000,
+      source: 'url',
+      genre: 'Ambient',
+      license: 'Free'
+    }
+  ])
+
+  // Popular radio stations
+  const popularRadioStations: Track[] = [
+    {
+      id: 'radio-jazz',
+      title: 'Smooth Jazz Radio',
+      artist: 'Jazz Radio',
+      album: 'Live Stream',
+      duration: '∞',
+      durationSeconds: 0,
+      audioUrl: 'http://jazz-wr04.ice.infomaniak.ch/jazz-wr04-128.mp3',
+      coverUrl: '/api/placeholder/300/300',
+      isLiked: false,
+      plays: 0,
+      source: 'radio',
+      genre: 'Jazz',
+      license: 'Streaming'
     },
     {
-      id: '5',
-      title: 'Quantum Resonance',
-      artist: 'Astro Frequencies',
-      album: 'Particle Physics',
-      duration: '6:12',
+      id: 'radio-classical',
+      title: 'Classical Music Radio',
+      artist: 'Classical Radio',
+      album: 'Live Stream',
+      duration: '∞',
+      durationSeconds: 0,
+      audioUrl: 'http://stream.radiojar.com/4wqre23fytzuv',
       coverUrl: '/api/placeholder/300/300',
-      isLiked: true,
-      plays: 1420000
+      isLiked: false,
+      plays: 0,
+      source: 'radio',
+      genre: 'Classical',
+      license: 'Streaming'
+    },
+    {
+      id: 'radio-electronic',
+      title: 'Electronic Music Radio',
+      artist: 'Electronic Radio',
+      album: 'Live Stream',
+      duration: '∞',
+      durationSeconds: 0,
+      audioUrl: 'http://stream.zeno.fm/f3wvbbqmdg8uv',
+      coverUrl: '/api/placeholder/300/300',
+      isLiked: false,
+      plays: 0,
+      source: 'radio',
+      genre: 'Electronic',
+      license: 'Streaming'
     }
   ]
 
