@@ -36,7 +36,7 @@ export const NyxOS: React.FC = () => {
   const [isBooted, setIsBooted] = useState(false)
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [navigationStyle, setNavigationStyle] = useState<'gestures' | 'buttons'>('gestures')
-  
+
   // Auto-detect device type
   const selectedDeviceType: DeviceType = isPhone ? 'phone' : isTablet ? 'tablet' : 'desktop'
 
@@ -76,6 +76,8 @@ export const NyxOS: React.FC = () => {
     document.addEventListener('keydown', handleKeyDown, true)
     return () => document.removeEventListener('keydown', handleKeyDown, true)
   }, [])
+
+
 
   const handleBootComplete = (user: User) => {
     // Auto-detect device type and set up user
@@ -174,130 +176,128 @@ export const NyxOS: React.FC = () => {
   }
 
   return (
-    <ShutdownSystem>
-      <motion.div
-        className={`fixed inset-0 overflow-hidden ${themeSettings.mode}`}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-      >
-        {/* Stable Live Wallpaper System */}
-        <StableLiveWallpaper />
+    <motion.div
+      className={`fixed inset-0 overflow-hidden ${themeSettings.mode}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+    >
+      {/* Stable Live Wallpaper System */}
+      <StableLiveWallpaper />
 
-        {/* Emotional Overlay */}
-        <div
-          className="absolute inset-0 transition-all duration-1000 ease-out pointer-events-none"
-          style={{
-            background: getBackgroundGradient(),
-          }}
-        />
+      {/* Emotional Overlay */}
+      <div
+        className="absolute inset-0 transition-all duration-1000 ease-out pointer-events-none"
+        style={{
+          background: getBackgroundGradient(),
+        }}
+      />
 
-        {/* User Info & Theme Toggle - Hidden on phone when in fullscreen apps */}
-        {!isPhone && (
-          <motion.div
-            className="absolute top-4 left-4 flex items-center gap-3 z-30"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-          <div className={cn(
-            "backdrop-blur-xl rounded-2xl px-4 py-2 shadow-lg flex items-center gap-3",
-            themeSettings.mode === 'dark'
-              ? "bg-black/40 border border-purple-500/30"
-              : "bg-white/40 border border-blue-300/40"
-          )}>
-            <div className="text-lg">{currentUser?.avatar}</div>
-            <div>
-              <div className={cn(
-                "text-sm font-medium",
-                themeSettings.mode === 'dark' ? "text-white" : "text-gray-800"
-              )}>{currentUser?.displayName}</div>
-              <div className={cn(
-                "text-xs",
-                themeSettings.mode === 'dark' ? "text-purple-300/70" : "text-blue-600/70"
-              )}>@{currentUser?.username}</div>
-            </div>
-          </div>
-
-          <button
-            onClick={() => setThemeMode(themeSettings.mode === 'dark' ? 'light' : 'dark')}
-            className={cn(
-              "backdrop-blur-xl rounded-xl p-3 transition-all shadow-lg hover:scale-105",
-              themeSettings.mode === 'dark'
-                ? "bg-black/40 border border-purple-500/30 hover:bg-black/50"
-                : "bg-white/40 border border-blue-300/40 hover:bg-white/50"
-            )}
-          >
-            {themeSettings.mode === 'dark' ? '☀️' : '🌙'}
-          </button>
-          </motion.div>
-        )}
-
-        {/* AI Status Indicator - Smaller on tablet, hidden on phone */}
-        {!isPhone && (
-          <motion.div
-            className={cn(
-              "absolute top-4 right-4 text-white/80 z-30",
-              isTablet ? "text-xs" : "text-sm"
-            )}
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-          <div className={cn(
-            "flex items-center gap-2 backdrop-blur-xl rounded-2xl px-4 py-2 shadow-lg",
-            themeSettings.mode === 'dark'
-              ? "bg-black/40 border border-purple-500/30"
-              : "bg-white/40 border border-blue-300/40"
-          )}>
-            <div
-              className="w-3 h-3 rounded-full transition-all duration-300"
-              style={{
-                backgroundColor: currentEmotion === 'happy' ? '#22c55e' :
-                               currentEmotion === 'sad' ? '#3b82f6' :
-                               currentEmotion === 'excited' ? '#fbbf24' :
-                               currentEmotion === 'annoyed' ? '#ef4444' :
-                               currentEmotion === 'focused' ? '#a855f7' :
-                               currentEmotion === 'confused' ? '#9ca3af' :
-                               currentEmotion === 'tired' ? '#4b5563' : '#8b5cf6',
-                boxShadow: `0 0 10px currentColor`,
-              }}
-            />
-            <span className={cn(
-              "capitalize",
-              themeSettings.mode === 'dark' ? "text-purple-200" : "text-blue-700"
-            )}>{currentEmotion}</span>
+      {/* User Info & Theme Toggle - Hidden on phone when in fullscreen apps */}
+      {!isPhone && (
+        <motion.div
+          className="absolute top-4 left-4 flex items-center gap-3 z-30"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+        <div className={cn(
+          "backdrop-blur-xl rounded-2xl px-4 py-2 shadow-lg flex items-center gap-3",
+          themeSettings.mode === 'dark'
+            ? "bg-black/40 border border-purple-500/30"
+            : "bg-white/40 border border-blue-300/40"
+        )}>
+          <div className="text-lg">{currentUser?.avatar}</div>
+          <div>
             <div className={cn(
-              "text-xs ml-2",
+              "text-sm font-medium",
+              themeSettings.mode === 'dark' ? "text-white" : "text-gray-800"
+            )}>{currentUser?.displayName}</div>
+            <div className={cn(
+              "text-xs",
               themeSettings.mode === 'dark' ? "text-purple-300/70" : "text-blue-600/70"
-            )}>AI Active</div>
+            )}>@{currentUser?.username}</div>
           </div>
-          </motion.div>
-        )}
+        </div>
 
-        {/* Enhanced Desktop with App Icons */}
-        <EnhancedDesktop />
+        <button
+          onClick={() => setThemeMode(themeSettings.mode === 'dark' ? 'light' : 'dark')}
+          className={cn(
+            "backdrop-blur-xl rounded-xl p-3 transition-all shadow-lg hover:scale-105",
+            themeSettings.mode === 'dark'
+              ? "bg-black/40 border border-purple-500/30 hover:bg-black/50"
+              : "bg-white/40 border border-blue-300/40 hover:bg-white/50"
+          )}
+        >
+          {themeSettings.mode === 'dark' ? '☀️' : '🌙'}
+        </button>
+        </motion.div>
+      )}
 
-        {/* Mobile Home Screen */}
-        <MobileHomeScreen />
-
-        {/* Android Navigation - For mobile and tablet */}
-        {(selectedDeviceType === 'phone' || selectedDeviceType === 'tablet') && (
-          <AndroidNavigation
-            navigationStyle={navigationStyle}
-            onNavigationStyleChange={setNavigationStyle}
+      {/* AI Status Indicator - Smaller on tablet, hidden on phone */}
+      {!isPhone && (
+        <motion.div
+          className={cn(
+            "absolute top-4 right-4 text-white/80 z-30",
+            isTablet ? "text-xs" : "text-sm"
+          )}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+        <div className={cn(
+          "flex items-center gap-2 backdrop-blur-xl rounded-2xl px-4 py-2 shadow-lg",
+          themeSettings.mode === 'dark'
+            ? "bg-black/40 border border-purple-500/30"
+            : "bg-white/40 border border-blue-300/40"
+        )}>
+          <div
+            className="w-3 h-3 rounded-full transition-all duration-300"
+            style={{
+              backgroundColor: currentEmotion === 'happy' ? '#22c55e' :
+                             currentEmotion === 'sad' ? '#3b82f6' :
+                             currentEmotion === 'excited' ? '#fbbf24' :
+                             currentEmotion === 'annoyed' ? '#ef4444' :
+                             currentEmotion === 'focused' ? '#a855f7' :
+                             currentEmotion === 'confused' ? '#9ca3af' :
+                             currentEmotion === 'tired' ? '#4b5563' : '#8b5cf6',
+              boxShadow: `0 0 10px currentColor`,
+            }}
           />
-        )}
+          <span className={cn(
+            "capitalize",
+            themeSettings.mode === 'dark' ? "text-purple-200" : "text-blue-700"
+          )}>{currentEmotion}</span>
+          <div className={cn(
+            "text-xs ml-2",
+            themeSettings.mode === 'dark' ? "text-purple-300/70" : "text-blue-600/70"
+          )}>AI Active</div>
+        </div>
+        </motion.div>
+      )}
 
-        {/* Window Manager */}
-        <WindowManager />
+      {/* Enhanced Desktop with App Icons */}
+      <EnhancedDesktop />
 
-        {/* Nyx Taskbar - Hidden on phone, minimal on tablet */}
-        {selectedDeviceType === 'desktop' && <NyxTaskbar />}
-        {selectedDeviceType === 'tablet' && uiConfig.showMinimalTaskbar && (
-          <div className="fixed bottom-0 left-0 right-0 h-8 bg-black/40 backdrop-blur-sm border-t border-white/5 z-30" />
-        )}
-      </motion.div>
-    </ShutdownSystem>
+      {/* Mobile Home Screen */}
+      <MobileHomeScreen />
+
+      {/* Android Navigation - For mobile and tablet */}
+      {(selectedDeviceType === 'phone' || selectedDeviceType === 'tablet') && (
+        <AndroidNavigation
+          navigationStyle={navigationStyle}
+          onNavigationStyleChange={setNavigationStyle}
+        />
+      )}
+
+      {/* Window Manager */}
+      <WindowManager />
+
+      {/* Nyx Taskbar - Hidden on phone, minimal on tablet */}
+      {selectedDeviceType === 'desktop' && <NyxTaskbar />}
+      {selectedDeviceType === 'tablet' && uiConfig.showMinimalTaskbar && (
+        <div className="fixed bottom-0 left-0 right-0 h-8 bg-black/40 backdrop-blur-sm border-t border-white/5 z-30" />
+      )}
+    </motion.div>
   )
 }
