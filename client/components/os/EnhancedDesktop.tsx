@@ -45,7 +45,8 @@ import {
   FileText,
   Calculator as CalculatorIcon,
   Chrome,
-  Grid3x3
+  Grid3x3,
+  HelpCircle
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { DesktopIcon } from './DesktopIcon'
