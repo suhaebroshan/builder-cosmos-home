@@ -259,33 +259,6 @@ export const MobileHomeScreen: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
-      
-      {/* Status bar for mobile */}
-      {(isPhone || isTablet) && (
-        <motion.div
-          className={cn(
-            "absolute top-0 left-0 right-0 h-8 backdrop-blur-sm flex items-center justify-between px-4 text-xs z-40",
-            settings.mode === 'dark'
-              ? "bg-black/20 text-white/60"
-              : "bg-white/30 text-gray-700/70"
-          )}
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <div className="flex items-center gap-2">
-            <div className="w-1 h-1 bg-green-400 rounded-full" />
-            <span>Nyx OS</span>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <span>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-            <div className="w-6 h-3 border border-white/40 rounded-sm relative">
-              <div className="w-4 h-1.5 bg-green-400 rounded-sm absolute top-0.5 left-0.5" />
-            </div>
-          </div>
-        </motion.div>
-      )}
     </div>
   )
 }
