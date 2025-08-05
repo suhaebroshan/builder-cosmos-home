@@ -87,26 +87,44 @@ export const useDeviceDetection = () => {
           useGestures: true,
           supportsSplitScreen: true,
           supportsFloatingWindows: true,
-          maxWindows: 3,
+          maxWindows: 8,
           defaultWindowMode: 'fullscreen' as const,
-          taskbarPosition: 'bottom' as const,
+          taskbarPosition: 'hidden' as const,
           showAppSwitcher: true,
-          useSwipeGestures: true
+          useSwipeGestures: true,
+          androidStyle: true,
+          showNavigationBar: true,
+          navigationStyle: 'gestures' as const, // or 'buttons'
+          appDrawer: true,
+          notificationPanel: true,
+          quickSettings: true,
+          bouncyAnimations: true,
+          statusBarHeight: 24,
+          navigationBarHeight: 48
         }
       case 'tablet':
         return {
-          hasWindowControls: false, // 80% phone-like: no window controls
-          allowWindowResize: false, // 80% phone-like: no resizing
-          allowWindowMove: false,   // 80% phone-like: no moving
-          useGestures: true,        // Phone-like gestures
-          supportsSplitScreen: true, // Phone-like split screen
-          supportsFloatingWindows: true, // Phone-like floating
-          maxWindows: 4,            // Slightly more than phone
-          defaultWindowMode: 'fullscreen' as const, // 80% phone-like: fullscreen default
-          taskbarPosition: 'bottom' as const,
-          showAppSwitcher: true,    // Phone-like app switcher
-          useSwipeGestures: true,   // Phone-like swipes
-          showMinimalTaskbar: true  // 20% desktop: minimal taskbar
+          hasWindowControls: false, // 80% phone-like
+          allowWindowResize: true,  // 20% desktop-like
+          allowWindowMove: true,    // 20% desktop-like
+          useGestures: true,        // 80% phone-like
+          supportsSplitScreen: true,
+          supportsFloatingWindows: true,
+          maxWindows: 12,
+          defaultWindowMode: 'fullscreen' as const, // 80% phone-like
+          taskbarPosition: 'bottom' as const, // 20% desktop-like
+          showAppSwitcher: true,
+          useSwipeGestures: true,
+          androidStyle: true,       // 80% phone-like
+          showNavigationBar: true,
+          navigationStyle: 'gestures' as const,
+          appDrawer: true,
+          notificationPanel: true,
+          quickSettings: true,
+          bouncyAnimations: true,
+          statusBarHeight: 28,
+          navigationBarHeight: 52,
+          showMinimalTaskbar: true  // 20% desktop feature
         }
       case 'desktop':
       default:
@@ -117,11 +135,19 @@ export const useDeviceDetection = () => {
           useGestures: false,
           supportsSplitScreen: false,
           supportsFloatingWindows: false,
-          maxWindows: 10,
+          maxWindows: 20,
           defaultWindowMode: 'windowed' as const,
           taskbarPosition: 'bottom' as const,
           showAppSwitcher: false,
-          useSwipeGestures: false
+          useSwipeGestures: false,
+          androidStyle: false,
+          showNavigationBar: false,
+          appDrawer: false,
+          notificationPanel: false,
+          quickSettings: false,
+          bouncyAnimations: false,
+          statusBarHeight: 0,
+          navigationBarHeight: 0
         }
     }
   }
