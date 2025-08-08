@@ -193,6 +193,22 @@ CURRENT DEVICE: ${deviceInfo}
     }
   }
 
+  private getDeviceContext(): string {
+    const width = window.innerWidth
+    const height = window.innerHeight
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+    const userAgent = navigator.userAgent.toLowerCase()
+
+    let deviceType = 'desktop'
+    if (width < 768 || (isTouchDevice && width < 900) || /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|phone/i.test(userAgent)) {
+      deviceType = 'phone'
+    } else if (width >= 768 && width <= 1366 && (isTouchDevice || /ipad|android.*tablet|kindle|silk/i.test(userAgent))) {
+      deviceType = 'tablet'
+    }
+
+    return `${deviceType} (${width}x${height}, ${isTouchDevice ? 'touch' : 'no-touch'})`
+  }
+
   clearConversation() {
     this.currentConversation = []
   }
