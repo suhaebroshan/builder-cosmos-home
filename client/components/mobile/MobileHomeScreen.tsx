@@ -23,7 +23,10 @@ import {
   HelpCircle,
   Music,
   ChevronUp,
-  Search
+  Search,
+  User,
+  UserPlus,
+  Users
 } from 'lucide-react'
 
 export const MobileHomeScreen: React.FC = () => {
