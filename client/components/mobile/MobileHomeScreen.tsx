@@ -157,8 +157,11 @@ export const MobileHomeScreen: React.FC = () => {
         "p-6",
         isPhone ? "pt-16 pb-20" : "pt-14 pb-18"
       )}>
-        <div className="grid grid-cols-4 gap-4 mb-8">
-          {mobileApps.slice(0, isPhone ? 8 : 12).map((app) => (
+        <div className={cn(
+          "grid gap-4 mb-8",
+          isPhone ? "grid-cols-4" : "grid-cols-5"
+        )}>
+          {mobileApps.slice(0, isPhone ? 12 : 15).map((app) => (
             <motion.button
               key={app.id}
               onClick={() => handleAppLaunch(app)}
