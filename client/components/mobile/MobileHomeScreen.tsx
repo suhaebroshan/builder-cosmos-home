@@ -29,11 +29,27 @@ import {
   Users
 } from 'lucide-react'
 
+interface User {
+  id: string
+  username: string
+  displayName: string
+  avatar: string
+}
+
+const defaultUsers: User[] = [
+  { id: '1', username: 'suhaeb', displayName: 'Suhaeb', avatar: '👤' },
+  { id: '2', username: 'sloka', displayName: 'Sloka', avatar: '👩‍💻' },
+  { id: '3', username: 'guest', displayName: 'Guest', avatar: '🌟' }
+]
+
 export const MobileHomeScreen: React.FC = () => {
   const { isPhone, isTablet } = useDeviceDetection()
   const { windows, openWindow } = useWindowStore()
   const { settings } = useThemeStore()
   const [showAppDrawer, setShowAppDrawer] = useState(false)
+  const [showUserSwitcher, setShowUserSwitcher] = useState(false)
+  const [currentUser, setCurrentUser] = useState<User>(defaultUsers[0])
+  const [users, setUsers] = useState<User[]>(defaultUsers)
 
   // Only show when no fullscreen apps are running
   if (windows.some(w => w.mode === 'fullscreen' && !w.isMinimized)) return null
