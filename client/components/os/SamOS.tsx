@@ -280,13 +280,13 @@ export const NyxOS: React.FC = () => {
         )}
 
         {/* Enhanced Desktop with App Icons - Desktop only */}
-        {selectedDeviceType === 'desktop' && <EnhancedDesktop />}
+        {actualDeviceType === 'desktop' && <EnhancedDesktop />}
 
         {/* Mobile Home Screen - Mobile and tablet only */}
-        {(selectedDeviceType === 'phone' || selectedDeviceType === 'tablet') && <MobileHomeScreen />}
+        {(actualDeviceType === 'phone' || actualDeviceType === 'tablet') && <MobileHomeScreen />}
 
         {/* Android Navigation - For mobile and tablet */}
-        {(selectedDeviceType === 'phone' || selectedDeviceType === 'tablet') && (
+        {(actualDeviceType === 'phone' || actualDeviceType === 'tablet') && (
           <AndroidNavigation
             navigationStyle={navigationStyle}
             onNavigationStyleChange={setNavigationStyle}
@@ -298,7 +298,7 @@ export const NyxOS: React.FC = () => {
         <WindowManager />
 
         {/* Nyx Taskbar - Desktop only, tablet uses Android navigation */}
-        {selectedDeviceType === 'desktop' && <NyxTaskbar />}
+        {actualDeviceType === 'desktop' && <NyxTaskbar />}
       </motion.div>
     </ShutdownSystem>
   )
