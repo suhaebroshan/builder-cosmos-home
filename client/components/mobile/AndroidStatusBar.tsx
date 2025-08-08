@@ -45,7 +45,11 @@ interface AndroidStatusBarProps {
 export const AndroidStatusBar: React.FC<AndroidStatusBarProps> = ({
   onNotificationsPull,
   onQuickSettingsPull,
-  className
+  onHome,
+  onBack,
+  onRecentApps,
+  className,
+  showTaskbarFeatures = true
 }) => {
   const { statusBarStyle, showNotificationDots, deviceType } = useDeviceAuthStore()
   const { settings: themeSettings } = useThemeStore()
