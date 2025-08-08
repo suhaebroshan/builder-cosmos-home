@@ -330,20 +330,26 @@ export const EnhancedDesktop: React.FC = () => {
       return
     }
 
-    // Determine window mode based on device
+    // Determine window mode based on device with proper sizing
     let windowMode = uiConfig.defaultWindowMode
     let windowSize = icon.defaultSize
     let windowPosition = icon.defaultPosition
 
     if (isPhone) {
       windowMode = 'fullscreen'
-      windowSize = { width: deviceInfo.screenWidth, height: deviceInfo.screenHeight }
-      windowPosition = { x: 0, y: 0 }
+      windowSize = {
+        width: uiConfig.maxViewportWidth || deviceInfo.screenWidth,
+        height: uiConfig.maxViewportHeight || (deviceInfo.screenHeight - 84) // Status + nav bars
+      }
+      windowPosition = { x: 0, y: uiConfig.statusBarHeight || 28 }
     } else if (isTablet) {
-      // Tablet: 80% phone-like behavior (fullscreen by default)
+      // Tablet: fullscreen with proper spacing for status/nav bars
       windowMode = 'fullscreen'
-      windowSize = { width: deviceInfo.screenWidth, height: deviceInfo.screenHeight }
-      windowPosition = { x: 0, y: 0 }
+      windowSize = {
+        width: uiConfig.maxViewportWidth || (deviceInfo.screenWidth - 16),
+        height: uiConfig.maxViewportHeight || (deviceInfo.screenHeight - 88)
+      }
+      windowPosition = { x: uiConfig.windowPadding || 8, y: uiConfig.statusBarHeight || 32 }
     }
 
     // Wrap component with error boundary
