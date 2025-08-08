@@ -284,6 +284,32 @@ export const WindowsMediaPlayer: React.FC<WindowsMediaPlayerProps> = ({ windowId
     }
   }, [currentTrack])
 
+  // Auto-dismiss errors after 5 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(null), 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [error])
+
+  // Handle mobile orientation changes
+  useEffect(() => {
+    const handleOrientationChange = () => {
+      // Force re-render on orientation change for mobile
+      if (isMobile) {
+        setTimeout(() => {
+          if (audioRef.current && isPlaying) {
+            // Resume playback if needed
+            audioRef.current.play().catch(() => {})
+          }
+        }, 100)
+      }
+    }
+
+    window.addEventListener('orientationchange', handleOrientationChange)
+    return () => window.removeEventListener('orientationchange', handleOrientationChange)
+  }, [isMobile, isPlaying])
+
   // Play/Pause functions with better error handling
   const togglePlayback = async () => {
     if (!audioRef.current || !currentTrack) return
