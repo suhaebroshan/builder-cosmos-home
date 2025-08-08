@@ -46,7 +46,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   }
 
   return (
-    <div className="fixed inset-0 z-[300] bg-gradient-to-br from-purple-950 via-black to-violet-950 flex items-center justify-center">
+    <div className="fixed inset-0 z-[300] bg-gradient-to-br from-purple-950 via-black to-violet-950 flex items-center justify-center min-h-screen overflow-hidden">
       {/* Animated background particles */}
       <div className="absolute inset-0">
         {Array.from({ length: 30 }).map((_, i) => (
