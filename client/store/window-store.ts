@@ -173,10 +173,10 @@ export const useWindowStore = create<WindowStore>((set, get) => ({
       splitScreenWindows: { left: leftWindowId, right: rightWindowId },
       windows: state.windows.map((w) => {
         if (w.id === leftWindowId) {
-          return { ...w, mode: 'split-left', size: { width: window.innerWidth / 2, height: window.innerHeight - 80 } }
+          return { ...w, mode: 'split-left', size: { width: window.innerWidth / 2, height: window.innerHeight - 120 } }
         }
         if (w.id === rightWindowId) {
-          return { ...w, mode: 'split-right', size: { width: window.innerWidth / 2, height: window.innerHeight - 80 } }
+          return { ...w, mode: 'split-right', size: { width: window.innerWidth / 2, height: window.innerHeight - 120 } }
         }
         return w
       }),
