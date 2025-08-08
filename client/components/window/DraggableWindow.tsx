@@ -218,12 +218,12 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
       } else {
         // Default to fullscreen like phone (80% phone behavior) with proper spacing
         const statusBarHeight = uiConfig.statusBarHeight || 32
-        const navBarHeight = uiConfig.navigationBarHeight || 56
+        const topNavHeight = 48 // Navigation moved to top
         return {
           x: 0,
-          y: statusBarHeight,
+          y: statusBarHeight + topNavHeight,
           width: viewportWidth,
-          height: viewportHeight - statusBarHeight - navBarHeight
+          height: viewportHeight - statusBarHeight - topNavHeight
         }
       }
     } else {
