@@ -538,9 +538,9 @@ export const EnhancedDesktop: React.FC = () => {
       <div
         {...desktopFocusable.focusableProps}
         className={cn(
-          "absolute inset-0 select-none focus:outline-none",
-          isPhone ? "p-4" : isTablet ? "p-6" : "p-8"
-        )}
+        "absolute inset-0 select-none focus:outline-none",
+        isPhone ? "p-4 pt-12 pb-16" : isTablet ? "p-6 pt-14 pb-16" : "p-8"
+      )}
       onClick={handleDesktopClick}
       onContextMenu={handleDesktopRightClick}
       onMouseDown={(e) => {
