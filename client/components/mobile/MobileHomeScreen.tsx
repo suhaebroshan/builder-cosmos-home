@@ -32,8 +32,7 @@ export const MobileHomeScreen: React.FC = () => {
   const { settings } = useThemeStore()
   const [showAppDrawer, setShowAppDrawer] = useState(false)
 
-  // Only show on mobile when no fullscreen apps are running
-  if (!isPhone && !isTablet) return null
+  // Only show when no fullscreen apps are running
   if (windows.some(w => w.mode === 'fullscreen' && !w.isMinimized)) return null
 
   // Mobile app definitions
