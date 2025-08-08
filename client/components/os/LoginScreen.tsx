@@ -71,7 +71,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
       </div>
 
       {/* User Selection Menu - Bottom Left */}
-      <div className="absolute bottom-8 left-8">
+      <div className="absolute bottom-4 left-4 sm:bottom-8 sm:left-8">
         <AnimatePresence>
           {showUserSwitcher && (
             <motion.div
