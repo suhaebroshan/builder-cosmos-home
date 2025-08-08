@@ -27,18 +27,22 @@ export const useDeviceDetection = () => {
     const width = window.innerWidth
     const height = window.innerHeight
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+    const userAgent = navigator.userAgent.toLowerCase()
 
-    // Phone: < 768px width in any orientation
-    if (width < 768) {
+    // Check for mobile devices in user agent
+    const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent)
+
+    // Phone: < 768px width OR mobile user agent with small screen
+    if (width < 768 || (isMobileUA && width < 1024)) {
       return 'phone'
     }
 
-    // Tablet: 768px - 1200px width and touch device OR portrait orientation with touch
-    if ((width >= 768 && width <= 1200 && isTouchDevice) || (height > width && width < 1200 && isTouchDevice)) {
+    // Tablet: 768px - 1366px width and (touch device OR tablet user agent)
+    if (width >= 768 && width <= 1366 && (isTouchDevice || /ipad|android/i.test(userAgent))) {
       return 'tablet'
     }
 
-    // Desktop: > 1200px or no touch device
+    // Desktop: > 1366px or no touch device and not mobile UA
     return 'desktop'
   }
 
@@ -94,13 +98,16 @@ export const useDeviceDetection = () => {
           useSwipeGestures: true,
           androidStyle: true,
           showNavigationBar: true,
-          navigationStyle: 'gestures' as const, // or 'buttons'
+          navigationStyle: 'buttons' as const, // Default to buttons
           appDrawer: true,
           notificationPanel: true,
           quickSettings: true,
           bouncyAnimations: true,
-          statusBarHeight: 24,
-          navigationBarHeight: 48
+          statusBarHeight: 28,
+          navigationBarHeight: 56,
+          windowPadding: 0,
+          maxViewportWidth: deviceInfo.screenWidth,
+          maxViewportHeight: deviceInfo.screenHeight - 84 // Status bar + nav bar
         }
       case 'tablet':
         return {
@@ -117,14 +124,17 @@ export const useDeviceDetection = () => {
           useSwipeGestures: true,
           androidStyle: true,       // 80% phone-like
           showNavigationBar: true,
-          navigationStyle: 'gestures' as const,
+          navigationStyle: 'buttons' as const, // Default to buttons
           appDrawer: true,
           notificationPanel: true,
           quickSettings: true,
           bouncyAnimations: true,
-          statusBarHeight: 28,
-          navigationBarHeight: 52,
-          showMinimalTaskbar: true  // 20% desktop feature
+          statusBarHeight: 32,
+          navigationBarHeight: 56,
+          showMinimalTaskbar: true,  // 20% desktop feature
+          windowPadding: 8,
+          maxViewportWidth: deviceInfo.screenWidth - 16,
+          maxViewportHeight: deviceInfo.screenHeight - 88 // Status bar + nav bar
         }
       case 'desktop':
       default:
@@ -147,7 +157,10 @@ export const useDeviceDetection = () => {
           quickSettings: false,
           bouncyAnimations: false,
           statusBarHeight: 0,
-          navigationBarHeight: 0
+          navigationBarHeight: 0,
+          windowPadding: 20,
+          maxViewportWidth: deviceInfo.screenWidth - 40,
+          maxViewportHeight: deviceInfo.screenHeight - 80 // Taskbar space
         }
     }
   }
