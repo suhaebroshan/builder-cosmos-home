@@ -180,7 +180,7 @@ export const MobileHomeScreen: React.FC = () => {
         </div>
 
         {/* App Drawer Toggle for phones */}
-        {isPhone && (
+        {isPhone && mobileApps.length > 12 && (
           <motion.button
             onClick={() => setShowAppDrawer(true)}
             className={cn(
