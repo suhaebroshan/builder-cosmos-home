@@ -162,7 +162,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
             {/* Current User Display */}
             <div className="mb-6 text-center">
               <motion.div
-                className="w-24 h-24 bg-gradient-to-br from-purple-600 to-violet-700 rounded-full flex items-center justify-center text-3xl mx-auto mb-4"
+                className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-purple-600 to-violet-700 rounded-full flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 300, damping: 30, delay: 0.3 }}
