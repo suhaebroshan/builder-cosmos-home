@@ -35,7 +35,7 @@ export const NyxOS: React.FC = () => {
   const { deviceInfo, uiConfig, isPhone, isTablet, isDesktop } = useDeviceDetection()
   const [isBooted, setIsBooted] = useState(false)
   const [currentUser, setCurrentUser] = useState<User | null>(null)
-  const [navigationStyle, setNavigationStyle] = useState<'gestures' | 'buttons'>('gestures')
+  const [navigationStyle, setNavigationStyle] = useState<'gestures' | 'buttons'>('buttons') // Default to buttons
   
   // Auto-detect device type
   const selectedDeviceType: DeviceType = isPhone ? 'phone' : isTablet ? 'tablet' : 'desktop'
@@ -286,17 +286,15 @@ export const NyxOS: React.FC = () => {
           <AndroidNavigation
             navigationStyle={navigationStyle}
             onNavigationStyleChange={setNavigationStyle}
+            showStatusBarControls={true}
           />
         )}
 
         {/* Window Manager */}
         <WindowManager />
 
-        {/* Nyx Taskbar - Hidden on phone, minimal on tablet */}
+        {/* Nyx Taskbar - Desktop only, tablet uses Android navigation */}
         {selectedDeviceType === 'desktop' && <NyxTaskbar />}
-        {selectedDeviceType === 'tablet' && uiConfig.showMinimalTaskbar && (
-          <div className="fixed bottom-0 left-0 right-0 h-8 bg-black/40 backdrop-blur-sm border-t border-white/5 z-30" />
-        )}
       </motion.div>
     </ShutdownSystem>
   )
