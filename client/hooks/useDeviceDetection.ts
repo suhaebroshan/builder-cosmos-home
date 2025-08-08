@@ -29,20 +29,21 @@ export const useDeviceDetection = () => {
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
     const userAgent = navigator.userAgent.toLowerCase()
 
-    // Check for mobile devices in user agent
-    const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent)
+    // More comprehensive mobile detection
+    const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|phone/i.test(userAgent)
+    const isTabletUA = /ipad|android.*tablet|kindle|silk/i.test(userAgent)
 
-    // Phone: < 768px width OR mobile user agent with small screen
-    if (width < 768 || (isMobileUA && width < 1024)) {
+    // Force mobile detection - if it's a touch device with small screen, it's mobile
+    if (width < 768 || (isTouchDevice && width < 900) || isMobileUA) {
       return 'phone'
     }
 
-    // Tablet: 768px - 1366px width and (touch device OR tablet user agent)
-    if (width >= 768 && width <= 1366 && (isTouchDevice || /ipad|android/i.test(userAgent))) {
+    // Tablet detection - larger touch devices or explicit tablet UA
+    if (width >= 768 && width <= 1366 && (isTouchDevice || isTabletUA)) {
       return 'tablet'
     }
 
-    // Desktop: > 1366px or no touch device and not mobile UA
+    // Desktop fallback
     return 'desktop'
   }
 
