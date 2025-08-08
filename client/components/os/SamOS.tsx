@@ -275,11 +275,11 @@ export const NyxOS: React.FC = () => {
           </motion.div>
         )}
 
-        {/* Enhanced Desktop with App Icons */}
-        <EnhancedDesktop />
+        {/* Enhanced Desktop with App Icons - Desktop only */}
+        {selectedDeviceType === 'desktop' && <EnhancedDesktop />}
 
-        {/* Mobile Home Screen */}
-        <MobileHomeScreen />
+        {/* Mobile Home Screen - Mobile and tablet only */}
+        {(selectedDeviceType === 'phone' || selectedDeviceType === 'tablet') && <MobileHomeScreen />}
 
         {/* Android Navigation - For mobile and tablet */}
         {(selectedDeviceType === 'phone' || selectedDeviceType === 'tablet') && (
