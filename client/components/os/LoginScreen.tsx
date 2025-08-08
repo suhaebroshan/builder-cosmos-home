@@ -19,12 +19,14 @@ const defaultUsers: User[] = [
     id: 'user1',
     username: 'suhaeb',
     displayName: 'Suhaeb',
+    password: '',
     avatar: '👤'
   },
   {
     id: 'user2',
     username: 'sloka',
     displayName: 'Sloka',
+    password: '',
     avatar: '👩‍💻'
   }
 ]
