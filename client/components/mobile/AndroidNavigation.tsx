@@ -29,8 +29,9 @@ interface AndroidNavigationProps {
 }
 
 export const AndroidNavigation: React.FC<AndroidNavigationProps> = ({
-  navigationStyle,
-  onNavigationStyleChange
+  navigationStyle = 'buttons', // Default to buttons
+  onNavigationStyleChange,
+  showStatusBarControls = true
 }) => {
   const { windows, focusedWindowId, closeWindow, openWindow } = useWindowStore()
   const { deviceInfo, uiConfig } = useDeviceDetection()
