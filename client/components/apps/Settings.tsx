@@ -101,6 +101,11 @@ export const Settings: React.FC<SettingsProps> = ({ windowId }) => {
   })
   const [tempProfilePic, setTempProfilePic] = useState(profilePicture)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Security section state - moved from renderSecuritySection to fix Rules of Hooks
+  const [tempPasscode, setTempPasscode] = useState('')
+  const [tempPattern, setTempPattern] = useState<number[]>([])
+  const [showPasscode, setShowPasscode] = useState(false)
   
   const [settings, setSettings] = useState(() => {
     const savedSettings = localStorage.getItem('nyx-settings')
