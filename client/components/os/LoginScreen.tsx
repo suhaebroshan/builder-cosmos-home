@@ -120,11 +120,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-violet-700 rounded-full flex items-center justify-center text-lg">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-600 to-violet-700 rounded-full flex items-center justify-center text-sm sm:text-lg">
             {selectedUser.avatar}
           </div>
           <div className="text-left">
-            <div className="text-white text-sm font-medium">{selectedUser.displayName}</div>
+            <div className="text-white text-xs sm:text-sm font-medium">{selectedUser.displayName}</div>
             <div className="text-purple-300/70 text-xs">@{selectedUser.username}</div>
           </div>
           <Users className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
