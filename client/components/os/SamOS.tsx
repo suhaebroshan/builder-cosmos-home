@@ -45,7 +45,7 @@ export const NyxOS: React.FC = () => {
   const actualDeviceType = forcePhoneView ? 'phone' : selectedDeviceType
 
   // Enable global keyboard shortcuts (disabled on phone)
-  useKeyboardShortcuts(!isPhone && selectedDeviceType !== 'phone')
+  useKeyboardShortcuts(!isPhone && actualDeviceType !== 'phone')
 
   // Update CSS variables when theme changes
   useEffect(() => {
