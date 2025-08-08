@@ -130,13 +130,13 @@ export const AndroidStatusBar: React.FC<AndroidStatusBarProps> = ({
     (statusBarStyle === 'auto' && themeSettings.mode === 'dark')
 
   const statusBarClass = cn(
-    "fixed top-0 left-0 right-0 z-50 px-4 py-1",
-    "flex items-center justify-between",
-    "backdrop-blur-md transition-all duration-300",
-    isDark 
-      ? "bg-black/80 text-white border-b border-white/10" 
-      : "bg-white/80 text-black border-b border-black/10",
-    deviceType === 'phone' ? "h-7 text-xs" : "h-8 text-sm",
+    "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+    "flex items-center justify-between backdrop-blur-md",
+    isDark
+      ? "bg-black/90 text-white border-b border-white/10"
+      : "bg-white/90 text-black border-b border-black/10",
+    deviceType === 'phone' ? "h-10 text-xs px-2" : "h-12 text-sm px-4",
+    showTaskbarFeatures ? "shadow-lg" : "",
     className
   )
 
