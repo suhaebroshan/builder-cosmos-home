@@ -196,8 +196,8 @@ export const NyxOS: React.FC = () => {
           }}
         />
 
-        {/* User Info & Theme Toggle - Hidden on phone when in fullscreen apps */}
-        {!isPhone && (
+        {/* User Info & Theme Toggle - Hidden on phone and tablet */}
+        {actualDeviceType === 'desktop' && (
           <motion.div
             className="absolute top-4 left-4 flex items-center gap-3 z-30"
             initial={{ opacity: 0, x: -20 }}
