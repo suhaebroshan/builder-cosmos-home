@@ -166,15 +166,22 @@ export const MobileHomeScreen: React.FC = () => {
               key={app.id}
               onClick={() => handleAppLaunch(app)}
               className={cn(
-                "aspect-square rounded-2xl p-4 flex flex-col items-center justify-center text-white shadow-lg",
+                "aspect-square rounded-2xl flex flex-col items-center justify-center text-white shadow-lg",
                 app.color,
-                "hover:scale-105 active:scale-95 transition-transform pointer-events-auto"
+                "hover:scale-105 active:scale-95 transition-transform pointer-events-auto",
+                isPhone ? "p-3" : "p-4"
               )}
               whileTap={{ scale: 0.9 }}
               whileHover={{ scale: 1.05 }}
             >
-              <app.icon className="w-8 h-8 mb-2" />
-              <span className="text-xs font-medium text-center">{app.name}</span>
+              <app.icon className={cn(
+                "mb-2",
+                isPhone ? "w-7 h-7" : "w-8 h-8"
+              )} />
+              <span className={cn(
+                "font-medium text-center leading-tight",
+                isPhone ? "text-xs" : "text-sm"
+              )}>{app.name}</span>
             </motion.button>
           ))}
         </div>
