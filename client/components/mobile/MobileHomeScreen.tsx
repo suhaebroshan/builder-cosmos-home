@@ -37,7 +37,7 @@ interface User {
 }
 
 const defaultUsers: User[] = [
-  { id: '1', username: 'suhaeb', displayName: 'Suhaeb', avatar: '👤' },
+  { id: '1', username: 'suhaeb', displayName: 'Suhaeb', avatar: '����' },
   { id: '2', username: 'sloka', displayName: 'Sloka', avatar: '👩‍💻' },
   { id: '3', username: 'guest', displayName: 'Guest', avatar: '🌟' }
 ]
@@ -338,6 +338,148 @@ export const MobileHomeScreen: React.FC = () => {
                   </motion.button>
                 ))}
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* User Switcher Modal */}
+      <AnimatePresence>
+        {showUserSwitcher && (
+          <motion.div
+            className="fixed inset-0 z-50 pointer-events-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {/* Backdrop */}
+            <div
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={() => setShowUserSwitcher(false)}
+            />
+
+            {/* Modal */}
+            <motion.div
+              className={cn(
+                "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-11/12 max-w-md rounded-3xl p-6 shadow-2xl",
+                settings.mode === 'dark'
+                  ? "bg-gray-900/95 border border-white/10"
+                  : "bg-white/95 border border-gray-200"
+              )}
+              initial={{ scale: 0.8, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.8, y: 20 }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+            >
+              <div className="text-center mb-6">
+                <h3 className={cn(
+                  "text-xl font-bold mb-2",
+                  settings.mode === 'dark' ? "text-white" : "text-gray-900"
+                )}>
+                  Switch User
+                </h3>
+                <p className={cn(
+                  "text-sm opacity-70",
+                  settings.mode === 'dark' ? "text-gray-300" : "text-gray-600"
+                )}>
+                  Choose or add a user profile
+                </p>
+              </div>
+
+              {/* User List */}
+              <div className="space-y-3 mb-6">
+                {users.map((user) => (
+                  <motion.button
+                    key={user.id}
+                    onClick={() => {
+                      setCurrentUser(user)
+                      setShowUserSwitcher(false)
+                    }}
+                    className={cn(
+                      "w-full flex items-center gap-4 p-3 rounded-2xl transition-colors",
+                      currentUser.id === user.id
+                        ? "bg-purple-500/20 border-2 border-purple-500/50"
+                        : settings.mode === 'dark'
+                        ? "bg-gray-800/50 hover:bg-gray-700/50 border border-gray-700"
+                        : "bg-gray-100 hover:bg-gray-200 border border-gray-200"
+                    )}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-lg">
+                      {user.avatar}
+                    </div>
+                    <div className="text-left">
+                      <div className={cn(
+                        "font-medium",
+                        settings.mode === 'dark' ? "text-white" : "text-gray-900"
+                      )}>
+                        {user.displayName}
+                      </div>
+                      <div className={cn(
+                        "text-sm opacity-70",
+                        settings.mode === 'dark' ? "text-gray-300" : "text-gray-600"
+                      )}>
+                        @{user.username}
+                      </div>
+                    </div>
+                    {currentUser.id === user.id && (
+                      <div className="ml-auto w-3 h-3 bg-purple-500 rounded-full" />
+                    )}
+                  </motion.button>
+                ))}
+
+                {/* Add User Button */}
+                <motion.button
+                  onClick={() => {
+                    const newUser: User = {
+                      id: `user-${Date.now()}`,
+                      username: `user${users.length + 1}`,
+                      displayName: `User ${users.length + 1}`,
+                      avatar: ['🚀', '⭐', '🔥', '💎', '🌈'][Math.floor(Math.random() * 5)]
+                    }
+                    setUsers([...users, newUser])
+                    setCurrentUser(newUser)
+                    setShowUserSwitcher(false)
+                  }}
+                  className={cn(
+                    "w-full flex items-center gap-4 p-3 rounded-2xl border-2 border-dashed transition-colors",
+                    settings.mode === 'dark'
+                      ? "border-gray-600 hover:border-gray-500 hover:bg-gray-800/20"
+                      : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+                  )}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className={cn(
+                    "w-12 h-12 rounded-full flex items-center justify-center",
+                    settings.mode === 'dark' ? "bg-gray-700" : "bg-gray-200"
+                  )}>
+                    <UserPlus className="w-6 h-6" />
+                  </div>
+                  <div className="text-left">
+                    <div className={cn(
+                      "font-medium",
+                      settings.mode === 'dark' ? "text-white" : "text-gray-900"
+                    )}>
+                      Add New User
+                    </div>
+                    <div className={cn(
+                      "text-sm opacity-70",
+                      settings.mode === 'dark' ? "text-gray-300" : "text-gray-600"
+                    )}>
+                      Create a new profile
+                    </div>
+                  </div>
+                </motion.button>
+              </div>
+
+              {/* Close Button */}
+              <motion.button
+                onClick={() => setShowUserSwitcher(false)}
+                className="w-full py-3 bg-purple-500 hover:bg-purple-600 text-white font-medium rounded-2xl transition-colors"
+                whileTap={{ scale: 0.98 }}
+              >
+                Done
+              </motion.button>
             </motion.div>
           </motion.div>
         )}
