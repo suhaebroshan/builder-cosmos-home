@@ -652,18 +652,44 @@ export const WindowsMediaPlayer: React.FC<WindowsMediaPlayerProps> = ({ windowId
                   {RADIO_STATIONS.map((station) => (
                     <div
                       key={station.id}
-                      onClick={() => playTrack(station)}
                       className={cn(
-                        "flex items-center p-3 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700",
+                        "flex items-center p-3 rounded hover:bg-gray-200 dark:hover:bg-gray-700 group",
                         currentTrack?.id === station.id && "bg-blue-100 dark:bg-blue-900"
                       )}
                     >
-                      <Radio className="w-8 h-8 text-blue-500 mr-3" />
-                      <div className="flex-1">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          if (currentTrack?.id === station.id) {
+                            togglePlayback()
+                          } else {
+                            playTrack(station)
+                            setTimeout(() => togglePlayback(), 500)
+                          }
+                        }}
+                        className="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center mr-3 hover:scale-105 transition-transform"
+                      >
+                        {currentTrack?.id === station.id && isPlaying ? (
+                          <Pause className="w-6 h-6 text-white" />
+                        ) : (
+                          <Radio className="w-6 h-6 text-white" />
+                        )}
+                      </button>
+                      <div
+                        className="flex-1 cursor-pointer"
+                        onClick={() => setCurrentTrack(station)}
+                      >
                         <div className="font-medium">{station.title}</div>
                         <div className="text-sm text-gray-500">{station.genre} • Live Stream</div>
                       </div>
-                      <div className="text-sm text-green-500">LIVE</div>
+                      <div className={cn(
+                        "text-sm font-semibold px-2 py-1 rounded",
+                        currentTrack?.id === station.id && isPlaying
+                          ? "text-red-500 bg-red-100 dark:bg-red-900"
+                          : "text-green-500 bg-green-100 dark:bg-green-900"
+                      )}>
+                        {currentTrack?.id === station.id && isPlaying ? "ON AIR" : "LIVE"}
+                      </div>
                     </div>
                   ))}
                 </div>
