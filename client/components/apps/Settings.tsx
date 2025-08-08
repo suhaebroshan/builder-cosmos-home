@@ -506,10 +506,6 @@ export const Settings: React.FC<SettingsProps> = ({ windowId }) => {
   )
 
   const renderSecuritySection = () => {
-    const [tempPasscode, setTempPasscode] = useState('')
-    const [tempPattern, setTempPattern] = useState<number[]>([])
-    const [showPasscode, setShowPasscode] = useState(false)
-
     return (
       <div className="space-y-6">
         <h3 className="text-xl font-semibold text-white mb-4">Security & Lock Screen</h3>
