@@ -62,7 +62,7 @@ interface Playlist {
   isDefault?: boolean
 }
 
-// Real working audio sources
+// Real working audio sources with CORS-friendly URLs
 const DEFAULT_TRACKS: AudioTrack[] = [
   {
     id: '1',
@@ -71,7 +71,7 @@ const DEFAULT_TRACKS: AudioTrack[] = [
     album: 'Directionless EP',
     duration: 158,
     src: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Broke_For_Free/Directionless_EP/Broke_For_Free_-_01_-_Night_Owl.mp3',
-    cover: '/api/placeholder/300/300',
+    cover: '/placeholder.svg',
     genre: 'Electronic',
     year: 2012,
     bitrate: '320kbps',
@@ -84,7 +84,7 @@ const DEFAULT_TRACKS: AudioTrack[] = [
     album: 'Directionless EP', 
     duration: 252,
     src: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Broke_For_Free/Directionless_EP/Broke_For_Free_-_02_-_Something_Elated.mp3',
-    cover: '/api/placeholder/300/300',
+    cover: '/placeholder.svg',
     genre: 'Electronic',
     year: 2012,
     bitrate: '320kbps',
@@ -97,7 +97,7 @@ const DEFAULT_TRACKS: AudioTrack[] = [
     album: 'Directionless EP',
     duration: 180,
     src: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Broke_For_Free/Directionless_EP/Broke_For_Free_-_03_-_As_Colorful_as_Ever.mp3',
-    cover: '/api/placeholder/300/300',
+    cover: '/placeholder.svg',
     genre: 'Electronic',
     year: 2012,
     bitrate: '320kbps',
@@ -110,7 +110,7 @@ const DEFAULT_TRACKS: AudioTrack[] = [
     album: 'Instrumental',
     duration: 195,
     src: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Josh_Lippi__The_Overtimers/The_Story_Starts/Josh_Lippi__The_Overtimers_-_05_-_Mellow_Waves.mp3',
-    cover: '/api/placeholder/300/300',
+    cover: '/placeholder.svg',
     genre: 'Instrumental',
     year: 2014,
     bitrate: '320kbps',
@@ -118,38 +118,38 @@ const DEFAULT_TRACKS: AudioTrack[] = [
   }
 ]
 
-// Radio stations
+// Radio stations with working HTTPS streams
 const RADIO_STATIONS: AudioTrack[] = [
   {
     id: 'radio-1',
-    title: 'Smooth Jazz 24/7',
-    artist: 'Jazz Radio Network',
+    title: 'SomaFM - Groove Salad',
+    artist: 'SomaFM',
     album: 'Live Stream',
     duration: 0,
-    src: 'http://jazz-wr04.ice.infomaniak.ch/jazz-wr04-128.mp3',
-    cover: '/api/placeholder/300/300',
-    genre: 'Jazz',
+    src: 'https://ice1.somafm.com/groovesalad-256-mp3',
+    cover: '/placeholder.svg',
+    genre: 'Ambient',
     format: 'Stream'
   },
   {
     id: 'radio-2',
-    title: 'Classical Music Radio',
-    artist: 'Classical Network',
+    title: 'SomaFM - Drone Zone',
+    artist: 'SomaFM',
     album: 'Live Stream',
     duration: 0,
-    src: 'http://stream.radiojar.com/4wqre23fytzuv',
-    cover: '/api/placeholder/300/300',
-    genre: 'Classical',
+    src: 'https://ice1.somafm.com/dronezone-256-mp3',
+    cover: '/placeholder.svg',
+    genre: 'Ambient',
     format: 'Stream'
   },
   {
     id: 'radio-3',
-    title: 'Electronic Beats',
-    artist: 'Electronic Radio',
+    title: 'SomaFM - Lush',
+    artist: 'SomaFM',
     album: 'Live Stream',
     duration: 0,
-    src: 'http://stream.zeno.fm/f3wvbbqmdg8uv',
-    cover: '/api/placeholder/300/300',
+    src: 'https://ice1.somafm.com/lush-256-mp3',
+    cover: '/placeholder.svg',
     genre: 'Electronic',
     format: 'Stream'
   }
@@ -222,8 +222,30 @@ export const WindowsMediaPlayer: React.FC<WindowsMediaPlayerProps> = ({ windowId
     }
   }, [currentTrack, currentPlaylist, repeat])
 
-  const handleError = useCallback(() => {
-    setError('Failed to load audio file')
+  const handleError = useCallback((e: Event) => {
+    console.error('Audio error:', e)
+    const audio = e.target as HTMLAudioElement
+    const errorCode = audio.error?.code
+    let errorMessage = 'Failed to load audio file'
+
+    switch (errorCode) {
+      case MediaError.MEDIA_ERR_NETWORK:
+        errorMessage = 'Network error - check your connection'
+        break
+      case MediaError.MEDIA_ERR_DECODE:
+        errorMessage = 'Audio format not supported'
+        break
+      case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+        errorMessage = 'Audio source not supported or CORS blocked'
+        break
+      case MediaError.MEDIA_ERR_ABORTED:
+        errorMessage = 'Audio loading was aborted'
+        break
+      default:
+        errorMessage = 'Unknown audio error occurred'
+    }
+
+    setError(errorMessage)
     setIsPlaying(false)
     setIsLoading(false)
   }, [])
@@ -262,7 +284,7 @@ export const WindowsMediaPlayer: React.FC<WindowsMediaPlayerProps> = ({ windowId
     }
   }, [currentTrack])
 
-  // Play/Pause functions
+  // Play/Pause functions with better error handling
   const togglePlayback = async () => {
     if (!audioRef.current || !currentTrack) return
 
@@ -271,31 +293,45 @@ export const WindowsMediaPlayer: React.FC<WindowsMediaPlayerProps> = ({ windowId
         audioRef.current.pause()
         setIsPlaying(false)
       } else {
-        await audioRef.current.play()
-        setIsPlaying(true)
+        // Handle autoplay restrictions
+        const playPromise = audioRef.current.play()
+        if (playPromise !== undefined) {
+          await playPromise
+          setIsPlaying(true)
+        }
       }
-    } catch (err) {
-      setError('Playback failed')
+    } catch (err: any) {
+      console.error('Playback error:', err)
+      if (err.name === 'NotAllowedError') {
+        setError('Autoplay blocked - please interact with the page first')
+      } else if (err.name === 'NotSupportedError') {
+        setError('Audio format not supported by your browser')
+      } else {
+        setError(`Playback failed: ${err.message || 'Unknown error'}`)
+      }
+      setIsPlaying(false)
     }
   }
 
   const playTrack = async (track: AudioTrack) => {
     if (!audioRef.current) return
 
+    // Stop current playback first
+    if (isPlaying) {
+      audioRef.current.pause()
+      setIsPlaying(false)
+    }
+
     setCurrentTrack(track)
     setIsLoading(true)
     setError(null)
-    
+    setCurrentTime(0)
+
     audioRef.current.src = track.src
     audioRef.current.load()
 
-    try {
-      await audioRef.current.play()
-      setIsPlaying(true)
-    } catch (err) {
-      setError('Failed to play track')
-      setIsLoading(false)
-    }
+    // Don't auto-play immediately, wait for user interaction
+    setIsLoading(false)
   }
 
   const skipNext = () => {
@@ -468,13 +504,29 @@ export const WindowsMediaPlayer: React.FC<WindowsMediaPlayerProps> = ({ windowId
             {currentView === 'now-playing' && (
               <div className={cn("space-y-6", isCompact && "space-y-4")}>
                 {/* Current Track Display */}
-                {currentTrack && (
+                {currentTrack ? (
                   <div className="text-center">
                     <div className={cn(
-                      "mx-auto rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mb-4 shadow-lg",
+                      "mx-auto rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mb-4 shadow-lg relative overflow-hidden",
                       isMobile ? "w-48 h-48" : isCompact ? "w-32 h-32" : "w-64 h-64"
                     )}>
-                      <Music className={cn("text-white", isMobile ? "w-24 h-24" : isCompact ? "w-16 h-16" : "w-32 h-32")} />
+                      {currentTrack.cover && currentTrack.cover !== '/placeholder.svg' ? (
+                        <img
+                          src={currentTrack.cover}
+                          alt={currentTrack.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <Music className={cn("text-white", isMobile ? "w-24 h-24" : isCompact ? "w-16 h-16" : "w-32 h-32")} />
+                      )}
+                      {isPlaying && (
+                        <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                          <div className="w-2 h-8 bg-white/80 animate-pulse mr-1"></div>
+                          <div className="w-2 h-6 bg-white/80 animate-pulse mr-1" style={{animationDelay: '0.2s'}}></div>
+                          <div className="w-2 h-10 bg-white/80 animate-pulse mr-1" style={{animationDelay: '0.4s'}}></div>
+                          <div className="w-2 h-4 bg-white/80 animate-pulse" style={{animationDelay: '0.6s'}}></div>
+                        </div>
+                      )}
                     </div>
                     <h2 className={cn("font-bold mb-2 px-4", isMobile ? "text-xl" : isCompact ? "text-lg" : "text-3xl")}>{currentTrack.title}</h2>
                     <p className={cn("mb-2 px-4", isMobile ? "text-lg" : isCompact ? "text-sm" : "text-xl")}>{currentTrack.artist}</p>
@@ -484,6 +536,12 @@ export const WindowsMediaPlayer: React.FC<WindowsMediaPlayerProps> = ({ windowId
                         {currentTrack.year} • {currentTrack.genre} • {currentTrack.format}
                       </p>
                     )}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <Music className={cn("mx-auto text-gray-400 mb-4", isMobile ? "w-16 h-16" : "w-20 h-20")} />
+                    <p className={cn("text-gray-500", isMobile ? "text-lg" : "text-xl")}>No track selected</p>
+                    <p className={cn("text-gray-400 mt-2", isMobile ? "text-sm" : "text-base")}>Choose a song from your library to start playing</p>
                   </div>
                 )}
 
@@ -616,17 +674,25 @@ export const WindowsMediaPlayer: React.FC<WindowsMediaPlayerProps> = ({ windowId
             {/* Progress Bar */}
             <div className={cn("mb-3", isMobile && "mb-4")}>
               <div className={cn("flex items-center space-x-2", isMobile ? "text-sm" : "text-xs")}>
-                <span className={cn("text-right", isMobile ? "w-14" : "w-12")}>{formatTime(currentTime)}</span>
+                <span className={cn("text-right tabular-nums", isMobile ? "w-14" : "w-12")}>{formatTime(currentTime)}</span>
                 <div
-                  className={cn("flex-1 bg-gray-300 dark:bg-gray-600 rounded cursor-pointer", isMobile ? "h-3" : "h-2")}
+                  className={cn(
+                    "flex-1 bg-gray-300 dark:bg-gray-600 rounded cursor-pointer relative group",
+                    isMobile ? "h-3" : "h-2"
+                  )}
                   onClick={seek}
                 >
                   <div
-                    className="h-full bg-blue-500 rounded transition-all"
+                    className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded transition-all duration-200 relative"
                     style={{ width: `${progress}%` }}
-                  />
+                  >
+                    <div className={cn(
+                      "absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity",
+                      isMobile ? "w-4 h-4" : "w-3 h-3"
+                    )} />
+                  </div>
                 </div>
-                <span className={cn(isMobile ? "w-14" : "w-12")}>{formatTime(duration)}</span>
+                <span className={cn("tabular-nums", isMobile ? "w-14" : "w-12")}>{formatTime(duration)}</span>
               </div>
             </div>
 
@@ -843,23 +909,29 @@ export const WindowsMediaPlayer: React.FC<WindowsMediaPlayerProps> = ({ windowId
         ref={audioRef}
         crossOrigin="anonymous"
         preload="metadata"
+        playsInline
       />
 
       {/* Error Display */}
-      {error && (
-        <motion.div
-          className="fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-50"
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 100 }}
-          onClick={() => setError(null)}
-        >
-          <div className="flex items-center space-x-2">
-            <AlertCircle className="w-4 h-4" />
-            <span className="text-sm">{error}</span>
-          </div>
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            className="fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded shadow-lg z-50 max-w-sm cursor-pointer"
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 100 }}
+            onClick={() => setError(null)}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className="flex items-center space-x-2">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <span className="text-sm">{error}</span>
+              <X className="w-4 h-4 flex-shrink-0 ml-2 opacity-70 hover:opacity-100" />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Add URL Modal */}
       {isAddingUrl && (
