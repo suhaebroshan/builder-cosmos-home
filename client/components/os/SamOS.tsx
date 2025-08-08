@@ -40,9 +40,10 @@ export const NyxOS: React.FC = () => {
   // Auto-detect device type with fallback for small screens
   const selectedDeviceType: DeviceType = isPhone ? 'phone' : isTablet ? 'tablet' : 'desktop'
 
-  // Force mobile view for very small screens regardless of detection
-  const forcePhoneView = window.innerWidth < 768
-  const actualDeviceType = forcePhoneView ? 'phone' : selectedDeviceType
+  // Force mobile view for small screens or touch devices
+  const forcePhoneView = window.innerWidth < 768 || (window.innerWidth < 900 && 'ontouchstart' in window)
+  const forceMobileView = forcePhoneView || (window.innerWidth < 1200 && navigator.maxTouchPoints > 0)
+  const actualDeviceType = forcePhoneView ? 'phone' : forceMobileView && selectedDeviceType === 'desktop' ? 'tablet' : selectedDeviceType
 
   // Enable global keyboard shortcuts (disabled on phone)
   useKeyboardShortcuts(!isPhone && actualDeviceType !== 'phone')
