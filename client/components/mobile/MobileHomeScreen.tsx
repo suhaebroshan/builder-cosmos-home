@@ -153,7 +153,10 @@ export const MobileHomeScreen: React.FC = () => {
   return (
     <div className="absolute inset-0">
       {/* Main App Grid (visible on phones and tablets) */}
-      <div className="p-6 pt-12">
+      <div className={cn(
+        "p-6",
+        isPhone ? "pt-16 pb-20" : "pt-14 pb-18"
+      )}>
         <div className="grid grid-cols-4 gap-4 mb-8">
           {mobileApps.slice(0, isPhone ? 8 : 12).map((app) => (
             <motion.button
