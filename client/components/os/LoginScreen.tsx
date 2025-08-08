@@ -175,8 +175,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
-                <h2 className="text-white text-xl font-medium mb-1">{selectedUser.displayName}</h2>
-                <p className="text-purple-300/70 text-sm">@{selectedUser.username}</p>
+                <h2 className="text-white text-lg sm:text-xl font-medium mb-1">{selectedUser.displayName}</h2>
+                <p className="text-purple-300/70 text-xs sm:text-sm">@{selectedUser.username}</p>
               </motion.div>
             </div>
 
