@@ -92,12 +92,15 @@ CURRENT DEVICE: ${deviceInfo}
           model,
           messages: [systemMessage, ...this.currentConversation.slice(-10)], // Keep last 10 messages
           temperature: 0.8,
-          max_tokens: 800
+          max_tokens: 600, // Reduced for faster responses
+          stream: false
         })
       })
 
       if (!response.ok) {
-        throw new Error(`OpenRouter API error: ${response.status}`)
+        const errorText = await response.text()
+        console.error('API Error:', response.status, errorText)
+        throw new Error(`OpenRouter API error: ${response.status} - ${errorText}`)
       }
 
       const data = await response.json()
