@@ -94,7 +94,7 @@ export const NyxOS: React.FC = () => {
       setEmotion('excited', 0.9)
       let welcomeMessage = `Welcome to Nyx OS, ${user.displayName}! `
 
-      switch (selectedDeviceType) {
+      switch (actualDeviceType) {
         case 'phone':
           welcomeMessage += "Your Android-style mobile experience is ready with smooth gestures and bouncy animations!"
           break
