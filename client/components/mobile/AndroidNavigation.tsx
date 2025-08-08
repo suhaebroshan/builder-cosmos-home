@@ -23,8 +23,9 @@ import {
 import { cn } from '@/lib/utils'
 
 interface AndroidNavigationProps {
-  navigationStyle: 'gestures' | 'buttons'
-  onNavigationStyleChange: (style: 'gestures' | 'buttons') => void
+  navigationStyle?: 'gestures' | 'buttons'
+  onNavigationStyleChange?: (style: 'gestures' | 'buttons') => void
+  showStatusBarControls?: boolean
 }
 
 export const AndroidNavigation: React.FC<AndroidNavigationProps> = ({
