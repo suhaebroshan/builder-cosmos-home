@@ -37,8 +37,12 @@ export const NyxOS: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [navigationStyle, setNavigationStyle] = useState<'gestures' | 'buttons'>('buttons') // Default to buttons
   
-  // Auto-detect device type
+  // Auto-detect device type with fallback for small screens
   const selectedDeviceType: DeviceType = isPhone ? 'phone' : isTablet ? 'tablet' : 'desktop'
+
+  // Force mobile view for very small screens regardless of detection
+  const forcePhoneView = window.innerWidth < 768
+  const actualDeviceType = forcePhoneView ? 'phone' : selectedDeviceType
 
   // Enable global keyboard shortcuts (disabled on phone)
   useKeyboardShortcuts(!isPhone && selectedDeviceType !== 'phone')
