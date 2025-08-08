@@ -171,10 +171,48 @@ export const MobileHomeScreen: React.FC = () => {
   
   return (
     <div className="absolute inset-0 z-20 bg-transparent pointer-events-auto">
+      {/* User Switcher at top */}
+      <div className="p-4 pt-20"> {/* Account for status bar + nav buttons */}
+        <motion.div
+          className={cn(
+            "rounded-2xl p-3 mb-4 flex items-center justify-between backdrop-blur-md border",
+            settings.mode === 'dark'
+              ? "bg-black/40 border-white/10"
+              : "bg-white/40 border-black/10"
+          )}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => setShowUserSwitcher(true)}
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-lg">
+              {currentUser.avatar}
+            </div>
+            <div>
+              <div className={cn(
+                "font-medium",
+                settings.mode === 'dark' ? "text-white" : "text-gray-900"
+              )}>
+                Welcome back, {currentUser.displayName}!
+              </div>
+              <div className={cn(
+                "text-sm opacity-70",
+                settings.mode === 'dark' ? "text-gray-300" : "text-gray-600"
+              )}>
+                @{currentUser.username} • Tap to switch
+              </div>
+            </div>
+          </div>
+          <Users className={cn(
+            "w-5 h-5 opacity-60",
+            settings.mode === 'dark' ? "text-gray-300" : "text-gray-600"
+          )} />
+        </motion.div>
+      </div>
+
       {/* Main App Grid (visible on phones and tablets) */}
       <div className={cn(
-        "p-6",
-        isPhone ? "pt-16 pb-20" : "pt-14 pb-18"
+        "px-6 pb-6",
+        isPhone ? "pt-0" : "pt-2"
       )}>
         <div className={cn(
           "grid gap-4 mb-8",
