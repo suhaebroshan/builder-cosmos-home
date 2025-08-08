@@ -132,7 +132,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
       </div>
 
       <motion.div
-        className="relative liquid-glass-window rounded-3xl p-8 max-w-md w-full mx-4 liquid-reflection"
+        className="relative liquid-glass-window rounded-3xl p-4 sm:p-8 max-w-md w-full mx-4 liquid-reflection"
         initial={{ opacity: 0, scale: 0.8, y: 50 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
