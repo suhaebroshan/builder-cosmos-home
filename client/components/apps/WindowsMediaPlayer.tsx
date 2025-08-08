@@ -603,21 +603,38 @@ export const WindowsMediaPlayer: React.FC<WindowsMediaPlayerProps> = ({ windowId
                   {currentPlaylist.tracks.map((track, index) => (
                     <div
                       key={track.id}
-                      onClick={() => playTrack(track)}
                       className={cn(
-                        "flex items-center rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors",
+                        "flex items-center rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors group",
                         currentTrack?.id === track.id && "bg-blue-100 dark:bg-blue-900",
                         isMobile ? "p-3" : "p-2"
                       )}
                     >
                       {!isMobile && <div className="w-8 text-center text-sm">{index + 1}</div>}
-                      <div className={cn(
-                        "bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center mr-3",
-                        isMobile ? "w-12 h-12" : "w-10 h-10"
-                      )}>
-                        <Music className={cn("text-white", isMobile ? "w-6 h-6" : "w-5 h-5")} />
-                      </div>
-                      <div className="flex-1 min-w-0">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          if (currentTrack?.id === track.id) {
+                            togglePlayback()
+                          } else {
+                            playTrack(track)
+                            setTimeout(() => togglePlayback(), 100)
+                          }
+                        }}
+                        className={cn(
+                          "bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center mr-3 hover:scale-105 transition-transform",
+                          isMobile ? "w-12 h-12" : "w-10 h-10"
+                        )}
+                      >
+                        {currentTrack?.id === track.id && isPlaying ? (
+                          <Pause className={cn("text-white", isMobile ? "w-6 h-6" : "w-5 h-5")} />
+                        ) : (
+                          <Play className={cn("text-white", isMobile ? "w-6 h-6" : "w-5 h-5")} />
+                        )}
+                      </button>
+                      <div
+                        className="flex-1 min-w-0 cursor-pointer"
+                        onClick={() => setCurrentTrack(track)}
+                      >
                         <div className={cn("font-medium truncate", isMobile && "text-lg")}>{track.title}</div>
                         <div className={cn("text-gray-500 truncate", isMobile ? "text-base" : "text-sm")}>{track.artist}</div>
                       </div>
