@@ -182,12 +182,14 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
           height: Math.min(safeSize.height, viewportHeight * 0.6)
         }
       } else {
-        // Fullscreen mode for phones
+        // Fullscreen mode for phones - account for status bar and navigation
+        const statusBarHeight = uiConfig.statusBarHeight || 40
+        const navBarHeight = uiConfig.navigationBarHeight || 56
         return {
           x: 0,
-          y: 0,
+          y: statusBarHeight,
           width: viewportWidth,
-          height: viewportHeight
+          height: viewportHeight - statusBarHeight - navBarHeight
         }
       }
     } else if (isTablet) {
