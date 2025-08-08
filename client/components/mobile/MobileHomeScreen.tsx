@@ -137,10 +137,10 @@ export const MobileHomeScreen: React.FC = () => {
         appId: app.id,
         title: app.name,
         component: AppComponent,
-        position: { x: 0, y: 0 },
+        position: { x: 0, y: isPhone ? 0 : 50 },
         size: {
-          width: isPhone ? window.innerWidth : window.innerWidth * 0.8,
-          height: isPhone ? window.innerHeight : window.innerHeight * 0.8
+          width: isPhone ? window.innerWidth : window.innerWidth * 0.85,
+          height: isPhone ? window.innerHeight : window.innerHeight * 0.85
         },
         mode: isPhone ? 'fullscreen' : 'windowed'
       })
