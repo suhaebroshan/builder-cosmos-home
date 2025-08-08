@@ -237,8 +237,8 @@ export const NyxOS: React.FC = () => {
           </motion.div>
         )}
 
-        {/* AI Status Indicator - Smaller on tablet, hidden on phone */}
-        {!isPhone && (
+        {/* AI Status Indicator - Desktop only */}
+        {actualDeviceType === 'desktop' && (
           <motion.div
             className={cn(
               "absolute top-4 right-4 text-white/80 z-30",
