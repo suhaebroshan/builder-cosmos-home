@@ -151,21 +151,30 @@ export const AndroidNavigation: React.FC<AndroidNavigationProps> = ({
       <AnimatePresence>
         {showRecentApps && (
           <motion.div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/70 backdrop-blur-md z-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setShowRecentApps(false)}
           >
             <motion.div
-              className="flex flex-col h-full pt-16 pb-20"
+              className={cn(
+                "flex flex-col h-full",
+                showStatusBarControls ? "pt-20 pb-16" : "pt-16 pb-20"
+              )}
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
               <div className="text-center mb-6">
-                <h2 className="text-white text-xl font-semibold">Recent Apps</h2>
+                <h2 className={cn(
+                  "text-white font-semibold",
+                  deviceInfo.type === 'phone' ? "text-lg" : "text-xl"
+                )}>Recent Apps</h2>
+                <p className="text-white/60 text-sm mt-1">
+                  {windows.length} {windows.length === 1 ? 'app' : 'apps'} running
+                </p>
               </div>
 
               <div className="flex-1 overflow-y-auto px-4">
