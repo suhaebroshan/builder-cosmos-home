@@ -96,7 +96,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                         : 'hover:bg-purple-800/20'
                     }`}
                   >
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-violet-700 rounded-full flex items-center justify-center text-lg">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-600 to-violet-700 rounded-full flex items-center justify-center text-sm sm:text-lg">
                       {user.avatar}
                     </div>
                     <div>
