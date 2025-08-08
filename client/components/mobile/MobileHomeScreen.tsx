@@ -151,7 +151,7 @@ export const MobileHomeScreen: React.FC = () => {
   }
   
   return (
-    <div className="absolute inset-0 z-20">
+    <div className="absolute inset-0 z-20 bg-transparent pointer-events-auto">
       {/* Main App Grid (visible on phones and tablets) */}
       <div className={cn(
         "p-6",
