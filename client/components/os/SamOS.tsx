@@ -114,6 +114,10 @@ export const NyxOS: React.FC = () => {
     }, 1500)
   }
 
+  const handleIntroCutsceneComplete = () => {
+    setShowIntroCutscene(false)
+  }
+
   // Handle system events
   useEffect(() => {
     const handleOpenBrowser = () => {
