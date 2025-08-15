@@ -185,6 +185,11 @@ export const NyxOS: React.FC = () => {
     return <EnhancedBootAnimation onComplete={handleBootComplete} />
   }
 
+  // Show intro cutscene after boot but before main OS
+  if (showIntroCutscene && currentUser) {
+    return <IntroCutscene user={currentUser} onComplete={handleIntroCutsceneComplete} />
+  }
+
   return (
     <ShutdownSystem>
       <motion.div
