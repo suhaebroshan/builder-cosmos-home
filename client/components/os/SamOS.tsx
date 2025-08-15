@@ -36,6 +36,7 @@ export const NyxOS: React.FC = () => {
   const { deviceInfo, uiConfig, isPhone, isTablet, isDesktop } = useDeviceDetection()
   const [isBooted, setIsBooted] = useState(false)
   const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [showIntroCutscene, setShowIntroCutscene] = useState(false)
   const [navigationStyle, setNavigationStyle] = useState<'gestures' | 'buttons'>('buttons') // Default to buttons
   
   // Auto-detect device type with fallback for small screens
