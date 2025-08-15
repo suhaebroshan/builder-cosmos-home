@@ -116,6 +116,65 @@ export const NyxOS: React.FC = () => {
 
   const handleIntroCutsceneComplete = () => {
     setShowIntroCutscene(false)
+
+    // Apply user-specific theme
+    if (currentUser) {
+      applyUserTheme(currentUser.username)
+    }
+  }
+
+  const applyUserTheme = (username: string) => {
+    const { updateSettings } = useThemeStore.getState()
+
+    switch (username) {
+      case 'shreya':
+        // Pinkish-purple theme for Shreya
+        updateSettings({
+          accentColor: '#ec4899', // pink-500
+          customColors: {
+            primary: '#be185d', // pink-700
+            secondary: '#f472b6', // pink-400
+            accent: '#ec4899' // pink-500
+          }
+        })
+        // Update CSS variables for Shreya's theme
+        document.documentElement.style.setProperty('--primary', '#be185d')
+        document.documentElement.style.setProperty('--secondary', '#f472b6')
+        document.documentElement.style.setProperty('--accent', '#ec4899')
+        break
+      case 'suhaeb':
+        // Keep default purple theme
+        updateSettings({
+          accentColor: '#8b5cf6', // purple-500
+          customColors: {
+            primary: '#7c3aed', // violet-600
+            secondary: '#a855f7', // purple-500
+            accent: '#8b5cf6' // purple-500
+          }
+        })
+        break
+      case 'raheel':
+        // Blue-purple theme for Raheel
+        updateSettings({
+          accentColor: '#3b82f6', // blue-500
+          customColors: {
+            primary: '#1d4ed8', // blue-700
+            secondary: '#60a5fa', // blue-400
+            accent: '#3b82f6' // blue-500
+          }
+        })
+        break
+      default:
+        // Default purple theme
+        updateSettings({
+          accentColor: '#8b5cf6',
+          customColors: {
+            primary: '#7c3aed',
+            secondary: '#a855f7',
+            accent: '#8b5cf6'
+          }
+        })
+    }
   }
 
   // Handle system events
