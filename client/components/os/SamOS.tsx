@@ -88,6 +88,7 @@ export const NyxOS: React.FC = () => {
     // Auto-detect device type and set up user
     setCurrentUser(user)
     setIsBooted(true)
+    setShowIntroCutscene(true) // Show intro cutscene first
 
     // Initialize AI service
     aiService.setVoiceMode(true)
