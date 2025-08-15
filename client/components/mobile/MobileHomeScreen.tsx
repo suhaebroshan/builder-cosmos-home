@@ -39,7 +39,8 @@ interface User {
 const defaultUsers: User[] = [
   { id: '1', username: 'suhaeb', displayName: 'Suhaeb', avatar: '����' },
   { id: '2', username: 'shreya', displayName: 'Shreya', avatar: '👩‍💻' },
-  { id: '3', username: 'guest', displayName: 'Guest', avatar: '🌟' }
+  { id: '3', username: 'raheel', displayName: 'Raheel', avatar: '🧑‍💻' },
+  { id: '4', username: 'guest', displayName: 'Guest', avatar: '🌟' }
 ]
 
 export const MobileHomeScreen: React.FC = () => {
