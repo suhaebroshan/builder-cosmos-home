@@ -38,7 +38,7 @@ interface User {
 
 const defaultUsers: User[] = [
   { id: '1', username: 'suhaeb', displayName: 'Suhaeb', avatar: '����' },
-  { id: '2', username: 'sloka', displayName: 'Sloka', avatar: '👩‍💻' },
+  { id: '2', username: 'shreya', displayName: 'Shreya', avatar: '👩‍💻' },
   { id: '3', username: 'guest', displayName: 'Guest', avatar: '🌟' }
 ]
 
