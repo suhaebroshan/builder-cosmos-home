@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Phone, Camera, MessageSquare, Chrome, Settings, Calculator,
-  Music, Gallery, Clock, Weather, Calendar, Mail, FileText,
+  Music, Image, Clock, Weather, Calendar, Mail, FileText,
   Video, Mic, MapPin, ShoppingBag, Gamepad2, Heart,
   Search, Wifi, Battery, Signal, MoreHorizontal,
   ArrowUp, ArrowDown, Home, Square, Triangle
@@ -19,7 +19,7 @@ const oneUIApps = [
   { id: 'camera', name: 'Camera', icon: Camera, color: '#dc2626', category: 'media' },
   { id: 'messages', name: 'Messages', icon: MessageSquare, color: '#16a34a', category: 'communication' },
   { id: 'browser', name: 'Internet', icon: Chrome, color: '#ea580c', category: 'tools' },
-  { id: 'gallery', name: 'Gallery', icon: Gallery, color: '#7c3aed', category: 'media' },
+  { id: 'gallery', name: 'Gallery', icon: Image, color: '#7c3aed', category: 'media' },
   { id: 'music', name: 'Music', icon: Music, color: '#c2410c', category: 'media' },
   { id: 'calendar', name: 'Calendar', icon: Calendar, color: '#0891b2', category: 'productivity' },
   { id: 'clock', name: 'Clock', icon: Clock, color: '#4f46e5', category: 'tools' },
