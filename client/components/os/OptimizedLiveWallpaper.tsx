@@ -1,1 +1,341 @@
-import React, { useEffect, useRef, useCallback, useState } from 'react'\nimport { usePerformanceManager } from '@/hooks/usePerformanceManager'\nimport { useDeviceDetection } from '@/hooks/useDeviceDetection'\n\ninterface Particle {\n  x: number\n  y: number\n  vx: number\n  vy: number\n  size: number\n  opacity: number\n  life: number\n  maxLife: number\n  color: string\n}\n\ninterface OptimizedLiveWallpaperProps {\n  className?: string\n}\n\nexport const OptimizedLiveWallpaper: React.FC<OptimizedLiveWallpaperProps> = ({ \n  className = \"\" \n}) => {\n  const canvasRef = useRef<HTMLCanvasElement>(null)\n  const animationRef = useRef<number>()\n  const particlesRef = useRef<Particle[]>([])\n  const lastFrameTime = useRef(0)\n  const fpsCounter = useRef(0)\n  const lastFpsUpdate = useRef(0)\n  const [isVisible, setIsVisible] = useState(true)\n  \n  const { profile, performanceStats } = usePerformanceManager()\n  const { deviceInfo } = useDeviceDetection()\n\n  // Performance-based configuration\n  const getConfig = useCallback(() => {\n    const baseConfig = {\n      particleCount: profile.particleCount,\n      maxParticles: profile.particleCount * 2,\n      targetFPS: profile.frameRateTarget,\n      enableBlur: profile.blurIntensity > 0,\n      enableGlow: profile.enableAdvancedEffects,\n      animationSpeed: 1,\n      cleanup: profile.memoryOptimization,\n    }\n\n    // Adjust for battery\n    if (performanceStats.isLowPowerMode) {\n      return {\n        ...baseConfig,\n        particleCount: Math.max(baseConfig.particleCount / 4, 5),\n        targetFPS: 30,\n        enableBlur: false,\n        enableGlow: false,\n        animationSpeed: 0.5,\n      }\n    }\n\n    // Adjust for performance\n    if (performanceStats.fps < 30) {\n      return {\n        ...baseConfig,\n        particleCount: Math.max(baseConfig.particleCount / 2, 10),\n        enableBlur: false,\n        enableGlow: false,\n      }\n    }\n\n    return baseConfig\n  }, [profile, performanceStats])\n\n  // Visibility observer for performance\n  useEffect(() => {\n    if (!profile.enableWallpaperAnimations) {\n      setIsVisible(false)\n      return\n    }\n\n    const observer = new IntersectionObserver(\n      ([entry]) => {\n        setIsVisible(entry.isIntersecting)\n      },\n      { threshold: 0.1 }\n    )\n\n    const canvas = canvasRef.current\n    if (canvas) {\n      observer.observe(canvas)\n    }\n\n    return () => {\n      if (canvas) {\n        observer.unobserve(canvas)\n      }\n    }\n  }, [profile.enableWallpaperAnimations])\n\n  // Particle creation\n  const createParticle = useCallback((canvas: HTMLCanvasElement): Particle => {\n    const colors = [\n      'rgba(139, 92, 246, ', // purple-500\n      'rgba(168, 85, 247, ', // purple-400\n      'rgba(59, 130, 246, ',  // blue-500\n      'rgba(147, 51, 234, ',  // purple-600\n      'rgba(79, 70, 229, ',   // indigo-600\n    ]\n\n    return {\n      x: Math.random() * canvas.width,\n      y: canvas.height + 10,\n      vx: (Math.random() - 0.5) * 2,\n      vy: -Math.random() * 3 - 1,\n      size: Math.random() * 3 + 1,\n      opacity: Math.random() * 0.8 + 0.2,\n      life: 0,\n      maxLife: Math.random() * 200 + 100,\n      color: colors[Math.floor(Math.random() * colors.length)],\n    }\n  }, [])\n\n  // Particle update\n  const updateParticle = useCallback((particle: Particle, deltaTime: number, config: any): boolean => {\n    particle.life += deltaTime * config.animationSpeed\n    particle.x += particle.vx * deltaTime * 0.1 * config.animationSpeed\n    particle.y += particle.vy * deltaTime * 0.1 * config.animationSpeed\n\n    // Fade out over lifetime\n    const lifeFactor = 1 - (particle.life / particle.maxLife)\n    particle.opacity = lifeFactor * 0.8\n\n    // Apply physics\n    particle.vy += 0.01 * deltaTime // gravity\n    particle.vx *= 0.99 // air resistance\n\n    return particle.life < particle.maxLife && particle.y > -50\n  }, [])\n\n  // Render function with performance optimizations\n  const render = useCallback((canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {\n    const config = getConfig()\n    \n    // Clear canvas efficiently\n    ctx.clearRect(0, 0, canvas.width, canvas.height)\n\n    // Set composite operation for performance\n    ctx.globalCompositeOperation = 'normal'\n\n    particlesRef.current.forEach((particle, index) => {\n      if (!particle) return\n\n      ctx.beginPath()\n      ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)\n      \n      // Performance-based rendering\n      if (config.enableGlow && profile.enableAdvancedEffects) {\n        // Glow effect for high performance\n        const gradient = ctx.createRadialGradient(\n          particle.x, particle.y, 0,\n          particle.x, particle.y, particle.size * 3\n        )\n        gradient.addColorStop(0, particle.color + particle.opacity + ')')\n        gradient.addColorStop(0.5, particle.color + (particle.opacity * 0.5) + ')')\n        gradient.addColorStop(1, particle.color + '0)')\n        ctx.fillStyle = gradient\n      } else {\n        // Simple fill for performance\n        ctx.fillStyle = particle.color + particle.opacity + ')'\n      }\n      \n      ctx.fill()\n    })\n\n    // Add subtle background gradient for depth\n    if (profile.enableAdvancedEffects) {\n      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)\n      gradient.addColorStop(0, 'rgba(79, 70, 229, 0.02)')\n      gradient.addColorStop(0.5, 'rgba(139, 92, 246, 0.01)')\n      gradient.addColorStop(1, 'rgba(168, 85, 247, 0.02)')\n      \n      ctx.fillStyle = gradient\n      ctx.fillRect(0, 0, canvas.width, canvas.height)\n    }\n  }, [getConfig, profile.enableAdvancedEffects])\n\n  // Main animation loop with FPS control\n  const animate = useCallback((currentTime: number) => {\n    if (!isVisible || !profile.enableWallpaperAnimations) {\n      animationRef.current = requestAnimationFrame(animate)\n      return\n    }\n\n    const canvas = canvasRef.current\n    const ctx = canvas?.getContext('2d')\n    if (!canvas || !ctx) {\n      animationRef.current = requestAnimationFrame(animate)\n      return\n    }\n\n    const config = getConfig()\n    const targetFrameTime = 1000 / config.targetFPS\n    const deltaTime = currentTime - lastFrameTime.current\n\n    // Frame rate limiting\n    if (deltaTime < targetFrameTime) {\n      animationRef.current = requestAnimationFrame(animate)\n      return\n    }\n\n    lastFrameTime.current = currentTime\n\n    // FPS monitoring\n    fpsCounter.current++\n    if (currentTime - lastFpsUpdate.current >= 1000) {\n      lastFpsUpdate.current = currentTime\n      fpsCounter.current = 0\n    }\n\n    // Particle management\n    const particles = particlesRef.current\n    \n    // Update existing particles\n    for (let i = particles.length - 1; i >= 0; i--) {\n      const particle = particles[i]\n      if (!updateParticle(particle, deltaTime, config)) {\n        particles.splice(i, 1)\n      }\n    }\n\n    // Add new particles based on performance\n    if (particles.length < config.particleCount && Math.random() < 0.1) {\n      particles.push(createParticle(canvas))\n    }\n\n    // Memory cleanup\n    if (config.cleanup && particles.length > config.maxParticles) {\n      particles.splice(0, particles.length - config.particleCount)\n    }\n\n    // Render\n    render(canvas, ctx)\n\n    animationRef.current = requestAnimationFrame(animate)\n  }, [isVisible, profile.enableWallpaperAnimations, getConfig, updateParticle, createParticle, render])\n\n  // Canvas setup and resize handling\n  useEffect(() => {\n    const canvas = canvasRef.current\n    if (!canvas) return\n\n    const ctx = canvas.getContext('2d', {\n      alpha: true,\n      desynchronized: true, // Performance optimization\n    })\n    if (!ctx) return\n\n    const updateCanvasSize = () => {\n      const rect = canvas.getBoundingClientRect()\n      const dpr = profile.enableGPUAcceleration ? (window.devicePixelRatio || 1) : 1\n      \n      canvas.width = rect.width * dpr\n      canvas.height = rect.height * dpr\n      \n      ctx.scale(dpr, dpr)\n      canvas.style.width = rect.width + 'px'\n      canvas.style.height = rect.height + 'px'\n    }\n\n    updateCanvasSize()\n\n    const resizeObserver = new ResizeObserver(updateCanvasSize)\n    resizeObserver.observe(canvas)\n\n    return () => {\n      resizeObserver.disconnect()\n    }\n  }, [profile.enableGPUAcceleration])\n\n  // Start animation\n  useEffect(() => {\n    if (profile.enableWallpaperAnimations && isVisible) {\n      animationRef.current = requestAnimationFrame(animate)\n    }\n\n    return () => {\n      if (animationRef.current) {\n        cancelAnimationFrame(animationRef.current)\n      }\n    }\n  }, [animate, profile.enableWallpaperAnimations, isVisible])\n\n  // Cleanup on unmount\n  useEffect(() => {\n    return () => {\n      if (animationRef.current) {\n        cancelAnimationFrame(animationRef.current)\n      }\n      particlesRef.current = []\n    }\n  }, [])\n\n  // Memory cleanup listener\n  useEffect(() => {\n    const handleMemoryCleanup = () => {\n      particlesRef.current = []\n    }\n\n    window.addEventListener('nyx:cleanup-memory', handleMemoryCleanup)\n    return () => window.removeEventListener('nyx:cleanup-memory', handleMemoryCleanup)\n  }, [])\n\n  if (!profile.enableWallpaperAnimations) {\n    return (\n      <div \n        className={`fixed inset-0 bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 ${className}`}\n        style={{ zIndex: -1 }}\n      />\n    )\n  }\n\n  return (\n    <>\n      {/* Static background for when canvas is disabled */}\n      <div \n        className={`fixed inset-0 bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 ${className}`}\n        style={{ zIndex: -1 }}\n      />\n      \n      {/* Animated canvas overlay */}\n      <canvas\n        ref={canvasRef}\n        className={`fixed inset-0 pointer-events-none ${className}`}\n        style={{ \n          zIndex: -1,\n          opacity: isVisible ? 1 : 0,\n          transition: 'opacity 0.5s ease',\n          willChange: profile.enableGPUAcceleration ? 'transform' : 'auto',\n        }}\n      />\n    </>\n  )\n}"
+import React, { useEffect, useRef, useCallback, useState } from 'react'
+import { usePerformanceManager } from '@/hooks/usePerformanceManager'
+import { useDeviceDetection } from '@/hooks/useDeviceDetection'
+
+interface Particle {
+  x: number
+  y: number
+  vx: number
+  vy: number
+  size: number
+  opacity: number
+  life: number
+  maxLife: number
+  color: string
+}
+
+interface OptimizedLiveWallpaperProps {
+  className?: string
+}
+
+export const OptimizedLiveWallpaper: React.FC<OptimizedLiveWallpaperProps> = ({ 
+  className = "" 
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const animationRef = useRef<number>()
+  const particlesRef = useRef<Particle[]>([])
+  const lastFrameTime = useRef(0)
+  const fpsCounter = useRef(0)
+  const lastFpsUpdate = useRef(0)
+  const [isVisible, setIsVisible] = useState(true)
+  
+  const { profile, performanceStats } = usePerformanceManager()
+  const { deviceInfo } = useDeviceDetection()
+
+  // Performance-based configuration
+  const getConfig = useCallback(() => {
+    const baseConfig = {
+      particleCount: profile.particleCount,
+      maxParticles: profile.particleCount * 2,
+      targetFPS: profile.frameRateTarget,
+      enableBlur: profile.blurIntensity > 0,
+      enableGlow: profile.enableAdvancedEffects,
+      animationSpeed: 1,
+      cleanup: profile.memoryOptimization,
+    }
+
+    // Adjust for battery
+    if (performanceStats.isLowPowerMode) {
+      return {
+        ...baseConfig,
+        particleCount: Math.max(baseConfig.particleCount / 4, 5),
+        targetFPS: 30,
+        enableBlur: false,
+        enableGlow: false,
+        animationSpeed: 0.5,
+      }
+    }
+
+    // Adjust for performance
+    if (performanceStats.fps < 30) {
+      return {
+        ...baseConfig,
+        particleCount: Math.max(baseConfig.particleCount / 2, 10),
+        enableBlur: false,
+        enableGlow: false,
+      }
+    }
+
+    return baseConfig
+  }, [profile, performanceStats])
+
+  // Visibility observer for performance
+  useEffect(() => {
+    if (!profile.enableWallpaperAnimations) {
+      setIsVisible(false)
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting)
+      },
+      { threshold: 0.1 }
+    )
+
+    const canvas = canvasRef.current
+    if (canvas) {
+      observer.observe(canvas)
+    }
+
+    return () => {
+      if (canvas) {
+        observer.unobserve(canvas)
+      }
+    }
+  }, [profile.enableWallpaperAnimations])
+
+  // Particle creation
+  const createParticle = useCallback((canvas: HTMLCanvasElement): Particle => {
+    const colors = [
+      'rgba(139, 92, 246, ', // purple-500
+      'rgba(168, 85, 247, ', // purple-400
+      'rgba(59, 130, 246, ',  // blue-500
+      'rgba(147, 51, 234, ',  // purple-600
+      'rgba(79, 70, 229, ',   // indigo-600
+    ]
+
+    return {
+      x: Math.random() * canvas.width,
+      y: canvas.height + 10,
+      vx: (Math.random() - 0.5) * 2,
+      vy: -Math.random() * 3 - 1,
+      size: Math.random() * 3 + 1,
+      opacity: Math.random() * 0.8 + 0.2,
+      life: 0,
+      maxLife: Math.random() * 200 + 100,
+      color: colors[Math.floor(Math.random() * colors.length)],
+    }
+  }, [])
+
+  // Particle update
+  const updateParticle = useCallback((particle: Particle, deltaTime: number, config: any): boolean => {
+    particle.life += deltaTime * config.animationSpeed
+    particle.x += particle.vx * deltaTime * 0.1 * config.animationSpeed
+    particle.y += particle.vy * deltaTime * 0.1 * config.animationSpeed
+
+    // Fade out over lifetime
+    const lifeFactor = 1 - (particle.life / particle.maxLife)
+    particle.opacity = lifeFactor * 0.8
+
+    // Apply physics
+    particle.vy += 0.01 * deltaTime // gravity
+    particle.vx *= 0.99 // air resistance
+
+    return particle.life < particle.maxLife && particle.y > -50
+  }, [])
+
+  // Render function with performance optimizations
+  const render = useCallback((canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
+    const config = getConfig()
+    
+    // Clear canvas efficiently
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    // Set composite operation for performance
+    ctx.globalCompositeOperation = 'normal'
+
+    particlesRef.current.forEach((particle, index) => {
+      if (!particle) return
+
+      ctx.beginPath()
+      ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
+      
+      // Performance-based rendering
+      if (config.enableGlow && profile.enableAdvancedEffects) {
+        // Glow effect for high performance
+        const gradient = ctx.createRadialGradient(
+          particle.x, particle.y, 0,
+          particle.x, particle.y, particle.size * 3
+        )
+        gradient.addColorStop(0, particle.color + particle.opacity + ')')
+        gradient.addColorStop(0.5, particle.color + (particle.opacity * 0.5) + ')')
+        gradient.addColorStop(1, particle.color + '0)')
+        ctx.fillStyle = gradient
+      } else {
+        // Simple fill for performance
+        ctx.fillStyle = particle.color + particle.opacity + ')'
+      }
+      
+      ctx.fill()
+    })
+
+    // Add subtle background gradient for depth
+    if (profile.enableAdvancedEffects) {
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+      gradient.addColorStop(0, 'rgba(79, 70, 229, 0.02)')
+      gradient.addColorStop(0.5, 'rgba(139, 92, 246, 0.01)')
+      gradient.addColorStop(1, 'rgba(168, 85, 247, 0.02)')
+      
+      ctx.fillStyle = gradient
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+    }
+  }, [getConfig, profile.enableAdvancedEffects])
+
+  // Main animation loop with FPS control
+  const animate = useCallback((currentTime: number) => {
+    if (!isVisible || !profile.enableWallpaperAnimations) {
+      animationRef.current = requestAnimationFrame(animate)
+      return
+    }
+
+    const canvas = canvasRef.current
+    const ctx = canvas?.getContext('2d')
+    if (!canvas || !ctx) {
+      animationRef.current = requestAnimationFrame(animate)
+      return
+    }
+
+    const config = getConfig()
+    const targetFrameTime = 1000 / config.targetFPS
+    const deltaTime = currentTime - lastFrameTime.current
+
+    // Frame rate limiting
+    if (deltaTime < targetFrameTime) {
+      animationRef.current = requestAnimationFrame(animate)
+      return
+    }
+
+    lastFrameTime.current = currentTime
+
+    // FPS monitoring
+    fpsCounter.current++
+    if (currentTime - lastFpsUpdate.current >= 1000) {
+      lastFpsUpdate.current = currentTime
+      fpsCounter.current = 0
+    }
+
+    // Particle management
+    const particles = particlesRef.current
+    
+    // Update existing particles
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const particle = particles[i]
+      if (!updateParticle(particle, deltaTime, config)) {
+        particles.splice(i, 1)
+      }
+    }
+
+    // Add new particles based on performance
+    if (particles.length < config.particleCount && Math.random() < 0.1) {
+      particles.push(createParticle(canvas))
+    }
+
+    // Memory cleanup
+    if (config.cleanup && particles.length > config.maxParticles) {
+      particles.splice(0, particles.length - config.particleCount)
+    }
+
+    // Render
+    render(canvas, ctx)
+
+    animationRef.current = requestAnimationFrame(animate)
+  }, [isVisible, profile.enableWallpaperAnimations, getConfig, updateParticle, createParticle, render])
+
+  // Canvas setup and resize handling
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const ctx = canvas.getContext('2d', {
+      alpha: true,
+      desynchronized: true, // Performance optimization
+    })
+    if (!ctx) return
+
+    const updateCanvasSize = () => {
+      const rect = canvas.getBoundingClientRect()
+      const dpr = profile.enableGPUAcceleration ? (window.devicePixelRatio || 1) : 1
+      
+      canvas.width = rect.width * dpr
+      canvas.height = rect.height * dpr
+      
+      ctx.scale(dpr, dpr)
+      canvas.style.width = rect.width + 'px'
+      canvas.style.height = rect.height + 'px'
+    }
+
+    updateCanvasSize()
+
+    const resizeObserver = new ResizeObserver(updateCanvasSize)
+    resizeObserver.observe(canvas)
+
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [profile.enableGPUAcceleration])
+
+  // Start animation
+  useEffect(() => {
+    if (profile.enableWallpaperAnimations && isVisible) {
+      animationRef.current = requestAnimationFrame(animate)
+    }
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+    }
+  }, [animate, profile.enableWallpaperAnimations, isVisible])
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+      particlesRef.current = []
+    }
+  }, [])
+
+  // Memory cleanup listener
+  useEffect(() => {
+    const handleMemoryCleanup = () => {
+      particlesRef.current = []
+    }
+
+    window.addEventListener('nyx:cleanup-memory', handleMemoryCleanup)
+    return () => window.removeEventListener('nyx:cleanup-memory', handleMemoryCleanup)
+  }, [])
+
+  if (!profile.enableWallpaperAnimations) {
+    return (
+      <div 
+        className={`fixed inset-0 bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 ${className}`}
+        style={{ zIndex: -1 }}
+      />
+    )
+  }
+
+  return (
+    <>
+      {/* Static background for when canvas is disabled */}
+      <div 
+        className={`fixed inset-0 bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 ${className}`}
+        style={{ zIndex: -1 }}
+      />
+      
+      {/* Animated canvas overlay */}
+      <canvas
+        ref={canvasRef}
+        className={`fixed inset-0 pointer-events-none ${className}`}
+        style={{ 
+          zIndex: -1,
+          opacity: isVisible ? 1 : 0,
+          transition: 'opacity 0.5s ease',
+          willChange: profile.enableGPUAcceleration ? 'transform' : 'auto',
+        }}
+      />
+    </>
+  )
+}

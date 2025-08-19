@@ -284,4 +284,451 @@ export const OptimizedShutdownSystem: React.FC<OptimizedShutdownSystemProps> = (
                       left: `${Math.random() * 100}%`,
                       top: `${Math.random() * 100}%`,
                     }}
-                    animate={profile.useReducedMotion ? {} : {\n                      opacity: [1, 0.3, 1, 0],\n                      scale: [1, 0.5, 1, 0],\n                    }}\n                    transition={{\n                      duration: 4,\n                      delay: Math.random() * 2,\n                      ease: 'easeInOut'\n                    }}\n                  />\n                ))}\n              </div>\n            )}\n\n            {/* Main shutdown interface */}\n            <motion.div\n              className=\"text-center z-10\"\n              initial={{ scale: 0.8, opacity: 0 }}\n              animate={{ scale: 1, opacity: 1 }}\n              transition={{ \n                delay: profile.useReducedMotion ? 0.1 : 0.3, \n                duration: profile.animationDuration / 1000 * 0.8 \n              }}\n            >\n              {/* Animated power icon */}\n              <motion.div\n                className=\"mb-8 relative\"\n                animate={profile.useReducedMotion ? {} : { rotate: 360 }}\n                transition={{ \n                  duration: profile.useReducedMotion ? 1 : 3, \n                  repeat: Infinity, \n                  ease: 'linear' \n                }}\n              >\n                <div className=\"w-24 h-24 rounded-full bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center relative\">\n                  <Power className=\"w-12 h-12 text-white\" />\n                  {profile.enableAdvancedEffects && (\n                    <>\n                      <div className=\"absolute inset-0 rounded-full bg-red-500/20 animate-pulse\" />\n                      <div className=\"absolute inset-0 rounded-full bg-gradient-to-br from-red-400/40 to-transparent\" />\n                    </>\n                  )}\n                </div>\n              </motion.div>\n\n              <motion.h1\n                className=\"text-4xl font-bold text-white mb-4\"\n                initial={{ y: profile.useReducedMotion ? 10 : 20, opacity: 0 }}\n                animate={{ y: 0, opacity: 1 }}\n                transition={{ delay: profile.useReducedMotion ? 0.2 : 0.6 }}\n              >\n                Shutting Down\n              </motion.h1>\n\n              {/* Performance info */}\n              <motion.div\n                className=\"flex items-center justify-center gap-4 mb-4 text-sm text-gray-400\"\n                initial={{ opacity: 0 }}\n                animate={{ opacity: 1 }}\n                transition={{ delay: 0.4 }}\n              >\n                <div className=\"flex items-center gap-1\">\n                  <Zap className=\"w-4 h-4\" />\n                  <span>{profile.name}</span>\n                </div>\n                <div className=\"flex items-center gap-1\">\n                  <Battery className=\"w-4 h-4\" />\n                  <span>{performanceStats.batteryLevel}%</span>\n                </div>\n                {performanceStats.fps > 0 && (\n                  <div className=\"flex items-center gap-1\">\n                    <span>{performanceStats.fps} FPS</span>\n                  </div>\n                )}\n              </motion.div>\n\n              <motion.p\n                className=\"text-lg text-gray-300 mb-8\"\n                key={shutdownMessage}\n                initial={{ opacity: 0 }}\n                animate={{ opacity: 1 }}\n                transition={{ duration: 0.5 }}\n              >\n                {shutdownMessage}\n              </motion.p>\n\n              {/* Optimized progress bar */}\n              <div className=\"w-96 mx-auto\">\n                <div className=\"flex justify-between text-sm text-gray-400 mb-2\">\n                  <span>Progress</span>\n                  <span>{Math.round(shutdownProgress)}%</span>\n                </div>\n                <div className=\"w-full bg-gray-800 rounded-full h-2 overflow-hidden\">\n                  <motion.div\n                    className=\"h-full bg-gradient-to-r from-red-500 to-orange-500 relative\"\n                    style={{ width: `${shutdownProgress}%` }}\n                    transition={{ duration: 0.1 }}\n                  >\n                    {profile.enableAdvancedEffects && (\n                      <motion.div\n                        className=\"absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent\"\n                        animate={{ x: ['-100%', '100%'] }}\n                        transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}\n                      />\n                    )}\n                  </motion.div>\n                </div>\n              </div>\n            </motion.div>\n\n            {/* Performance-based particles */}\n            {profile.enableParticles && (\n              <div className=\"absolute inset-0 pointer-events-none\">\n                {Array.from({ length: Math.min(profile.particleCount / 5, 20) }).map((_, i) => (\n                  <motion.div\n                    key={`shutdown-particle-${i}`}\n                    className=\"absolute w-2 h-2 bg-red-400/60 rounded-full\"\n                    style={{\n                      left: `${Math.random() * 100}%`,\n                      top: `${Math.random() * 100}%`,\n                    }}\n                    animate={profile.useReducedMotion ? {} : {\n                      y: [0, -100, -200],\n                      opacity: [0.8, 0.4, 0],\n                      scale: [1, 0.5, 0],\n                    }}\n                    transition={{\n                      duration: 3,\n                      repeat: Infinity,\n                      delay: Math.random() * 2,\n                      ease: 'easeOut',\n                    }}\n                  />\n                ))}\n              </div>\n            )}\n          </motion.div>\n        )}\n\n        {/* Shutdown Screen */}\n        {systemState === 'shutdown' && (\n          <motion.div\n            key=\"shutdown-screen\"\n            className={cn(\n              \"absolute inset-0 bg-black flex flex-col items-center justify-center\",\n              (isPhone || isTablet) ? \"cursor-default\" : \"cursor-pointer\"\n            )}\n            initial={{ opacity: 0 }}\n            animate={{ opacity: 1 }}\n            transition={{ duration: 1 }}\n          >\n            {/* Minimal starfield */}\n            {profile.enableParticles && (\n              <div className=\"absolute inset-0\">\n                {Array.from({ length: Math.min(getStarCount() / 3, 30) }).map((_, i) => (\n                  <motion.div\n                    key={i}\n                    className=\"absolute w-0.5 h-0.5 bg-white/30 rounded-full\"\n                    style={{\n                      left: `${Math.random() * 100}%`,\n                      top: `${Math.random() * 100}%`,\n                    }}\n                    animate={{\n                      opacity: [0.3, 0.7, 0.3],\n                    }}\n                    transition={{\n                      duration: 4 + Math.random() * 2,\n                      repeat: Infinity,\n                      delay: Math.random() * 2,\n                    }}\n                  />\n                ))}\n              </div>\n            )}\n\n            <motion.div\n              className=\"text-center\"\n              initial={{ scale: 0.8, opacity: 0 }}\n              animate={{ scale: 1, opacity: 1 }}\n              transition={{ delay: 0.5, duration: 1 }}\n            >\n              {/* Sleeping moon with performance-aware animation */}\n              <motion.div\n                className=\"mb-8\"\n                animate={profile.useReducedMotion ? {} : { \n                  y: [0, -10, 0],\n                  rotate: [0, 5, 0, -5, 0]\n                }}\n                transition={{ \n                  duration: 6, \n                  repeat: Infinity, \n                  ease: 'easeInOut' \n                }}\n              >\n                <div className=\"w-32 h-32 rounded-full bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 relative overflow-hidden mx-auto\">\n                  {/* Simplified craters for performance */}\n                  <div className=\"absolute top-6 left-8 w-6 h-6 rounded-full bg-gray-600/60\" />\n                  <div className=\"absolute top-16 right-12 w-4 h-4 rounded-full bg-gray-700/50\" />\n                  <div className=\"absolute bottom-8 left-16 w-8 h-8 rounded-full bg-gray-600/70\" />\n                  <div className=\"absolute bottom-12 right-16 w-3 h-3 rounded-full bg-gray-800/60\" />\n                  \n                  {/* Sleeping face */}\n                  <div className=\"absolute inset-0 flex items-center justify-center\">\n                    <div className=\"text-center\">\n                      <div className=\"flex gap-3 mb-2\">\n                        <div className=\"w-2 h-1 bg-gray-700 rounded-full\" />\n                        <div className=\"w-2 h-1 bg-gray-700 rounded-full\" />\n                      </div>\n                      <div className=\"w-4 h-2 border-2 border-gray-700 border-t-0 rounded-b-full\" />\n                    </div>\n                  </div>\n                  \n                  {profile.shadowQuality !== 'none' && (\n                    <div className=\"absolute inset-0 rounded-full shadow-[inset_0_0_50px_rgba(0,0,0,0.3)]\" />\n                  )}\n                </div>\n              </motion.div>\n\n              <h1 className=\"text-3xl font-bold text-white mb-4\">\n                Nyx OS is sleeping\n              </h1>\n              \n              <p className=\"text-gray-400 mb-2\">\n                Running in {profile.name} mode - {performanceStats.batteryLevel}% battery\n              </p>\n\n              <motion.div\n                className=\"text-sm text-gray-500\"\n                animate={profile.useReducedMotion ? {} : { opacity: [0.5, 1, 0.5] }}\n                transition={{ duration: 2, repeat: Infinity }}\n              >\n                {isPhone || isTablet ? 'Tap 3 times to wake up' : 'Press spacebar 3 times or click 3 times to wake up'}\n              </motion.div>\n\n              {/* Wake up progress */}\n              {(keyPressCount > 0 || clickCount > 0) && (\n                <motion.div\n                  className=\"mt-6\"\n                  initial={{ opacity: 0, y: 10 }}\n                  animate={{ opacity: 1, y: 0 }}\n                >\n                  <div className=\"flex justify-center gap-2\">\n                    {Array.from({ length: 3 }).map((_, i) => (\n                      <motion.div\n                        key={i}\n                        className={cn(\n                          \"w-3 h-3 rounded-full\",\n                          i < Math.max(keyPressCount, clickCount)\n                            ? \"bg-purple-400\"\n                            : \"bg-gray-700\"\n                        )}\n                        animate={!profile.useReducedMotion && i < Math.max(keyPressCount, clickCount) ? {\n                          scale: [1, 1.2, 1],\n                          opacity: [1, 0.7, 1]\n                        } : {}}\n                        transition={{ duration: 0.3 }}\n                      />\n                    ))}\n                  </div>\n                  <p className=\"text-xs text-purple-400 mt-2\">\n                    {Math.max(keyPressCount, clickCount)}/3 - Nyx is stirring...\n                  </p>\n                </motion.div>\n              )}\n            </motion.div>\n          </motion.div>\n        )}\n\n        {/* Starting Up Animation */}\n        {systemState === 'starting-up' && (\n          <motion.div\n            key=\"startup\"\n            className=\"absolute inset-0 bg-black flex flex-col items-center justify-center\"\n            initial={{ opacity: 0 }}\n            animate={{ opacity: 1 }}\n            exit={{ opacity: 0 }}\n            transition={{ duration: profile.useReducedMotion ? 0.2 : 0.5 }}\n          >\n            {/* Dynamic starfield */}\n            {profile.enableParticles && (\n              <div className=\"absolute inset-0\">\n                {Array.from({ length: getStarCount() }).map((_, i) => (\n                  <motion.div\n                    key={i}\n                    className=\"absolute w-0.5 h-0.5 bg-white rounded-full\"\n                    style={{\n                      left: `${Math.random() * 100}%`,\n                      top: `${Math.random() * 100}%`,\n                    }}\n                    animate={profile.useReducedMotion ? {} : {\n                      opacity: [0, 1, 0.5, 1],\n                      scale: [0, 1, 0.8, 1.2],\n                    }}\n                    transition={{\n                      duration: 2,\n                      delay: Math.random() * 3,\n                      repeat: Infinity,\n                      ease: 'easeInOut'\n                    }}\n                  />\n                ))}\n              </div>\n            )}\n\n            <motion.div\n              className=\"text-center z-10\"\n              initial={{ scale: 0.8, opacity: 0 }}\n              animate={{ scale: 1, opacity: 1 }}\n              transition={{ \n                delay: profile.useReducedMotion ? 0.1 : 0.2, \n                duration: profile.animationDuration / 1000 * 0.8 \n              }}\n            >\n              {/* Awakening icon */}\n              <motion.div\n                className=\"mb-8 relative\"\n                animate={profile.useReducedMotion ? {} : { \n                  rotate: [0, 10, -10, 0],\n                  y: [0, -5, 0]\n                }}\n                transition={{ \n                  duration: 2, \n                  repeat: Infinity, \n                  ease: 'easeInOut' \n                }}\n              >\n                <div className=\"w-24 h-24 rounded-full bg-gradient-to-br from-purple-400 to-violet-500 flex items-center justify-center relative\">\n                  <motion.div\n                    animate={profile.useReducedMotion ? {} : { rotate: 360 }}\n                    transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}\n                  >\n                    <RotateCcw className=\"w-12 h-12 text-white\" />\n                  </motion.div>\n                  \n                  {profile.enableAdvancedEffects && (\n                    <>\n                      <div className=\"absolute inset-0 rounded-full bg-purple-400/30 animate-ping\" />\n                      <div className=\"absolute inset-0 rounded-full bg-gradient-to-br from-purple-300/60 to-transparent\" />\n                    </>\n                  )}\n                </div>\n              </motion.div>\n\n              <motion.h1\n                className=\"text-4xl font-bold bg-gradient-to-r from-purple-400 to-violet-400 bg-clip-text text-transparent mb-4\"\n                initial={{ y: profile.useReducedMotion ? 10 : 20, opacity: 0 }}\n                animate={{ y: 0, opacity: 1 }}\n                transition={{ delay: profile.useReducedMotion ? 0.2 : 0.5 }}\n              >\n                Awakening Nyx\n              </motion.h1>\n\n              {/* Performance info */}\n              <motion.div\n                className=\"flex items-center justify-center gap-4 mb-4 text-sm text-purple-300\"\n                initial={{ opacity: 0 }}\n                animate={{ opacity: 1 }}\n                transition={{ delay: 0.4 }}\n              >\n                <div className=\"flex items-center gap-1\">\n                  <Zap className=\"w-4 h-4\" />\n                  <span>{profile.name} mode</span>\n                </div>\n                {performanceStats.fps > 0 && (\n                  <div className=\"flex items-center gap-1\">\n                    <span>{performanceStats.fps} FPS</span>\n                  </div>\n                )}\n              </motion.div>\n\n              <motion.p\n                className=\"text-lg text-purple-300 mb-8\"\n                initial={{ opacity: 0 }}\n                animate={{ opacity: 1 }}\n                transition={{ delay: profile.useReducedMotion ? 0.3 : 0.7 }}\n              >\n                {startupMessages[Math.floor(startupProgress / 12.5)] || startupMessages[0]}\n              </motion.p>\n\n              {/* Progress bar */}\n              <div className=\"w-96 mx-auto\">\n                <div className=\"flex justify-between text-sm text-purple-400 mb-2\">\n                  <span>Initialization</span>\n                  <span>{Math.round(startupProgress)}%</span>\n                </div>\n                <div className=\"w-full bg-gray-800 rounded-full h-2 overflow-hidden\">\n                  <motion.div\n                    className=\"h-full bg-gradient-to-r from-purple-500 to-violet-400 relative\"\n                    style={{ width: `${startupProgress}%` }}\n                    transition={{ duration: 0.1 }}\n                  >\n                    {profile.enableAdvancedEffects && (\n                      <motion.div\n                        className=\"absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent\"\n                        animate={{ x: ['-100%', '100%'] }}\n                        transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}\n                      />\n                    )}\n                  </motion.div>\n                </div>\n              </div>\n            </motion.div>\n\n            {/* Energy particles */}\n            {profile.enableParticles && (\n              <div className=\"absolute inset-0 pointer-events-none\">\n                {Array.from({ length: Math.min(profile.particleCount / 3, 30) }).map((_, i) => (\n                  <motion.div\n                    key={`startup-particle-${i}`}\n                    className=\"absolute w-2 h-2 bg-purple-400/80 rounded-full\"\n                    style={{\n                      left: `${Math.random() * 100}%`,\n                      top: `${Math.random() * 100}%`,\n                    }}\n                    animate={profile.useReducedMotion ? {} : {\n                      y: [100, -100],\n                      x: [0, Math.random() * 200 - 100],\n                      opacity: [0, 1, 0],\n                      scale: [0, 1, 0.5],\n                    }}\n                    transition={{\n                      duration: 3,\n                      repeat: Infinity,\n                      delay: Math.random() * 2,\n                      ease: 'easeOut',\n                    }}\n                  />\n                ))}\n              </div>\n            )}\n          </motion.div>\n        )}\n      </AnimatePresence>\n    </div>\n  )\n}\n\n// Hook to trigger shutdown\nexport const useShutdown = () => {\n  const { optimizeMemory } = usePerformanceManager()\n  \n  const shutdown = useCallback(() => {\n    optimizeMemory()\n    window.dispatchEvent(new CustomEvent('nyx:shutdown'))\n  }, [optimizeMemory])\n\n  return { shutdown }\n}"
+                    animate={profile.useReducedMotion ? {} : {
+                      opacity: [1, 0.3, 1, 0],
+                      scale: [1, 0.5, 1, 0],
+                    }}
+                    transition={{
+                      duration: 4,
+                      delay: Math.random() * 2,
+                      ease: 'easeInOut'
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Main shutdown interface */}
+            <motion.div
+              className="text-center z-10"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ 
+                delay: profile.useReducedMotion ? 0.1 : 0.3, 
+                duration: profile.animationDuration / 1000 * 0.8 
+              }}
+            >
+              {/* Animated power icon */}
+              <motion.div
+                className="mb-8 relative"
+                animate={profile.useReducedMotion ? {} : { rotate: 360 }}
+                transition={{ 
+                  duration: profile.useReducedMotion ? 1 : 3, 
+                  repeat: Infinity, 
+                  ease: 'linear' 
+                }}
+              >
+                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center relative">
+                  <Power className="w-12 h-12 text-white" />
+                  {profile.enableAdvancedEffects && (
+                    <>
+                      <div className="absolute inset-0 rounded-full bg-red-500/20 animate-pulse" />
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-red-400/40 to-transparent" />
+                    </>
+                  )}
+                </div>
+              </motion.div>
+
+              <motion.h1
+                className="text-4xl font-bold text-white mb-4"
+                initial={{ y: profile.useReducedMotion ? 10 : 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: profile.useReducedMotion ? 0.2 : 0.6 }}
+              >
+                Shutting Down
+              </motion.h1>
+
+              {/* Performance info */}
+              <motion.div
+                className="flex items-center justify-center gap-4 mb-4 text-sm text-gray-400"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                <div className="flex items-center gap-1">
+                  <Zap className="w-4 h-4" />
+                  <span>{profile.name}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Battery className="w-4 h-4" />
+                  <span>{performanceStats.batteryLevel}%</span>
+                </div>
+                {performanceStats.fps > 0 && (
+                  <div className="flex items-center gap-1">
+                    <span>{performanceStats.fps} FPS</span>
+                  </div>
+                )}
+              </motion.div>
+
+              <motion.p
+                className="text-lg text-gray-300 mb-8"
+                key={shutdownMessage}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                {shutdownMessage}
+              </motion.p>
+
+              {/* Optimized progress bar */}
+              <div className="w-96 mx-auto">
+                <div className="flex justify-between text-sm text-gray-400 mb-2">
+                  <span>Progress</span>
+                  <span>{Math.round(shutdownProgress)}%</span>
+                </div>
+                <div className="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
+                  <motion.div
+                    className="h-full bg-gradient-to-r from-red-500 to-orange-500 relative"
+                    style={{ width: `${shutdownProgress}%` }}
+                    transition={{ duration: 0.1 }}
+                  >
+                    {profile.enableAdvancedEffects && (
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                        animate={{ x: ['-100%', '100%'] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                      />
+                    )}
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Performance-based particles */}
+            {profile.enableParticles && (
+              <div className="absolute inset-0 pointer-events-none">
+                {Array.from({ length: Math.min(profile.particleCount / 5, 20) }).map((_, i) => (
+                  <motion.div
+                    key={`shutdown-particle-${i}`}
+                    className="absolute w-2 h-2 bg-red-400/60 rounded-full"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                    }}
+                    animate={profile.useReducedMotion ? {} : {
+                      y: [0, -100, -200],
+                      opacity: [0.8, 0.4, 0],
+                      scale: [1, 0.5, 0],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      delay: Math.random() * 2,
+                      ease: 'easeOut',
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </motion.div>
+        )}
+
+        {/* Shutdown Screen */}
+        {systemState === 'shutdown' && (
+          <motion.div
+            key="shutdown-screen"
+            className={cn(
+              "absolute inset-0 bg-black flex flex-col items-center justify-center",
+              (isPhone || isTablet) ? "cursor-default" : "cursor-pointer"
+            )}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+          >
+            {/* Minimal starfield */}
+            {profile.enableParticles && (
+              <div className="absolute inset-0">
+                {Array.from({ length: Math.min(getStarCount() / 3, 30) }).map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-0.5 h-0.5 bg-white/30 rounded-full"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                    }}
+                    animate={{
+                      opacity: [0.3, 0.7, 0.3],
+                    }}
+                    transition={{
+                      duration: 4 + Math.random() * 2,
+                      repeat: Infinity,
+                      delay: Math.random() * 2,
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
+            <motion.div
+              className="text-center"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.5, duration: 1 }}
+            >
+              {/* Sleeping moon with performance-aware animation */}
+              <motion.div
+                className="mb-8"
+                animate={profile.useReducedMotion ? {} : { 
+                  y: [0, -10, 0],
+                  rotate: [0, 5, 0, -5, 0]
+                }}
+                transition={{ 
+                  duration: 6, 
+                  repeat: Infinity, 
+                  ease: 'easeInOut' 
+                }}
+              >
+                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 relative overflow-hidden mx-auto">
+                  {/* Simplified craters for performance */}
+                  <div className="absolute top-6 left-8 w-6 h-6 rounded-full bg-gray-600/60" />
+                  <div className="absolute top-16 right-12 w-4 h-4 rounded-full bg-gray-700/50" />
+                  <div className="absolute bottom-8 left-16 w-8 h-8 rounded-full bg-gray-600/70" />
+                  <div className="absolute bottom-12 right-16 w-3 h-3 rounded-full bg-gray-800/60" />
+                  
+                  {/* Sleeping face */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="flex gap-3 mb-2">
+                        <div className="w-2 h-1 bg-gray-700 rounded-full" />
+                        <div className="w-2 h-1 bg-gray-700 rounded-full" />
+                      </div>
+                      <div className="w-4 h-2 border-2 border-gray-700 border-t-0 rounded-b-full" />
+                    </div>
+                  </div>
+                  
+                  {profile.shadowQuality !== 'none' && (
+                    <div className="absolute inset-0 rounded-full shadow-[inset_0_0_50px_rgba(0,0,0,0.3)]" />
+                  )}
+                </div>
+              </motion.div>
+
+              <h1 className="text-3xl font-bold text-white mb-4">
+                Nyx OS is sleeping
+              </h1>
+              
+              <p className="text-gray-400 mb-2">
+                Running in {profile.name} mode - {performanceStats.batteryLevel}% battery
+              </p>
+
+              <motion.div
+                className="text-sm text-gray-500"
+                animate={profile.useReducedMotion ? {} : { opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                {isPhone || isTablet ? 'Tap 3 times to wake up' : 'Press spacebar 3 times or click 3 times to wake up'}
+              </motion.div>
+
+              {/* Wake up progress */}
+              {(keyPressCount > 0 || clickCount > 0) && (
+                <motion.div
+                  className="mt-6"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  <div className="flex justify-center gap-2">
+                    {Array.from({ length: 3 }).map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className={cn(
+                          "w-3 h-3 rounded-full",
+                          i < Math.max(keyPressCount, clickCount)
+                            ? "bg-purple-400"
+                            : "bg-gray-700"
+                        )}
+                        animate={!profile.useReducedMotion && i < Math.max(keyPressCount, clickCount) ? {
+                          scale: [1, 1.2, 1],
+                          opacity: [1, 0.7, 1]
+                        } : {}}
+                        transition={{ duration: 0.3 }}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-xs text-purple-400 mt-2">
+                    {Math.max(keyPressCount, clickCount)}/3 - Nyx is stirring...
+                  </p>
+                </motion.div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Starting Up Animation */}
+        {systemState === 'starting-up' && (
+          <motion.div
+            key="startup"
+            className="absolute inset-0 bg-black flex flex-col items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: profile.useReducedMotion ? 0.2 : 0.5 }}
+          >
+            {/* Dynamic starfield */}
+            {profile.enableParticles && (
+              <div className="absolute inset-0">
+                {Array.from({ length: getStarCount() }).map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-0.5 h-0.5 bg-white rounded-full"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                    }}
+                    animate={profile.useReducedMotion ? {} : {
+                      opacity: [0, 1, 0.5, 1],
+                      scale: [0, 1, 0.8, 1.2],
+                    }}
+                    transition={{
+                      duration: 2,
+                      delay: Math.random() * 3,
+                      repeat: Infinity,
+                      ease: 'easeInOut'
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
+            <motion.div
+              className="text-center z-10"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ 
+                delay: profile.useReducedMotion ? 0.1 : 0.2, 
+                duration: profile.animationDuration / 1000 * 0.8 
+              }}
+            >
+              {/* Awakening icon */}
+              <motion.div
+                className="mb-8 relative"
+                animate={profile.useReducedMotion ? {} : { 
+                  rotate: [0, 10, -10, 0],
+                  y: [0, -5, 0]
+                }}
+                transition={{ 
+                  duration: 2, 
+                  repeat: Infinity, 
+                  ease: 'easeInOut' 
+                }}
+              >
+                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-400 to-violet-500 flex items-center justify-center relative">
+                  <motion.div
+                    animate={profile.useReducedMotion ? {} : { rotate: 360 }}
+                    transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+                  >
+                    <RotateCcw className="w-12 h-12 text-white" />
+                  </motion.div>
+                  
+                  {profile.enableAdvancedEffects && (
+                    <>
+                      <div className="absolute inset-0 rounded-full bg-purple-400/30 animate-ping" />
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-300/60 to-transparent" />
+                    </>
+                  )}
+                </div>
+              </motion.div>
+
+              <motion.h1
+                className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-violet-400 bg-clip-text text-transparent mb-4"
+                initial={{ y: profile.useReducedMotion ? 10 : 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: profile.useReducedMotion ? 0.2 : 0.5 }}
+              >
+                Awakening Nyx
+              </motion.h1>
+
+              {/* Performance info */}
+              <motion.div
+                className="flex items-center justify-center gap-4 mb-4 text-sm text-purple-300"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                <div className="flex items-center gap-1">
+                  <Zap className="w-4 h-4" />
+                  <span>{profile.name} mode</span>
+                </div>
+                {performanceStats.fps > 0 && (
+                  <div className="flex items-center gap-1">
+                    <span>{performanceStats.fps} FPS</span>
+                  </div>
+                )}
+              </motion.div>
+
+              <motion.p
+                className="text-lg text-purple-300 mb-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: profile.useReducedMotion ? 0.3 : 0.7 }}
+              >
+                {startupMessages[Math.floor(startupProgress / 12.5)] || startupMessages[0]}
+              </motion.p>
+
+              {/* Progress bar */}
+              <div className="w-96 mx-auto">
+                <div className="flex justify-between text-sm text-purple-400 mb-2">
+                  <span>Initialization</span>
+                  <span>{Math.round(startupProgress)}%</span>
+                </div>
+                <div className="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
+                  <motion.div
+                    className="h-full bg-gradient-to-r from-purple-500 to-violet-400 relative"
+                    style={{ width: `${startupProgress}%` }}
+                    transition={{ duration: 0.1 }}
+                  >
+                    {profile.enableAdvancedEffects && (
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                        animate={{ x: ['-100%', '100%'] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+                      />
+                    )}
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Energy particles */}
+            {profile.enableParticles && (
+              <div className="absolute inset-0 pointer-events-none">
+                {Array.from({ length: Math.min(profile.particleCount / 3, 30) }).map((_, i) => (
+                  <motion.div
+                    key={`startup-particle-${i}`}
+                    className="absolute w-2 h-2 bg-purple-400/80 rounded-full"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                    }}
+                    animate={profile.useReducedMotion ? {} : {
+                      y: [100, -100],
+                      x: [0, Math.random() * 200 - 100],
+                      opacity: [0, 1, 0],
+                      scale: [0, 1, 0.5],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      delay: Math.random() * 2,
+                      ease: 'easeOut',
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
+// Hook to trigger shutdown
+export const useShutdown = () => {
+  const { optimizeMemory } = usePerformanceManager()
+  
+  const shutdown = useCallback(() => {
+    optimizeMemory()
+    window.dispatchEvent(new CustomEvent('nyx:shutdown'))
+  }, [optimizeMemory])
+
+  return { shutdown }
+}
