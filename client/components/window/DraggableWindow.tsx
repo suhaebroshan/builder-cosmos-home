@@ -382,7 +382,13 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
       </div>
       
       {/* Window Content */}
-      <div className="flex-1 overflow-hidden liquid-glass">
+      <div
+        className="flex-1 overflow-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent hover:scrollbar-thumb-gray-500 liquid-glass"
+        style={{
+          scrollbarWidth: 'thin',
+          scrollbarColor: 'rgba(156, 163, 175, 0.5) transparent'
+        }}
+      >
         {children}
       </div>
       
