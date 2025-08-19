@@ -51,7 +51,7 @@ const DisclaimerModal: React.FC<DisclaimerProps> = ({ onClose }) => {
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
       >
         <div className="text-center">
-          <div className="text-6xl mb-4">���</div>
+          <div className="text-6xl mb-4">🚀</div>
           <h2 className="text-2xl font-bold text-white mb-4">Welcome to Nyx OS</h2>
           <div className="space-y-3 text-white/80 text-sm leading-relaxed">
             <p>
@@ -300,7 +300,7 @@ export const NyxOS: React.FC = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: profile.useReducedMotion ? 0.3 : 1 }}
       >
-        {/* Enhanced Live Wallpaper System */}
+        {/* Enhanced Live Wallpaper System with Theme-based Dynamic Effects */}
         <EnhancedLiveWallpaper />
 
         {/* Emotional Overlay */}
