@@ -5,11 +5,12 @@ import { NyxTaskbar } from '@/components/os/NyxTaskbar'
 import { EnhancedDesktop } from '@/components/os/EnhancedDesktop'
 import { OptimizedBootAnimation } from '@/components/os/OptimizedBootAnimation'
 import { DeviceSetupScreen } from '@/components/os/DeviceSetupScreen'
-import { OptimizedLiveWallpaper } from '@/components/os/OptimizedLiveWallpaper'
-import { MobileHomeScreen } from '@/components/mobile/MobileHomeScreen'
+import { EnhancedLiveWallpaper } from '@/components/os/EnhancedLiveWallpaper'
+import { OneUIHomeScreen } from '@/components/mobile/OneUIHomeScreen'
 import { AndroidNavigation } from '@/components/mobile/AndroidNavigation'
 import { OptimizedShutdownSystem } from '@/components/os/OptimizedShutdownSystem'
 import { IntroCutscene } from '@/components/os/IntroCutscene'
+import { PerformanceMonitor } from '@/components/os/PerformanceMonitor'
 import { NyxBrowser } from '@/components/apps/NyxBrowser'
 import { useSamStore } from '@/store/sam-store'
 import { useWindowStore } from '@/store/window-store'
@@ -30,6 +31,56 @@ interface User {
   authMethod: 'none' | 'passcode' | 'pattern'
 }
 
+interface DisclaimerProps {
+  onClose: () => void
+}
+
+const DisclaimerModal: React.FC<DisclaimerProps> = ({ onClose }) => {
+  return (
+    <motion.div
+      className="fixed inset-0 z-[300] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        className="bg-white/20 dark:bg-black/20 backdrop-blur-xl rounded-3xl p-8 max-w-md w-full border border-white/20"
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        transition={{ type: "spring", damping: 25, stiffness: 300 }}
+      >
+        <div className="text-center">
+          <div className="text-6xl mb-4">���</div>
+          <h2 className="text-2xl font-bold text-white mb-4">Welcome to Nyx OS</h2>
+          <div className="space-y-3 text-white/80 text-sm leading-relaxed">
+            <p>
+              <strong>This is a demonstration, prototype, and proof of concept</strong> of what's possible with modern web technologies.
+            </p>
+            <p>
+              Nyx OS showcases advanced UI/UX design, performance optimization, and cross-platform compatibility - all running entirely in your browser.
+            </p>
+            <p>
+              While fully functional, this is not a production operating system. It's a glimpse into the future of web-based computing experiences.
+            </p>
+            <div className="mt-6 p-4 bg-blue-500/20 rounded-2xl border border-blue-400/30">
+              <p className="text-blue-200 text-xs">
+                💡 <strong>Pro tip:</strong> Try switching between device modes, test the apps, and enjoy the adaptive performance system that scales with your device capabilities!
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="mt-6 w-full py-3 bg-white/20 hover:bg-white/30 border border-white/30 rounded-2xl text-white font-medium transition-all duration-200"
+          >
+            Let's Explore! 🎉
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
 export const NyxOS: React.FC = () => {
   const { currentEmotion, emotionIntensity, addMessage, setEmotion } = useSamStore()
   const { openWindow } = useWindowStore()
@@ -39,7 +90,8 @@ export const NyxOS: React.FC = () => {
   const [isBooted, setIsBooted] = useState(false)
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [showIntroCutscene, setShowIntroCutscene] = useState(false)
-  const [navigationStyle, setNavigationStyle] = useState<'gestures' | 'buttons'>('buttons') // Default to buttons
+  const [showDisclaimer, setShowDisclaimer] = useState(false)
+  const [navigationStyle, setNavigationStyle] = useState<'gestures' | 'buttons'>('buttons')
   
   // Auto-detect device type with fallback for small screens
   const selectedDeviceType: DeviceType = isPhone ? 'phone' : isTablet ? 'tablet' : 'desktop'
@@ -64,7 +116,6 @@ export const NyxOS: React.FC = () => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'w') {
         e.preventDefault()
         e.stopPropagation()
-        // Let our OS handle it
         return false
       }
 
@@ -87,10 +138,9 @@ export const NyxOS: React.FC = () => {
   }, [])
 
   const handleBootComplete = (user: User) => {
-    // Auto-detect device type and set up user
     setCurrentUser(user)
     setIsBooted(true)
-    setShowIntroCutscene(true) // Show intro cutscene first
+    setShowIntroCutscene(true)
 
     // Initialize AI service
     aiService.setVoiceMode(true)
@@ -102,13 +152,13 @@ export const NyxOS: React.FC = () => {
 
       switch (actualDeviceType) {
         case 'phone':
-          welcomeMessage += "Your Android-style mobile experience is ready with smooth gestures and bouncy animations!"
+          welcomeMessage += "Your Samsung One UI 7 style mobile experience is ready with smooth gestures and dynamic wallpapers!"
           break
         case 'tablet':
-          welcomeMessage += "Your hybrid tablet experience combines the best of mobile and desktop - enjoy 80% mobile smoothness with 20% desktop power!"
+          welcomeMessage += "Your hybrid tablet experience combines mobile smoothness with desktop functionality!"
           break
         case 'desktop':
-          welcomeMessage += "Your full desktop experience is ready with advanced multitasking and all the pro features you need!"
+          welcomeMessage += "Your full desktop experience is ready with advanced multitasking and performance monitoring!"
           break
       }
 
@@ -118,6 +168,7 @@ export const NyxOS: React.FC = () => {
 
   const handleIntroCutsceneComplete = () => {
     setShowIntroCutscene(false)
+    setShowDisclaimer(true) // Show disclaimer after intro
 
     // Apply user-specific theme
     if (currentUser) {
@@ -130,44 +181,36 @@ export const NyxOS: React.FC = () => {
 
     switch (username) {
       case 'shreya':
-        // Pinkish-purple theme for Shreya
         updateSettings({
-          accentColor: '#ec4899', // pink-500
+          accentColor: '#ec4899',
           customColors: {
-            primary: '#be185d', // pink-700
-            secondary: '#f472b6', // pink-400
-            accent: '#ec4899' // pink-500
+            primary: '#be185d',
+            secondary: '#f472b6',
+            accent: '#ec4899'
           }
         })
-        // Update CSS variables for Shreya's theme
-        document.documentElement.style.setProperty('--primary', '#be185d')
-        document.documentElement.style.setProperty('--secondary', '#f472b6')
-        document.documentElement.style.setProperty('--accent', '#ec4899')
         break
       case 'suhaeb':
-        // Keep default purple theme
         updateSettings({
-          accentColor: '#8b5cf6', // purple-500
+          accentColor: '#8b5cf6',
           customColors: {
-            primary: '#7c3aed', // violet-600
-            secondary: '#a855f7', // purple-500
-            accent: '#8b5cf6' // purple-500
+            primary: '#7c3aed',
+            secondary: '#a855f7',
+            accent: '#8b5cf6'
           }
         })
         break
       case 'raheel':
-        // Blue-purple theme for Raheel
         updateSettings({
-          accentColor: '#3b82f6', // blue-500
+          accentColor: '#3b82f6',
           customColors: {
-            primary: '#1d4ed8', // blue-700
-            secondary: '#60a5fa', // blue-400
-            accent: '#3b82f6' // blue-500
+            primary: '#1d4ed8',
+            secondary: '#60a5fa',
+            accent: '#3b82f6'
           }
         })
         break
       default:
-        // Default purple theme
         updateSettings({
           accentColor: '#8b5cf6',
           customColors: {
@@ -191,7 +234,6 @@ export const NyxOS: React.FC = () => {
     }
 
     const handleOpenSettings = () => {
-      // Import Settings dynamically to avoid circular imports
       import('@/components/apps/Settings').then(({ Settings }) => {
         openWindow({
           title: 'Settings',
@@ -203,9 +245,8 @@ export const NyxOS: React.FC = () => {
     }
 
     const handleChangeWallpaper = () => {
-      // Trigger wallpaper change
       setEmotion('excited', 0.7)
-      addMessage("Wallpaper system activated! Check settings for customization options.", 'sam', 'excited')
+      addMessage("Dynamic wallpaper system activated! Experience different themes in dark and light modes.", 'sam', 'excited')
     }
 
     window.addEventListener('nyx:open-browser', handleOpenBrowser)
@@ -259,8 +300,8 @@ export const NyxOS: React.FC = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: profile.useReducedMotion ? 0.3 : 1 }}
       >
-        {/* Optimized Live Wallpaper System */}
-        <OptimizedLiveWallpaper />
+        {/* Enhanced Live Wallpaper System */}
+        <EnhancedLiveWallpaper />
 
         {/* Emotional Overlay */}
         <div
@@ -311,6 +352,11 @@ export const NyxOS: React.FC = () => {
           </motion.div>
         )}
 
+        {/* Performance Monitor - Desktop only */}
+        {actualDeviceType === 'desktop' && (
+          <PerformanceMonitor />
+        )}
+
         {/* AI Status Indicator - Desktop only */}
         {actualDeviceType === 'desktop' && (
           <motion.div
@@ -321,6 +367,7 @@ export const NyxOS: React.FC = () => {
             initial={{ opacity: 0, y: profile.useReducedMotion ? -10 : -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: profile.useReducedMotion ? 0.2 : 0.4, duration: profile.animationDuration / 1000 }}
+            style={{ right: '300px' }} // Offset for performance monitor
           >
           <div className={cn(
             "flex items-center gap-2 backdrop-blur-xl rounded-2xl px-4 py-2 shadow-lg",
@@ -356,8 +403,8 @@ export const NyxOS: React.FC = () => {
         {/* Enhanced Desktop with App Icons - Desktop only */}
         {actualDeviceType === 'desktop' && <EnhancedDesktop />}
 
-        {/* Mobile Home Screen - Mobile and tablet only */}
-        {(actualDeviceType === 'phone' || actualDeviceType === 'tablet') && <MobileHomeScreen />}
+        {/* One UI 7 Mobile Home Screen - Mobile and tablet only */}
+        {(actualDeviceType === 'phone' || actualDeviceType === 'tablet') && <OneUIHomeScreen />}
 
         {/* Android Navigation - For mobile and tablet */}
         {(actualDeviceType === 'phone' || actualDeviceType === 'tablet') && (
@@ -374,6 +421,11 @@ export const NyxOS: React.FC = () => {
         {/* Nyx Taskbar - Desktop only, tablet uses Android navigation */}
         {actualDeviceType === 'desktop' && <NyxTaskbar />}
       </motion.div>
+
+      {/* Disclaimer Modal */}
+      {showDisclaimer && (
+        <DisclaimerModal onClose={() => setShowDisclaimer(false)} />
+      )}
     </OptimizedShutdownSystem>
   )
 }
