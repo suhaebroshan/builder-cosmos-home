@@ -84,10 +84,15 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
   const handleDragStart = () => {
     setIsDragging(true)
   }
-  
+
   const handleDragEnd = (event: any, info: PanInfo) => {
     setIsDragging(false)
-    onPositionUpdate(info)
+
+    // Prevent tiny movements from registering as drags
+    const dragDistance = Math.sqrt(info.offset.x ** 2 + info.offset.y ** 2)
+    if (dragDistance > 5) {
+      onPositionUpdate(info)
+    }
   }
   
   const handleSizeChange = (newSize: number) => {
@@ -116,30 +121,32 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
         height: customSize + 20, // Extra space for label
       }}
       initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ 
-        opacity: 1, 
-        scale: isDragging ? 1.1 : 1,
-        rotate: isDragging ? 5 : 0
+      animate={{
+        opacity: 1,
+        scale: 1,
+        rotate: 0
       }}
       exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ 
-        delay: index * 0.05,
+      transition={{
+        delay: index * 0.03,
         type: "spring",
-        stiffness: 300,
-        damping: 25
+        stiffness: 400,
+        damping: 30,
+        mass: 0.5
       }}
       drag={isEditMode}
       dragMomentum={false}
-      dragElastic={0.1}
+      dragElastic={0.05}
+      dragTransition={{ bounceStiffness: 600, bounceDamping: 10 }}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
-      whileHover={{ scale: isEditMode ? 1.05 : 1.02 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ scale: isEditMode ? 1.02 : 1.01 }}
+      whileTap={{ scale: 0.98 }}
       whileDrag={{
-        scale: 1.1,
-        rotate: 2,
-        zIndex: 999,
-        boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
+        scale: 1.05,
+        zIndex: 1000,
+        boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+        transition: { duration: 0 }
       }}
       {...iconInteraction.interactionProps}
     >
@@ -156,7 +163,7 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
       {/* App Icon */}
       <div
         className={cn(
-          "relative flex items-center justify-center transition-all duration-200",
+          "relative flex items-center justify-center transition-all duration-150 will-change-transform",
           isOpen
             ? 'apple-button bg-blue-500/20 border-blue-400/40 shadow-xl shadow-blue-500/20'
             : 'apple-button',
@@ -166,6 +173,7 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
         style={{
           width: customSize,
           height: customSize,
+          transform: 'translateZ(0)', // GPU acceleration
         }}
       >
         <Icon 
