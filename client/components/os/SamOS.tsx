@@ -3,12 +3,12 @@ import { motion } from 'framer-motion'
 import { WindowManager } from '@/components/window/WindowManager'
 import { NyxTaskbar } from '@/components/os/NyxTaskbar'
 import { EnhancedDesktop } from '@/components/os/EnhancedDesktop'
-import { EnhancedBootAnimation } from '@/components/os/EnhancedBootAnimation'
+import { OptimizedBootAnimation } from '@/components/os/OptimizedBootAnimation'
 import { DeviceSetupScreen } from '@/components/os/DeviceSetupScreen'
-import { StableLiveWallpaper } from '@/components/os/StableLiveWallpaper'
+import { OptimizedLiveWallpaper } from '@/components/os/OptimizedLiveWallpaper'
 import { MobileHomeScreen } from '@/components/mobile/MobileHomeScreen'
 import { AndroidNavigation } from '@/components/mobile/AndroidNavigation'
-import { ShutdownSystem } from '@/components/os/ShutdownSystem'
+import { OptimizedShutdownSystem } from '@/components/os/OptimizedShutdownSystem'
 import { IntroCutscene } from '@/components/os/IntroCutscene'
 import { NyxBrowser } from '@/components/apps/NyxBrowser'
 import { useSamStore } from '@/store/sam-store'
@@ -16,6 +16,7 @@ import { useWindowStore } from '@/store/window-store'
 import { useThemeStore, updateCSSVariables } from '@/store/theme-store'
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 import { useDeviceDetection, DeviceType } from '@/hooks/useDeviceDetection'
+import { usePerformanceManager } from '@/hooks/usePerformanceManager'
 import { aiService } from '@/services/ai-service'
 import { cn } from '@/lib/utils'
 
@@ -34,6 +35,7 @@ export const NyxOS: React.FC = () => {
   const { openWindow } = useWindowStore()
   const { settings: themeSettings, setThemeMode } = useThemeStore()
   const { deviceInfo, uiConfig, isPhone, isTablet, isDesktop } = useDeviceDetection()
+  const { profile, isLowPerformance, optimizeMemory } = usePerformanceManager()
   const [isBooted, setIsBooted] = useState(false)
   const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [showIntroCutscene, setShowIntroCutscene] = useState(false)
@@ -241,7 +243,7 @@ export const NyxOS: React.FC = () => {
   }
   
   if (!isBooted) {
-    return <EnhancedBootAnimation onComplete={handleBootComplete} />
+    return <OptimizedBootAnimation onComplete={handleBootComplete} />
   }
 
   // Show intro cutscene after boot but before main OS
@@ -250,15 +252,15 @@ export const NyxOS: React.FC = () => {
   }
 
   return (
-    <ShutdownSystem>
+    <OptimizedShutdownSystem>
       <motion.div
         className={`fixed inset-0 overflow-hidden ${themeSettings.mode}`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: profile.useReducedMotion ? 0.3 : 1 }}
       >
-        {/* Stable Live Wallpaper System */}
-        <StableLiveWallpaper />
+        {/* Optimized Live Wallpaper System */}
+        <OptimizedLiveWallpaper />
 
         {/* Emotional Overlay */}
         <div
@@ -272,9 +274,9 @@ export const NyxOS: React.FC = () => {
         {actualDeviceType === 'desktop' && (
           <motion.div
             className="absolute top-4 left-4 flex items-center gap-3 z-30"
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: profile.useReducedMotion ? -10 : -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: profile.useReducedMotion ? 0.1 : 0.2, duration: profile.animationDuration / 1000 }}
           >
           <div className={cn(
             "backdrop-blur-xl rounded-2xl px-4 py-2 shadow-lg flex items-center gap-3",
@@ -316,9 +318,9 @@ export const NyxOS: React.FC = () => {
               "absolute top-4 right-4 text-white/80 z-30",
               isTablet ? "text-xs" : "text-sm"
             )}
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: profile.useReducedMotion ? -10 : -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: profile.useReducedMotion ? 0.2 : 0.4, duration: profile.animationDuration / 1000 }}
           >
           <div className={cn(
             "flex items-center gap-2 backdrop-blur-xl rounded-2xl px-4 py-2 shadow-lg",
@@ -366,12 +368,12 @@ export const NyxOS: React.FC = () => {
           />
         )}
 
-        {/* Window Manager */}
-        <WindowManager />
+        {/* Window Manager with Performance Limits */}
+        <WindowManager maxWindows={profile.maxWindows} />
 
         {/* Nyx Taskbar - Desktop only, tablet uses Android navigation */}
         {actualDeviceType === 'desktop' && <NyxTaskbar />}
       </motion.div>
-    </ShutdownSystem>
+    </OptimizedShutdownSystem>
   )
 }
