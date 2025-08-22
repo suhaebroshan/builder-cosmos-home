@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
+import {
   Phone, Camera, MessageSquare, Chrome, Settings, Calculator,
-  Music, Image, Clock, Weather, Calendar, Mail, FileText,
+  Music, Image, Clock, Cloud, Calendar, Mail, FileText,
   Video, Mic, MapPin, ShoppingBag, Gamepad2, Heart,
   Search, Wifi, Battery, Signal, MoreHorizontal,
   ArrowUp, ArrowDown, Home, Square, Triangle
