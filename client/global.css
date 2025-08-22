@@ -312,7 +312,7 @@ input, textarea, select {
       rgba(255, 255, 255, 0.5) 50%,
       rgba(255, 255, 255, 0.3) 80%,
       transparent 100%);
-    animation: liquidFlow var(--animation-duration) ease-in-out infinite;
+    animation: liquidFlow calc(var(--animation-duration) * 4) ease-in-out infinite;
     pointer-events: none;
     will-change: transform;
   }
@@ -322,15 +322,19 @@ input, textarea, select {
       left: -100%;
       opacity: 0;
     }
-    10% {
-      opacity: 1;
+    15% {
+      opacity: 0.6;
     }
-    50% {
-      left: 100%;
-      opacity: 1;
+    25% {
+      left: -20%;
+      opacity: 0.8;
     }
-    60% {
-      opacity: 0;
+    75% {
+      left: 120%;
+      opacity: 0.8;
+    }
+    85% {
+      opacity: 0.6;
     }
     100% {
       left: 100%;
@@ -414,9 +418,28 @@ input, textarea, select {
   }
 
   @keyframes liquidShine {
-    0% { left: -100%; }
-    50% { left: 100%; }
-    100% { left: 100%; }
+    0% {
+      left: -100%;
+      opacity: 0;
+    }
+    15% {
+      opacity: 0.4;
+    }
+    30% {
+      left: 0%;
+      opacity: 0.8;
+    }
+    70% {
+      left: 100%;
+      opacity: 0.8;
+    }
+    85% {
+      opacity: 0.4;
+    }
+    100% {
+      left: 100%;
+      opacity: 0;
+    }
   }
 
   .drag-over {
