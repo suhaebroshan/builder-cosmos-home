@@ -23,7 +23,7 @@ const oneUIApps = [
   { id: 'music', name: 'Music', icon: Music, color: '#c2410c', category: 'media' },
   { id: 'calendar', name: 'Calendar', icon: Calendar, color: '#0891b2', category: 'productivity' },
   { id: 'clock', name: 'Clock', icon: Clock, color: '#4f46e5', category: 'tools' },
-  { id: 'weather', name: 'Weather', icon: Weather, color: '#0369a1', category: 'tools' },
+  { id: 'weather', name: 'Weather', icon: Cloud, color: '#0369a1', category: 'tools' },
   { id: 'mail', name: 'Email', icon: Mail, color: '#dc2626', category: 'communication' },
   { id: 'notes', name: 'Notes', icon: FileText, color: '#ca8a04', category: 'productivity' },
   { id: 'calculator', name: 'Calculator', icon: Calculator, color: '#059669', category: 'tools' },
