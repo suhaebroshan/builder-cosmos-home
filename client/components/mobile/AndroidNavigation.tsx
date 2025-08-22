@@ -115,11 +115,11 @@ export const AndroidNavigation: React.FC<AndroidNavigationProps> = ({
         </motion.div>
       )}
 
-      {/* Button Navigation - Moved to top per user request */}
+      {/* Button Navigation - Bottom placement */}
       {navigationStyle === 'buttons' && uiConfig.showNavigationBar && (
         <motion.div
-          className="fixed top-10 left-0 right-0 h-12 bg-black/90 backdrop-blur-sm border-b border-white/10 flex items-center justify-around z-50"
-          initial={{ y: -48 }}
+          className="fixed bottom-0 left-0 right-0 h-16 bg-black/90 backdrop-blur-sm border-t border-white/10 flex items-center justify-around z-50"
+          initial={{ y: 64 }}
           animate={{ y: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >

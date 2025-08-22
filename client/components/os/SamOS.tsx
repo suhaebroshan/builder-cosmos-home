@@ -6,7 +6,7 @@ import { EnhancedDesktop } from '@/components/os/EnhancedDesktop'
 import { OptimizedBootAnimation } from '@/components/os/OptimizedBootAnimation'
 import { DeviceSetupScreen } from '@/components/os/DeviceSetupScreen'
 import { EnhancedLiveWallpaper } from '@/components/os/EnhancedLiveWallpaper'
-import { OneUIHomeScreen } from '@/components/mobile/OneUIHomeScreen'
+import { NyxMobileHomeScreen } from '@/components/mobile/NyxMobileHomeScreen'
 import { AndroidNavigation } from '@/components/mobile/AndroidNavigation'
 import { OptimizedShutdownSystem } from '@/components/os/OptimizedShutdownSystem'
 import { IntroCutscene } from '@/components/os/IntroCutscene'
@@ -412,8 +412,8 @@ export const NyxOS: React.FC = () => {
         {/* Enhanced Desktop with App Icons - Desktop only */}
         {actualDeviceType === 'desktop' && <EnhancedDesktop />}
 
-        {/* One UI 7 Mobile Home Screen - Mobile and tablet only */}
-        {(actualDeviceType === 'phone' || actualDeviceType === 'tablet') && <OneUIHomeScreen />}
+        {/* Nyx Mobile Home Screen - Mobile and tablet only */}
+        {(actualDeviceType === 'phone' || actualDeviceType === 'tablet') && <NyxMobileHomeScreen />}
 
         {/* Android Navigation - For mobile and tablet */}
         {(actualDeviceType === 'phone' || actualDeviceType === 'tablet') && (
