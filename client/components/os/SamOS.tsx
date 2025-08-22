@@ -36,6 +36,10 @@ interface DisclaimerProps {
 }
 
 const DisclaimerModal: React.FC<DisclaimerProps> = ({ onClose }) => {
+  const handleClose = () => {
+    localStorage.setItem('nyx-disclaimer-dismissed', 'true')
+    onClose()
+  }
   return (
     <motion.div
       className="fixed inset-0 z-[300] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
@@ -70,7 +74,7 @@ const DisclaimerModal: React.FC<DisclaimerProps> = ({ onClose }) => {
             </div>
           </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="mt-6 w-full py-3 bg-white/20 hover:bg-white/30 border border-white/30 rounded-2xl text-white font-medium transition-all duration-200"
           >
             Let's Explore! 🎉
@@ -168,7 +172,12 @@ export const NyxOS: React.FC = () => {
 
   const handleIntroCutsceneComplete = () => {
     setShowIntroCutscene(false)
-    setShowDisclaimer(true) // Show disclaimer after intro
+
+    // Check if disclaimer was already dismissed
+    const disclaimerDismissed = localStorage.getItem('nyx-disclaimer-dismissed')
+    if (!disclaimerDismissed) {
+      setShowDisclaimer(true) // Show disclaimer after intro only if not dismissed before
+    }
 
     // Apply user-specific theme
     if (currentUser) {
