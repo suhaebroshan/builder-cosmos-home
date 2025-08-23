@@ -79,10 +79,10 @@ export const NyxMobileHomeScreen: React.FC = () => {
     // Import and open the app component dynamically
     switch (app.id) {
       case 'camera':
-        import('@/components/apps/CameraApp').then(({ CameraApp }) => {
+        import('@/components/apps/EnhancedCameraApp').then(({ EnhancedCameraApp }) => {
           openWindow({
             title: app.name,
-            component: CameraApp,
+            component: EnhancedCameraApp,
             position: { x: 0, y: 0 },
             size: { width: window.innerWidth, height: window.innerHeight },
             isFullscreen: true,
