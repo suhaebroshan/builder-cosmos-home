@@ -255,7 +255,21 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
         borderColor: getEmotionBorderColor(),
         opacity: window.opacity || 1,
       }}
-      initial={{ scale: 0.8, opacity: 0, x: windowConfig.x, y: windowConfig.y, width: windowConfig.width, height: windowConfig.height }}
+      initial={window.animationOrigin ? {
+        scale: 0.1,
+        opacity: 0,
+        x: window.animationOrigin.x - 30,
+        y: window.animationOrigin.y - 30,
+        width: 60,
+        height: 60,
+      } : {
+        scale: 0.8,
+        opacity: 0,
+        x: windowConfig.x,
+        y: windowConfig.y,
+        width: windowConfig.width,
+        height: windowConfig.height
+      }}
       animate={{
         scale: 1,
         opacity: window.opacity || 1,
@@ -264,12 +278,22 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
         width: windowConfig.width,
         height: windowConfig.height,
       }}
-      exit={{ scale: 0.8, opacity: 0 }}
+      exit={window.animationOrigin ? {
+        scale: 0.1,
+        opacity: 0,
+        x: window.animationOrigin.x - 30,
+        y: window.animationOrigin.y - 30,
+        width: 60,
+        height: 60,
+      } : {
+        scale: 0.8,
+        opacity: 0
+      }}
       transition={{
         type: "spring",
-        stiffness: 260,
-        damping: 20,
-        duration: 0.4
+        stiffness: 280,
+        damping: 22,
+        duration: window.animationOrigin ? 0.6 : 0.4
       }}
       onClick={() => focusWindow(window.id)}
     >
