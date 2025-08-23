@@ -157,87 +157,145 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
   const viewportWidth = typeof globalThis.window !== 'undefined' ? globalThis.window.innerWidth : 1200
   const viewportHeight = typeof globalThis.window !== 'undefined' ? globalThis.window.innerHeight - (isPhone ? 0 : 80) : 720 // No taskbar on phone
 
-  // Mobile/tablet specific positioning and sizing
-  const getMobileWindowConfig = () => {
+  // Enhanced responsive window configuration
+  const getResponsiveWindowConfig = () => {
+    const statusBarHeight = uiConfig.statusBarHeight || (isPhone ? 32 : isTablet ? 28 : 0)
+    const navigationHeight = isPhone || isTablet ? 64 : 0 // Bottom navigation height
+    const taskbarHeight = !isPhone && !isTablet ? 80 : 0 // Desktop taskbar
+    const headerHeight = 40 // Window header height
+
+    // Calculate available space
+    const availableHeight = viewportHeight - statusBarHeight - navigationHeight - taskbarHeight
+    const availableWidth = viewportWidth
+
     if (isPhone) {
+      // Phone: Prioritize fullscreen for all apps except calculator
+      if (window.appId === 'calculator') {
+        return {
+          x: (viewportWidth - 300) / 2,
+          y: statusBarHeight + 50,
+          width: 300,
+          height: 450
+        }
+      }
+
       if (window.mode === 'split-left') {
         return {
           x: 0,
-          y: 0,
+          y: statusBarHeight,
           width: viewportWidth / 2,
-          height: viewportHeight
+          height: availableHeight
         }
       } else if (window.mode === 'split-right') {
         return {
           x: viewportWidth / 2,
-          y: 0,
+          y: statusBarHeight,
           width: viewportWidth / 2,
-          height: viewportHeight
+          height: availableHeight
         }
       } else if (window.mode === 'floating') {
+        const floatingWidth = Math.min(safeSize.width, viewportWidth * 0.85)
+        const floatingHeight = Math.min(safeSize.height, availableHeight * 0.7)
         return {
-          x: safePosition.x,
-          y: safePosition.y,
-          width: Math.min(safeSize.width, viewportWidth * 0.8),
-          height: Math.min(safeSize.height, viewportHeight * 0.6)
+          x: Math.max(0, Math.min(safePosition.x, viewportWidth - floatingWidth)),
+          y: Math.max(statusBarHeight, Math.min(safePosition.y, statusBarHeight + availableHeight - floatingHeight)),
+          width: floatingWidth,
+          height: floatingHeight
         }
       } else {
-        // Fullscreen mode for phones - account for status bar and top navigation
-        const statusBarHeight = uiConfig.statusBarHeight || 40
-        const topNavHeight = 48 // Navigation moved to top
+        // Fullscreen mode for phones
         return {
           x: 0,
-          y: statusBarHeight + topNavHeight,
+          y: statusBarHeight,
           width: viewportWidth,
-          height: viewportHeight - statusBarHeight - topNavHeight
+          height: availableHeight
         }
       }
     } else if (isTablet) {
-      // Tablet: 80% phone-like (fullscreen default) + 20% desktop features
+      // Tablet: Hybrid approach - apps can be fullscreen or windowed
       if (window.mode === 'split-left') {
         return {
           x: 0,
-          y: 0,
-          width: viewportWidth / 2,
-          height: viewportHeight
+          y: statusBarHeight,
+          width: viewportWidth / 2 - 8,
+          height: availableHeight
         }
       } else if (window.mode === 'split-right') {
         return {
-          x: viewportWidth / 2,
-          y: 0,
-          width: viewportWidth / 2,
-          height: viewportHeight
+          x: viewportWidth / 2 + 8,
+          y: statusBarHeight,
+          width: viewportWidth / 2 - 8,
+          height: availableHeight
         }
       } else if (window.mode === 'floating') {
+        const floatingWidth = Math.min(safeSize.width, viewportWidth * 0.75)
+        const floatingHeight = Math.min(safeSize.height, availableHeight * 0.8)
         return {
-          x: safePosition.x,
-          y: safePosition.y,
-          width: Math.min(safeSize.width, viewportWidth * 0.7),
-          height: Math.min(safeSize.height, viewportHeight * 0.6)
+          x: Math.max(0, Math.min(safePosition.x, viewportWidth - floatingWidth)),
+          y: Math.max(statusBarHeight, Math.min(safePosition.y, statusBarHeight + availableHeight - floatingHeight)),
+          width: floatingWidth,
+          height: floatingHeight
         }
-      } else {
-        // Default to fullscreen like phone (80% phone behavior) with proper spacing
-        const statusBarHeight = uiConfig.statusBarHeight || 32
-        const topNavHeight = 48 // Navigation moved to top
+      } else if (window.isFullscreen || window.appId === 'camera' || window.appId === 'gallery' || window.appId === 'call-sam') {
+        // Fullscreen for media apps
         return {
           x: 0,
-          y: statusBarHeight + topNavHeight,
+          y: statusBarHeight,
           width: viewportWidth,
-          height: viewportHeight - statusBarHeight - topNavHeight
+          height: availableHeight
+        }
+      } else {
+        // Default windowed mode for tablets - 70% of screen
+        const windowWidth = Math.min(safeSize.width, viewportWidth * 0.7)
+        const windowHeight = Math.min(safeSize.height, availableHeight * 0.8)
+        return {
+          x: Math.max(0, Math.min(safePosition.x, viewportWidth - windowWidth)),
+          y: Math.max(statusBarHeight, Math.min(safePosition.y, statusBarHeight + availableHeight - windowHeight)),
+          width: windowWidth,
+          height: windowHeight
         }
       }
     } else {
-      // Desktop mode
-      return {
-        x: window.isMaximized ? 0 : safePosition.x,
-        y: window.isMaximized ? 0 : safePosition.y,
-        width: window.isMaximized ? viewportWidth : safeSize.width,
-        height: window.isMaximized ? viewportHeight : safeSize.height
+      // Desktop mode - traditional windowing
+      if (window.isMaximized) {
+        return {
+          x: 0,
+          y: 0,
+          width: viewportWidth,
+          height: viewportHeight - taskbarHeight
+        }
+      } else if (window.mode === 'split-left') {
+        return {
+          x: 0,
+          y: 0,
+          width: viewportWidth / 2 - 8,
+          height: viewportHeight - taskbarHeight
+        }
+      } else if (window.mode === 'split-right') {
+        return {
+          x: viewportWidth / 2 + 8,
+          y: 0,
+          width: viewportWidth / 2 - 8,
+          height: viewportHeight - taskbarHeight
+        }
+      } else {
+        // Regular windowed mode
+        const minWidth = Math.max(300, viewportWidth * 0.2)
+        const minHeight = Math.max(200, (viewportHeight - taskbarHeight) * 0.3)
+        const maxWidth = viewportWidth * 0.9
+        const maxHeight = (viewportHeight - taskbarHeight) * 0.9
+
+        return {
+          x: Math.max(0, Math.min(safePosition.x, viewportWidth - minWidth)),
+          y: Math.max(0, Math.min(safePosition.y, viewportHeight - taskbarHeight - minHeight)),
+          width: Math.max(minWidth, Math.min(safeSize.width, maxWidth)),
+          height: Math.max(minHeight, Math.min(safeSize.height, maxHeight))
+        }
       }
     }
   }
 
-  const windowConfig = getMobileWindowConfig()
+  const windowConfig = getResponsiveWindowConfig()
   
   return (
     <motion.div
@@ -301,8 +359,8 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
       <div
         className={cn(
           "flex items-center justify-between select-none transition-all duration-300",
-          isPhone ? `p-2 ${themeSettings.mode === 'dark' ? 'bg-black/60' : 'bg-white/60'} backdrop-blur-sm border-b ${themeSettings.mode === 'dark' ? 'border-white/5' : 'border-black/5'}` :
-          isTablet ? `p-2.5 liquid-glass-dark border-b ${themeSettings.mode === 'dark' ? 'border-white/10' : 'border-black/10'}` :
+          isPhone ? `p-3 ${themeSettings.mode === 'dark' ? 'bg-black/80' : 'bg-white/80'} backdrop-blur-sm border-b ${themeSettings.mode === 'dark' ? 'border-white/10' : 'border-black/10'}` :
+          isTablet ? `p-3 liquid-glass-dark border-b ${themeSettings.mode === 'dark' ? 'border-white/15' : 'border-black/15'}` :
           `p-3 liquid-glass-dark border-b ${themeSettings.mode === 'dark' ? 'border-white/10 hover:bg-white/10' : 'border-black/10 hover:bg-black/5'} liquid-reflection liquid-bubble`,
           !isPhone && "cursor-grab",
           isDragging && "cursor-grabbing",
