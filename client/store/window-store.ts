@@ -18,6 +18,8 @@ export interface Window {
   splitPartner?: string
   isFloating?: boolean
   opacity?: number
+  animationOrigin?: { x: number; y: number }
+  isFullscreen?: boolean
 }
 
 interface WindowStore {
