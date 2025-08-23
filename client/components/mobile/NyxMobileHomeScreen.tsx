@@ -4,10 +4,11 @@ import {
   Phone, Camera, Chrome, Settings, Calculator,
   Image, Clock, Cloud, Calendar, FileText,
   Mic, MapPin, Search, Wifi, Battery, Signal,
-  ArrowUp, Home, Square, Triangle
+  ArrowUp, Home, Square, Triangle, WifiOff
 } from 'lucide-react'
 import { useWindowStore } from '@/store/window-store'
 import { useSamStore } from '@/store/sam-store'
+import { useDeviceInfo } from '@/hooks/useDeviceInfo'
 import { cn } from '@/lib/utils'
 
 // Nyx OS Mobile Apps - Clean and Essential
@@ -31,29 +32,28 @@ const nyxApps = [
 
 export const NyxMobileHomeScreen: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('')
-  const [time, setTime] = useState(new Date())
   const [showAppDrawer, setShowAppDrawer] = useState(false)
   const iconRefs = useRef<Record<string, HTMLElement | null>>({})
 
   const { openWindow } = useWindowStore()
   const { addMessage } = useSamStore()
+  const {
+    deviceInfo,
+    getBatteryPercentage,
+    getNetworkType,
+    getSignalStrength,
+    formatTime
+  } = useDeviceInfo()
 
-  // Update time every minute
-  useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 60000)
-    return () => clearInterval(timer)
-  }, [])
-
-  // Status bar info
+  // Real device status info
   const statusInfo = {
-    time: time.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      hour12: false 
-    }),
-    battery: 87,
-    signal: 4,
-    wifi: true,
+    time: formatTime('24h'),
+    battery: getBatteryPercentage(),
+    signal: getSignalStrength(),
+    wifi: deviceInfo.network.online && deviceInfo.network.type === 'wifi',
+    charging: deviceInfo.battery.charging,
+    networkType: getNetworkType(),
+    isOnline: deviceInfo.isOnline,
   }
 
   // Filtered apps for search
@@ -213,19 +213,50 @@ export const NyxMobileHomeScreen: React.FC = () => {
             ))}
           </div>
           
-          {/* WiFi */}
-          {statusInfo.wifi && <Wifi size={12} />}
-          
+          {/* WiFi/Network */}
+          {statusInfo.isOnline ? (
+            statusInfo.wifi ? (
+              <Wifi size={12} className="text-blue-500" />
+            ) : (
+              <div className="flex items-center gap-1">
+                <Signal size={12} />
+                <span className="text-xs">{statusInfo.networkType}</span>
+              </div>
+            )
+          ) : (
+            <WifiOff size={12} className="text-red-500" />
+          )}
+
           {/* Battery */}
           <div className="flex items-center gap-1">
-            <div className="w-6 h-3 border border-current rounded-sm relative">
-              <div 
-                className="h-full bg-current rounded-sm"
-                style={{ width: `${statusInfo.battery}%` }}
+            <div className={cn(
+              "w-6 h-3 border border-current rounded-sm relative",
+              statusInfo.charging ? "border-green-500" :
+              statusInfo.battery < 20 ? "border-red-500" : "border-current"
+            )}>
+              <div
+                className={cn(
+                  "h-full rounded-sm",
+                  statusInfo.charging ? "bg-green-500" :
+                  statusInfo.battery < 20 ? "bg-red-500" :
+                  statusInfo.battery < 50 ? "bg-yellow-500" : "bg-current"
+                )}
+                style={{ width: `${Math.max(statusInfo.battery, 5)}%` }}
               />
               <div className="absolute -right-0.5 top-0.5 w-0.5 h-2 bg-current rounded-r-sm" />
+              {statusInfo.charging && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-1 h-1 bg-white rounded-full animate-pulse" />
+                </div>
+              )}
             </div>
-            <span className="text-xs">{statusInfo.battery}%</span>
+            <span className={cn(
+              "text-xs",
+              statusInfo.charging ? "text-green-600" :
+              statusInfo.battery < 20 ? "text-red-600" : ""
+            )}>
+              {statusInfo.battery}%
+            </span>
           </div>
         </div>
       </motion.div>
@@ -240,18 +271,21 @@ export const NyxMobileHomeScreen: React.FC = () => {
           transition={{ delay: 0.4 }}
         >
           <div className="text-6xl font-thin text-black dark:text-white mb-2">
-            {time.toLocaleTimeString('en-US', { 
-              hour: '2-digit', 
-              minute: '2-digit',
-              hour12: false 
-            })}
+            {formatTime('24h')}
           </div>
           <div className="text-lg text-black/70 dark:text-white/70">
-            {time.toLocaleDateString('en-US', { 
+            {deviceInfo.time.toLocaleDateString('en-US', {
               weekday: 'long',
               month: 'long',
               day: 'numeric'
             })}
+          </div>
+          {/* Network Status Indicator */}
+          <div className="flex items-center gap-2 mt-2 text-sm text-black/50 dark:text-white/50">
+            <span className="text-xs">{statusInfo.networkType}</span>
+            {statusInfo.charging && (
+              <span className="text-xs text-green-600 dark:text-green-400">Charging</span>
+            )}
           </div>
         </motion.div>
 
