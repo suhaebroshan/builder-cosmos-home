@@ -181,7 +181,7 @@ export const NyxMobileHomeScreen: React.FC = () => {
   }
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <div className="fixed inset-0 z-10 overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       {/* Status Bar */}
       <motion.div
         className="absolute top-0 left-0 right-0 z-50 h-8 px-4 flex items-center justify-between text-black dark:text-white text-sm font-medium"
