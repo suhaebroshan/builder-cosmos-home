@@ -41,7 +41,7 @@ export const EnhancedLiveWallpaper: React.FC<EnhancedLiveWallpaperProps> = ({
   const [isVisible, setIsVisible] = useState(true)
   
   const { profile, performanceStats } = usePerformanceManager()
-  const { deviceInfo } = useDeviceDetection()
+  const { deviceInfo, isPhone, isTablet, isDesktop } = useDeviceDetection()
   const { settings: themeSettings } = useThemeStore()
 
   // Theme-based configuration
@@ -100,18 +100,35 @@ export const EnhancedLiveWallpaper: React.FC<EnhancedLiveWallpaperProps> = ({
     }
   }, [themeSettings.mode])
 
-  // Performance-based configuration
+  // Device and performance-based configuration
   const getConfig = useCallback(() => {
     const themeConfig = getThemeConfig()
+
+    // Device-specific performance scaling
+    let deviceMultiplier = 1
+    let maxParticles = profile.particleCount * 2
+    let targetFPS = profile.frameRateTarget
+
+    if (isPhone) {
+      deviceMultiplier = 0.6 // Reduce particles on phones
+      maxParticles = Math.min(maxParticles, 50)
+      targetFPS = Math.min(targetFPS, 30)
+    } else if (isTablet) {
+      deviceMultiplier = 0.8 // Moderate reduction on tablets
+      maxParticles = Math.min(maxParticles, 100)
+      targetFPS = Math.min(targetFPS, 45)
+    }
+
     const baseConfig = {
-      particleCount: profile.particleCount,
-      maxParticles: profile.particleCount * 2,
-      targetFPS: profile.frameRateTarget,
-      enableBlur: profile.blurIntensity > 0,
-      enableGlow: profile.enableAdvancedEffects,
-      animationSpeed: 1,
-      cleanup: profile.memoryOptimization,
-      wavePoints: Math.min(profile.particleCount / 2, 50),
+      particleCount: Math.floor(profile.particleCount * deviceMultiplier),
+      maxParticles,
+      targetFPS,
+      enableBlur: profile.blurIntensity > 0 && !isPhone, // Disable blur on phones for performance
+      enableGlow: profile.enableAdvancedEffects && !isPhone,
+      animationSpeed: isPhone ? 0.7 : 1,
+      cleanup: profile.memoryOptimization || isPhone,
+      wavePoints: Math.min(Math.floor((profile.particleCount * deviceMultiplier) / 2), isPhone ? 20 : 50),
+      deviceType: isPhone ? 'phone' : isTablet ? 'tablet' : 'desktop',
       ...themeConfig
     }
 
@@ -722,26 +739,62 @@ export const EnhancedLiveWallpaper: React.FC<EnhancedLiveWallpaperProps> = ({
 
   return (
     <>
-      {/* Static background */}
-      <div 
-        className={`fixed inset-0 ${className}`}
-        style={{ 
+      {/* Static background with device-responsive gradients */}
+      <div
+        className={cn(
+          "fixed inset-0",
+          className,
+          isPhone && "bg-gradient-to-b from-slate-900 via-purple-900 to-indigo-900 dark:from-black dark:via-gray-900 dark:to-slate-900",
+          isTablet && "bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900",
+          isDesktop && "bg-gradient-to-br"
+        )}
+        style={{
           zIndex: -1,
-          background: config.backgroundColor
+          background: isDesktop ? config.backgroundColor : undefined,
+          // Add device-specific background patterns
+          backgroundSize: isPhone ? 'cover' : isTablet ? '200% 200%' : 'auto',
+          backgroundPosition: isTablet ? '0% 0%' : 'center',
         }}
       />
-      
+
       {/* Animated canvas overlay */}
       <canvas
         ref={canvasRef}
-        className={`fixed inset-0 pointer-events-none ${className}`}
-        style={{ 
+        className={cn(
+          "fixed inset-0 pointer-events-none",
+          className,
+          // Optimize rendering for different devices
+          isPhone && "transform-gpu",
+          isTablet && "will-change-transform",
+          isDesktop && "will-change-auto"
+        )}
+        style={{
           zIndex: -1,
           opacity: isVisible ? 1 : 0,
-          transition: 'opacity 0.5s ease',
-          willChange: profile.enableGPUAcceleration ? 'transform' : 'auto',
+          transition: isPhone ? 'opacity 0.3s ease' : 'opacity 0.5s ease',
+          willChange: profile.enableGPUAcceleration && !isPhone ? 'transform' : 'auto',
+          // Ensure proper layering on mobile
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
         }}
       />
+
+      {/* Mobile-specific overlay for better performance */}
+      {isPhone && (
+        <div
+          className="fixed inset-0 pointer-events-none"
+          style={{
+            zIndex: -1,
+            background: themeSettings.mode === 'dark'
+              ? 'radial-gradient(circle at 30% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 70%)'
+              : 'radial-gradient(circle at 70% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 70%)',
+            opacity: 0.6
+          }}
+        />
+      )}
     </>
   )
 }
