@@ -556,9 +556,9 @@ export const EnhancedCameraApp: React.FC = () => {
   }
 
   return (
-    <div className="relative h-full w-full bg-black overflow-hidden">
+    <div className="fixed inset-0 z-[150] bg-black overflow-hidden">
       {/* Camera Preview */}
-      <div className="relative h-full">
+      <div className="fixed inset-0 z-0">
         {/* Main Camera View */}
         <video
           ref={mainVideoRef}
@@ -623,7 +623,7 @@ export const EnhancedCameraApp: React.FC = () => {
       </div>
 
       {/* Top Controls */}
-      <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/50 to-transparent">
+      <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/70 to-transparent z-10 safe-area-inset-top">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             {/* Flash Control */}
@@ -785,7 +785,7 @@ export const EnhancedCameraApp: React.FC = () => {
       )}
 
       {/* Bottom Controls */}
-      <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
+      <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent z-10 safe-area-inset-bottom">
         <div className="flex items-center justify-center gap-8">
           {/* Mode Selector */}
           <div className="flex bg-black/50 rounded-full p-1">
