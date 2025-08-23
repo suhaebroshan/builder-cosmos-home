@@ -630,7 +630,9 @@ export const EnhancedLiveWallpaper: React.FC<EnhancedLiveWallpaperProps> = ({
 
     const ctx = canvas.getContext('2d', {
       alpha: true,
-      desynchronized: true,
+      desynchronized: profile.enableGPUAcceleration && !isPhone,
+      powerPreference: isPhone ? 'low-power' : 'high-performance',
+      willReadFrequently: false
     })
     if (!ctx) return
 
