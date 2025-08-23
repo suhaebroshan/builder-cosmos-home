@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Phone, Camera, Chrome, Settings, Calculator,
@@ -33,7 +33,8 @@ export const NyxMobileHomeScreen: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [time, setTime] = useState(new Date())
   const [showAppDrawer, setShowAppDrawer] = useState(false)
-  
+  const iconRefs = useRef<Record<string, HTMLElement | null>>({})
+
   const { openWindow } = useWindowStore()
   const { addMessage } = useSamStore()
 
@@ -62,7 +63,19 @@ export const NyxMobileHomeScreen: React.FC = () => {
       )
     : nyxApps
 
-  const handleAppOpen = (app: typeof nyxApps[0]) => {
+  const handleAppOpen = (app: typeof nyxApps[0], event?: React.MouseEvent) => {
+    // Get icon position for animation
+    const iconElement = iconRefs.current[app.id]
+    let iconPosition = { x: window.innerWidth / 2, y: window.innerHeight / 2 }
+
+    if (iconElement) {
+      const rect = iconElement.getBoundingClientRect()
+      iconPosition = {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      }
+    }
+
     // Import and open the app component dynamically
     switch (app.id) {
       case 'camera':
@@ -73,6 +86,7 @@ export const NyxMobileHomeScreen: React.FC = () => {
             position: { x: 0, y: 0 },
             size: { width: window.innerWidth, height: window.innerHeight },
             isFullscreen: true,
+            animationOrigin: iconPosition,
           })
         })
         break
@@ -84,6 +98,7 @@ export const NyxMobileHomeScreen: React.FC = () => {
             position: { x: 0, y: 0 },
             size: { width: window.innerWidth, height: window.innerHeight },
             isFullscreen: true,
+            animationOrigin: iconPosition,
           })
         })
         break
@@ -95,6 +110,7 @@ export const NyxMobileHomeScreen: React.FC = () => {
             position: { x: 0, y: 0 },
             size: { width: window.innerWidth, height: window.innerHeight },
             isFullscreen: true,
+            animationOrigin: iconPosition,
           })
         })
         break
@@ -106,6 +122,7 @@ export const NyxMobileHomeScreen: React.FC = () => {
             position: { x: 0, y: 0 },
             size: { width: window.innerWidth, height: window.innerHeight },
             isFullscreen: true,
+            animationOrigin: iconPosition,
           })
         })
         break
@@ -117,6 +134,7 @@ export const NyxMobileHomeScreen: React.FC = () => {
             position: { x: 0, y: 0 },
             size: { width: window.innerWidth, height: window.innerHeight },
             isFullscreen: true,
+            animationOrigin: iconPosition,
           })
         })
         break
@@ -128,6 +146,7 @@ export const NyxMobileHomeScreen: React.FC = () => {
             position: { x: 0, y: 0 },
             size: { width: window.innerWidth, height: window.innerHeight },
             isFullscreen: true,
+            animationOrigin: iconPosition,
           })
         })
         break
@@ -138,6 +157,7 @@ export const NyxMobileHomeScreen: React.FC = () => {
             component: Calculator,
             position: { x: 50, y: 50 },
             size: { width: 350, height: 500 },
+            animationOrigin: iconPosition,
           })
         })
         break
@@ -149,6 +169,7 @@ export const NyxMobileHomeScreen: React.FC = () => {
             position: { x: 0, y: 0 },
             size: { width: window.innerWidth, height: window.innerHeight },
             isFullscreen: true,
+            animationOrigin: iconPosition,
           })
         })
         break
@@ -265,13 +286,14 @@ export const NyxMobileHomeScreen: React.FC = () => {
             return (
               <motion.button
                 key={app.id}
+                ref={(el) => { iconRefs.current[app.id] = el }}
                 className="aspect-square bg-white/20 dark:bg-white/10 backdrop-blur-xl rounded-3xl p-4 flex flex-col items-center justify-center gap-2"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.7 + index * 0.1 }}
-                onClick={() => handleAppOpen(app)}
+                onClick={(e) => handleAppOpen(app, e)}
               >
                 <div 
                   className="w-12 h-12 rounded-2xl flex items-center justify-center text-white"
@@ -334,13 +356,14 @@ export const NyxMobileHomeScreen: React.FC = () => {
                   return (
                     <motion.button
                       key={app.id}
+                      ref={(el) => { iconRefs.current[`drawer-${app.id}`] = el }}
                       className="flex flex-col items-center gap-2"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: index * 0.05 }}
-                      onClick={() => handleAppOpen(app)}
+                      onClick={(e) => handleAppOpen(app, e)}
                     >
                       <div 
                         className="w-16 h-16 rounded-3xl flex items-center justify-center text-white shadow-lg"
