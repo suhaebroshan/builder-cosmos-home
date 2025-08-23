@@ -753,7 +753,7 @@ export const EnhancedLiveWallpaper: React.FC<EnhancedLiveWallpaperProps> = ({
         )}
         style={{
           zIndex: -1,
-          background: isDesktop ? config.backgroundColor : undefined,
+          backgroundColor: isDesktop ? config.backgroundColor : undefined,
           // Add device-specific background patterns
           backgroundSize: isPhone ? 'cover' : isTablet ? '200% 200%' : 'auto',
           backgroundPosition: isTablet ? '0% 0%' : 'center',
