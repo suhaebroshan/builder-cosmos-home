@@ -184,7 +184,7 @@ export const NyxMobileHomeScreen: React.FC = () => {
     <div className="fixed inset-0 z-10 overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       {/* Status Bar */}
       <motion.div
-        className="absolute top-0 left-0 right-0 z-50 h-8 px-4 flex items-center justify-between text-black dark:text-white text-sm font-medium"
+        className="absolute top-0 left-0 right-0 z-[100] h-8 px-4 flex items-center justify-between text-black dark:text-white text-sm font-medium"
         style={{
           background: 'rgba(255, 255, 255, 0.1)',
           backdropFilter: 'blur(20px)',
@@ -365,7 +365,7 @@ export const NyxMobileHomeScreen: React.FC = () => {
       <AnimatePresence>
         {showAppDrawer && (
           <motion.div
-            className="absolute inset-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-2xl"
+            className="absolute inset-0 z-[200] bg-white/90 dark:bg-black/90 backdrop-blur-2xl"
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
@@ -419,7 +419,7 @@ export const NyxMobileHomeScreen: React.FC = () => {
 
       {/* Bottom Navigation Bar */}
       <motion.div
-        className="absolute bottom-0 left-0 right-0 h-16 z-40"
+        className="absolute bottom-0 left-0 right-0 h-16 z-[100]"
         style={{
           background: 'rgba(255, 255, 255, 0.1)',
           backdropFilter: 'blur(20px)',
