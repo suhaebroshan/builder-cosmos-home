@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useCallback, useState } from 'react'
 import { usePerformanceManager } from '@/hooks/usePerformanceManager'
 import { useDeviceDetection } from '@/hooks/useDeviceDetection'
 import { useThemeStore } from '@/store/theme-store'
+import { cn } from '@/lib/utils'
 
 interface Particle {
   x: number
