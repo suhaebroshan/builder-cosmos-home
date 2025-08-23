@@ -43,13 +43,13 @@ export const EnhancedCallSam: React.FC = () => {
   const [showSettings, setShowSettings] = useState(false)
   const [callDuration, setCallDuration] = useState(0)
   
-  const { 
-    currentEmotion, 
-    emotionIntensity, 
-    addMessage, 
+  const {
+    currentEmotion,
+    emotionIntensity,
+    addMessage,
     setEmotion,
-    isVoiceMode,
-    setVoiceMode 
+    isSpeaking,
+    setSpeaking
   } = useSamStore()
   const { settings: themeSettings } = useThemeStore()
   const { profile } = usePerformanceManager()
@@ -173,7 +173,7 @@ export const EnhancedCallSam: React.FC = () => {
     }
 
     setIsCallActive(true)
-    setVoiceMode(true)
+    setSpeaking(true)
     setCallDuration(0)
 
     // Start call timer
@@ -203,7 +203,7 @@ export const EnhancedCallSam: React.FC = () => {
   const endCall = useCallback(() => {
     setIsCallActive(false)
     setIsRecording(false)
-    setVoiceMode(false)
+    setSpeaking(false)
 
     // Stop all streams
     if (streamRef.current) {
