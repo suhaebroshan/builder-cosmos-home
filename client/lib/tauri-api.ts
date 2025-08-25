@@ -1,7 +1,7 @@
-import { invoke } from '@tauri-apps/api/core'
-import { getCurrentWindow, Window } from '@tauri-apps/api/window'
-import { platform, arch, hostname } from '@tauri-apps/plugin-os'
-import { sendNotification, isPermissionGranted, requestPermission } from '@tauri-apps/plugin-notification'
+import { invoke } from '@tauri-apps/api/tauri'
+import { appWindow } from '@tauri-apps/api/window'
+import { platform, arch, hostname } from '@tauri-apps/api/os'
+import { sendNotification, isPermissionGranted, requestPermission } from '@tauri-apps/api/notification'
 
 export interface SystemInfo {
   platform: string
