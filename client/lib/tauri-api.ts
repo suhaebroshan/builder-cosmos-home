@@ -166,16 +166,14 @@ export const getPlatformInfo = async () => {
 // Window state management for NYX OS
 export const initializeNyxWindow = async () => {
   if (!isTauri()) return
-  
-  const window = getCurrentWindow()
-  
+
   // Set up window for NYX OS experience
-  await window.setTitle('NYX OS')
-  await window.setFullscreen(true)
-  await window.center()
-  
+  await appWindow.setTitle('NYX OS')
+  await appWindow.setFullscreen(true)
+  await appWindow.center()
+
   // Listen for window events
-  window.listen('tauri://close-requested', () => {
+  await appWindow.listen('tauri://close-requested', () => {
     // Instead of closing, hide to system tray
     hideWindow()
   })
