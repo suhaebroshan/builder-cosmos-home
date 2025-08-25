@@ -142,11 +142,6 @@ fn main() {
             },
             _ => {}
         })
-        .plugin(tauri_plugin_os::init())
-        .plugin(tauri_plugin_fs::init())
-        .plugin(tauri_plugin_shell::init())
-        .plugin(tauri_plugin_window::init())
-        .plugin(tauri_plugin_notification::init())
         .invoke_handler(tauri::generate_handler![
             get_system_info,
             set_window_always_on_top,
@@ -161,13 +156,13 @@ fn main() {
         ])
         .setup(|app| {
             let main_window = app.get_window("main").unwrap();
-            
+
             // Set up window properties
             main_window.set_title("NYX OS").unwrap();
-            
+
             // Start in fullscreen mode for that OS experience
             main_window.set_fullscreen(true).unwrap();
-            
+
             Ok(())
         })
         .run(tauri::generate_context!())
