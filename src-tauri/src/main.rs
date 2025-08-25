@@ -2,11 +2,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use tauri::{CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem};
-use tauri_plugin_fs;
-use tauri_plugin_notification;
-use tauri_plugin_os;
-use tauri_plugin_shell;
-use tauri_plugin_window;
 
 // System information commands
 #[tauri::command]
