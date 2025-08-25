@@ -72,68 +72,39 @@
       "iconAsTemplate": true,
       "menuOnLeftClick": false
     },
-  "bundle": {
-    "active": true,
-    "targets": "all",
-    "icon": [
-      "icons/32x32.png",
-      "icons/128x128.png",
-      "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
-    ],
-    "resources": [],
-    "externalBin": [],
-    "copyright": "NYX OS - Built by Suhaeb Roshan",
-    "category": "Utility",
-    "shortDescription": "NYX Operating System - A beautiful, AI-powered desktop environment",
-    "longDescription": "NYX OS is a revolutionary operating system interface that combines beautiful design with powerful AI capabilities. Built for the future of computing.",
-    "deb": {
-      "depends": []
-    },
-    "macOS": {
-      "frameworks": [],
-      "minimumSystemVersion": "",
-      "exceptionDomain": "",
-      "signingIdentity": null,
-      "hardenedRuntime": true,
-      "entitlements": null
-    },
-    "windows": {
-      "certificateThumbprint": null,
-      "digestAlgorithm": "sha256",
-      "timestampUrl": ""
-    }
-  },
-  "plugins": {
-    "os": {
-      "version": "*"
-    },
-    "fs": {
-      "version": "*",
-      "scope": {
-        "allow": ["$APPDATA/**", "$DOCUMENT/**", "$DESKTOP/**", "$DOWNLOAD/**", "$HOME/**"],
-        "deny": []
+    "bundle": {
+      "active": true,
+      "targets": "all",
+      "identifier": "com.nyx.os",
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ],
+      "resources": [],
+      "externalBin": [],
+      "copyright": "NYX OS - Built by Suhaeb Roshan",
+      "category": "Utility",
+      "shortDescription": "NYX Operating System - A beautiful, AI-powered desktop environment",
+      "longDescription": "NYX OS is a revolutionary operating system interface that combines beautiful design with powerful AI capabilities. Built for the future of computing.",
+      "deb": {
+        "depends": []
+      },
+      "macOS": {
+        "frameworks": [],
+        "minimumSystemVersion": "",
+        "exceptionDomain": "",
+        "signingIdentity": null,
+        "hardenedRuntime": true,
+        "entitlements": null
+      },
+      "windows": {
+        "certificateThumbprint": null,
+        "digestAlgorithm": "sha256",
+        "timestampUrl": ""
       }
-    },
-    "shell": {
-      "version": "*",
-      "scope": {
-        "allow": [
-          {
-            "name": "open",
-            "cmd": "open",
-            "args": true
-          }
-        ],
-        "deny": []
-      }
-    },
-    "window": {
-      "version": "*"
-    },
-    "notification": {
-      "version": "*"
     }
   }
-}}
+}
