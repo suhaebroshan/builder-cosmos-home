@@ -1,44 +1,77 @@
 {
-  "productName": "NYX OS",
-  "version": "1.0.0",
-  "identifier": "com.nyx.os",
+  "package": {
+    "productName": "NYX OS",
+    "version": "1.0.0"
+  },
   "build": {
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build:client",
-    "devUrl": "http://localhost:5173",
-    "frontendDist": "../dist"
+    "devPath": "http://localhost:5173",
+    "distDir": "../dist"
   },
-  "app": {
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "shell": {
+        "all": false,
+        "open": true
+      },
+      "window": {
+        "all": false,
+        "close": true,
+        "hide": true,
+        "show": true,
+        "maximize": true,
+        "minimize": true,
+        "unmaximize": true,
+        "unminimize": true,
+        "startDragging": true,
+        "print": true
+      },
+      "fs": {
+        "all": true,
+        "readFile": true,
+        "writeFile": true,
+        "readDir": true,
+        "copyFile": true,
+        "createDir": true,
+        "removeDir": true,
+        "removeFile": true,
+        "renameFile": true,
+        "exists": true
+      },
+      "os": {
+        "all": true
+      },
+      "notification": {
+        "all": true
+      }
+    },
     "windows": [
       {
-        "label": "main",
+        "fullscreen": false,
+        "height": 800,
+        "resizable": true,
         "title": "NYX OS",
         "width": 1200,
-        "height": 800,
         "minWidth": 800,
         "minHeight": 600,
-        "fullscreen": false,
         "maximized": true,
-        "resizable": true,
         "decorations": false,
         "transparent": true,
         "alwaysOnTop": false,
         "center": true,
-        "skipTaskbar": false,
-        "theme": "dark"
+        "skipTaskbar": false
       }
     ],
     "security": {
-      "csp": null,
-      "dangerousRemoteDomainIpcAccess": [
-        {
-          "domain": "localhost",
-          "windows": ["main"],
-          "enableTauriAPI": true
-        }
-      ]
-    }
-  },
+      "csp": null
+    },
+    "systemTray": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true,
+      "menuOnLeftClick": false
+    },
   "bundle": {
     "active": true,
     "targets": "all",
@@ -103,4 +136,4 @@
       "version": "*"
     }
   }
-}
+}}
