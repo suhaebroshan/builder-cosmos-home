@@ -45,44 +45,38 @@ export const getSystemInfo = async (): Promise<SystemInfo> => {
 // Window Management
 export const setWindowAlwaysOnTop = async (alwaysOnTop: boolean): Promise<void> => {
   if (!isTauri()) return
-  
-  const window = getCurrentWindow()
-  await invoke('set_window_always_on_top', { window, alwaysOnTop })
+
+  await appWindow.setAlwaysOnTop(alwaysOnTop)
 }
 
 export const setWindowFullscreen = async (fullscreen: boolean): Promise<void> => {
   if (!isTauri()) return
-  
-  const window = getCurrentWindow()
-  await invoke('set_window_fullscreen', { window, fullscreen })
+
+  await appWindow.setFullscreen(fullscreen)
 }
 
 export const minimizeWindow = async (): Promise<void> => {
   if (!isTauri()) return
-  
-  const window = getCurrentWindow()
-  await invoke('minimize_window', { window })
+
+  await appWindow.minimize()
 }
 
 export const maximizeWindow = async (): Promise<void> => {
   if (!isTauri()) return
-  
-  const window = getCurrentWindow()
-  await invoke('maximize_window', { window })
+
+  await appWindow.maximize()
 }
 
 export const hideWindow = async (): Promise<void> => {
   if (!isTauri()) return
-  
-  const window = getCurrentWindow()
-  await invoke('hide_window', { window })
+
+  await appWindow.hide()
 }
 
 export const showWindow = async (): Promise<void> => {
   if (!isTauri()) return
-  
-  const window = getCurrentWindow()
-  await invoke('show_window', { window })
+
+  await appWindow.show()
 }
 
 // App Management
