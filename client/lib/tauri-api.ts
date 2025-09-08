@@ -2,6 +2,7 @@ import { invoke } from '@tauri-apps/api/tauri'
 import { appWindow } from '@tauri-apps/api/window'
 import { platform, arch, hostname } from '@tauri-apps/api/os'
 import { sendNotification, isPermissionGranted, requestPermission } from '@tauri-apps/api/notification'
+import { listen, UnlistenFn } from '@tauri-apps/api/event'
 
 export interface SystemInfo {
   platform: string
@@ -188,6 +189,48 @@ export const enableAutoStartup = async (): Promise<void> => {
   console.log('Auto-startup enabled (requires additional configuration)')
 }
 
+// New: Global shortcut and native window helpers
+export const registerGlobalShortcut = async (accelerator: string): Promise<void> => {
+  if (!isTauri()) return
+  await invoke('register_global_shortcut', { accelerator })
+}
+
+export const unregisterGlobalShortcut = async (accelerator: string): Promise<void> => {
+  if (!isTauri()) return
+  await invoke('unregister_global_shortcut', { accelerator })
+}
+
+export const listenGlobalShortcuts = async (handler: (payload: any) => void): Promise<UnlistenFn | undefined> => {
+  if (!isTauri()) return undefined
+  const unlisten = await listen('nyx:global-shortcut', (event) => {
+    handler(event.payload)
+  })
+  return unlisten
+}
+
+export const listenNativeWindowCreated = async (handler: (label: string) => void): Promise<UnlistenFn | undefined> => {
+  if (!isTauri()) return undefined
+  const unlisten = await listen('nyx:native-window-created', (event) => {
+    handler(event.payload as string)
+  })
+  return unlisten
+}
+
+export const createNativeWindow = async (label: string, title: string, width?: number, height?: number): Promise<void> => {
+  if (!isTauri()) return
+  await invoke('create_native_window', { label, title, width, height })
+}
+
+export const focusNativeWindow = async (label: string): Promise<void> => {
+  if (!isTauri()) return
+  await invoke('focus_native_window', { label })
+}
+
+export const closeNativeWindow = async (label: string): Promise<void> => {
+  if (!isTauri()) return
+  await invoke('close_native_window', { label })
+}
+
 export default {
   isTauri,
   getSystemInfo,
@@ -203,5 +246,12 @@ export default {
   showNotification,
   getPlatformInfo,
   initializeNyxWindow,
-  enableAutoStartup
+  enableAutoStartup,
+  registerGlobalShortcut,
+  unregisterGlobalShortcut,
+  listenGlobalShortcuts,
+  listenNativeWindowCreated,
+  createNativeWindow,
+  focusNativeWindow,
+  closeNativeWindow,
 }
