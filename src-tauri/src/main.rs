@@ -1,7 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use tauri::{CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem};
+use tauri::{CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem, WindowBuilder, WindowUrl};
 
 // System information commands
 #[tauri::command]
@@ -98,6 +98,67 @@ async fn get_performance_info() -> Result<serde_json::Value, String> {
     Ok(perf_info)
 }
 
+// Native window creation and management
+#[tauri::command]
+async fn create_native_window(app_handle: tauri::AppHandle, label: String, title: String, width: Option<f64>, height: Option<f64>) -> Result<(), String> {
+    // Create a new native window that loads the same app bundle. Frontend can detect the label to render a specific UI state.
+    let url = WindowUrl::App("index.html".into());
+
+    let mut builder = WindowBuilder::new(&app_handle, label.clone(), url).title(&title);
+
+    if let (Some(w), Some(h)) = (width, height) {
+        // inner_size expects logical size in many versions; try to call with f64 values
+        let _ = builder = builder.inner_size(w, h);
+    }
+
+    builder
+        .visible(true)
+        .build()
+        .map_err(|e| format!("Failed to create window: {}", e))?;
+
+    // Notify frontend that a native window was created
+    app_handle.emit_all("nyx:native-window-created", label).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
+async fn focus_native_window(app_handle: tauri::AppHandle, label: String) -> Result<(), String> {
+    if let Some(window) = app_handle.get_window(&label) {
+        window.show().map_err(|e| e.to_string())?;
+        window.set_focus().map_err(|e| e.to_string())?;
+        return Ok(());
+    }
+    Err("Window not found".into())
+}
+
+#[tauri::command]
+async fn close_native_window(app_handle: tauri::AppHandle, label: String) -> Result<(), String> {
+    if let Some(window) = app_handle.get_window(&label) {
+        window.close().map_err(|e| e.to_string())?;
+        return Ok(());
+    }
+    Err("Window not found".into())
+}
+
+// Global shortcut registration (dynamic) - uses Tauri's GlobalShortcutManager
+#[tauri::command]
+async fn register_global_shortcut(app_handle: tauri::AppHandle, accelerator: String) -> Result<(), String> {
+    let manager = app_handle.global_shortcut_manager();
+    let handle = app_handle.clone();
+    manager.register(&accelerator, move || {
+        // When shortcut is triggered, emit an event to the frontend
+        let _ = handle.emit_all("nyx:global-shortcut", accelerator.clone());
+    }).map_err(|e| format!("Failed to register shortcut: {}", e))?;
+    Ok(())
+}
+
+#[tauri::command]
+async fn unregister_global_shortcut(app_handle: tauri::AppHandle, accelerator: String) -> Result<(), String> {
+    let manager = app_handle.global_shortcut_manager();
+    manager.unregister(&accelerator).map_err(|e| format!("Failed to unregister shortcut: {}", e))?;
+    Ok(())
+}
+
 fn main() {
     // Create system tray
     let quit = CustomMenuItem::new("quit".to_string(), "Quit NYX OS");
@@ -115,28 +176,27 @@ fn main() {
     tauri::Builder::default()
         .system_tray(system_tray)
         .on_system_tray_event(|app, event| match event {
-            SystemTrayEvent::LeftClick {
-                position: _,
-                size: _,
-                ..
-            } => {
+            SystemTrayEvent::LeftClick { position: _, size: _, .. } => {
                 // Show main window on left click
-                let window = app.get_window("main").unwrap();
-                window.show().unwrap();
-                window.set_focus().unwrap();
+                if let Some(window) = app.get_window("main") {
+                    let _ = window.show();
+                    let _ = window.set_focus();
+                }
             }
             SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
                 "quit" => {
                     std::process::exit(0);
                 }
                 "show" => {
-                    let window = app.get_window("main").unwrap();
-                    window.show().unwrap();
-                    window.set_focus().unwrap();
+                    if let Some(window) = app.get_window("main") {
+                        let _ = window.show();
+                        let _ = window.set_focus();
+                    }
                 }
                 "hide" => {
-                    let window = app.get_window("main").unwrap();
-                    window.hide().unwrap();
+                    if let Some(window) = app.get_window("main") {
+                        let _ = window.hide();
+                    }
                 }
                 _ => {}
             },
@@ -152,16 +212,29 @@ fn main() {
             show_window,
             launch_external_app,
             get_desktop_apps,
-            get_performance_info
+            get_performance_info,
+            create_native_window,
+            focus_native_window,
+            close_native_window,
+            register_global_shortcut,
+            unregister_global_shortcut
         ])
         .setup(|app| {
             let main_window = app.get_window("main").unwrap();
 
             // Set up window properties
-            main_window.set_title("NYX OS").unwrap();
+            let _ = main_window.set_title("NYX OS");
 
             // Start in fullscreen mode for that OS experience
-            main_window.set_fullscreen(true).unwrap();
+            let _ = main_window.set_fullscreen(true);
+
+            // Register a convenient default global shortcut to create a new native window: CmdOrCtrl+Shift+N
+            let gsm = app.global_shortcut_manager();
+            let handle = app.handle();
+            let _ = gsm.register("CmdOrCtrl+Shift+N", move || {
+                // When triggered, emit an event so frontend may open a managed app or create a window
+                let _ = handle.emit_all("nyx:global-shortcut", "CmdOrCtrl+Shift+N");
+            });
 
             Ok(())
         })
