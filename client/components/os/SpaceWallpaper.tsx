@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 
 export const SpaceWallpaper: React.FC = () => {
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div className="fixed inset-0 overflow-hidden">
       {/* Base deep space gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900" />
       
