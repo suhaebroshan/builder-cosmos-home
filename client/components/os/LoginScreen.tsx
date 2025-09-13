@@ -160,7 +160,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            QUANTUM AUTHENTICATION
+            <p>welcome back :)</p>
+            <p><br /></p>
           </motion.div>
         </div>
 
