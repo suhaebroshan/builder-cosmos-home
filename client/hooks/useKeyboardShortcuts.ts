@@ -129,12 +129,13 @@ export const useKeyboardShortcuts = (enabled: boolean = true) => {
       return
     }
 
-    if (key === 'F2' || (cmdKey && key === 'r')) {
-      // Enter edit mode
+    if (key === 'F2' || (cmdKey && key.toLowerCase() === 'r')) {
+      // Toggle edit mode
       preventDefault()
-      setEditMode(true)
-      setEmotion('focused', 0.8)
-      addMessage("Edit mode activated! Use arrow keys to navigate icons.", 'sam', 'focused')
+      const next = !isEditMode
+      setEditMode(next)
+      setEmotion(next ? 'focused' : 'neutral', next ? 0.8 : 0.6)
+      addMessage(next ? "Edit mode activated! Use arrow keys to navigate icons." : "Edit mode disabled.", 'sam', next ? 'focused' : 'neutral')
       return
     }
 
