@@ -343,6 +343,13 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
               >
                 Reset Stats
               </button>
+              <button
+                onClick={() => setBubble(true)}
+                className="flex-1 apple-button py-2 text-sm text-white/80 hover:text-white transition-colors"
+                title="Toggle Bubble (Ctrl/Cmd+F)"
+              >
+                Bubble Mode
+              </button>
             </div>
           </motion.div>
         )}
