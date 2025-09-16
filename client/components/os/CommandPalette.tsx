@@ -37,6 +37,33 @@ export const CommandPalette: React.FC = () => {
   }, [open])
 
   const items: CommandItem[] = useMemo(() => {
+    const desktopCommands: CommandItem[] = [0,1,2,3].map((idx) => ({
+      id: `cmd-switch-desktop-${idx+1}`,
+      type: 'command',
+      title: `Switch to Desktop ${idx + 1}`,
+      action: () => {
+        const store = require('@/store/virtual-desktop-store') as any
+        store.useVirtualDesktopStore.getState().switchDesktop(idx)
+        setOpen(false)
+      }
+    }))
+
+    const moveWindowCommands: CommandItem[] = [0,1,2,3].map((idx) => ({
+      id: `cmd-move-window-desktop-${idx+1}`,
+      type: 'command',
+      title: `Move focused window to Desktop ${idx + 1}`,
+      action: () => {
+        const store = require('@/store/virtual-desktop-store') as any
+        store.useVirtualDesktopStore.getState().switchDesktop(idx)
+        const { focusedWindowId, moveWindowToDesktop } = require('@/store/window-store') as any
+        const id = (require('@/store/window-store') as any).useWindowStore.getState().focusedWindowId
+        if (id) {
+          ;(require('@/store/window-store') as any).useWindowStore.getState().moveWindowToDesktop(id, idx)
+        }
+        setOpen(false)
+      }
+    }))
+
     const appItems: CommandItem[] = icons.map((icon) => ({
       id: `app-${icon.appId}`,
       type: 'app',
