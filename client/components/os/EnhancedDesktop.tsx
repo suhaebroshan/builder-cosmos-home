@@ -52,6 +52,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { DesktopIcon } from './DesktopIcon'
+import { CommandPalette } from './CommandPalette'
 
 export const EnhancedDesktop: React.FC = () => {
   const { openWindow, windows, minimizeWindow, focusWindow, getWindowsByApp } = useWindowStore()
