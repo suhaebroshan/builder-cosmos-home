@@ -17,7 +17,7 @@ interface CommandItem {
 export const CommandPalette: React.FC = () => {
   const { icons } = useDesktopStore()
   const { openWindow } = useWindowStore()
-  const { settings, setSettings } = useThemeStore()
+  const { settings, setThemeMode } = useThemeStore()
 
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
