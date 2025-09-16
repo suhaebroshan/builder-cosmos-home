@@ -677,6 +677,7 @@ export const EnhancedDesktop: React.FC = () => {
       
 
       </div>
+      <CommandPalette />
     </MobileNavigation>
   )
 }
