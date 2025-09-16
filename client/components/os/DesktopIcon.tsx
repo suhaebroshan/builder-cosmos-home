@@ -102,10 +102,29 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
   
   const iconSizes = [32, 48, 64, 80, 96, 128]
   const iconColors = [
-    '#ffffff', '#3b82f6', '#ef4444', '#10b981', 
+    '#ffffff', '#3b82f6', '#ef4444', '#10b981',
     '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'
   ]
-  
+
+  const panelStyle: React.CSSProperties = (() => {
+    const vpW = typeof window !== 'undefined' ? window.innerWidth : 1200
+    const vpH = typeof window !== 'undefined' ? window.innerHeight : 800
+    const taskbarH = 80
+    const panelW = 260
+    const panelH = 240
+    const spaceBelow = vpH - (icon.position.y + customSize)
+    const showAbove = spaceBelow < panelH + taskbarH
+    const spaceRight = vpW - icon.position.x
+    const alignRight = spaceRight < panelW / 2 + 20
+    if (showAbove) {
+      return { bottom: customSize + 16, left: '50%', transform: 'translateX(-50%)' }
+    }
+    if (alignRight) {
+      return { top: '100%', right: 0, transform: 'translateY(16px)' }
+    }
+    return { top: '100%', left: '50%', transform: 'translate(-50%, 16px)' }
+  })()
+
   return (
     <motion.div
       {...focusable.focusableProps}
@@ -251,7 +270,8 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
       {/* Customization Panel */}
       {isCustomizing && isEditMode && (
         <motion.div
-          className="absolute top-full left-1/2 transform -translate-x-1/2 mt-4 apple-control-panel p-4 min-w-64 z-50"
+          className="absolute apple-control-panel p-4 min-w-64 z-50"
+          style={panelStyle}
           initial={{ opacity: 0, scale: 0.8, y: -10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: -10 }}
