@@ -408,37 +408,34 @@ export const EnhancedDesktop: React.FC = () => {
     }
   }
   
-  const snapToGrid = (x: number, y: number, iconSize: { width: number; height: number } = { width: 64, height: 64 }) => {
-    // Calculate dynamic grid based on icon size + padding
-    const gridSizeX = Math.max(80, iconSize.width + 24)
-    const gridSizeY = Math.max(80, iconSize.height + 32) // Extra space for label
-
-    return {
-      x: Math.round(x / gridSizeX) * gridSizeX,
-      y: Math.round(y / gridSizeY) * gridSizeY
-    }
+  const snapToGrid = (x: number, y: number, _iconSize: { width: number; height: number } = { width: 64, height: 64 }) => {
+    // Softer behavior: no snap to avoid unexpected jumps
+    return { x, y }
   }
 
   const handleIconDragEnd = (iconId: string, info: PanInfo) => {
     const icon = icons.find(i => i.id === iconId)
     if (!icon) return
 
-    // Calculate new position with bounds checking
-    const rawX = Math.max(0, icon.position.x + info.offset.x)
-    const rawY = Math.max(0, icon.position.y + info.offset.y)
+    const statusBar = uiConfig.statusBarHeight || (isPhone ? 32 : isTablet ? 28 : 0)
+    const taskbar = (!isPhone && !isTablet) ? (uiConfig.taskbarHeight || 80) : 0
 
-    // Snap to adaptive grid based on icon size
+    // Calculate new position with bounds checking inside safe area
+    const rawX = icon.position.x + info.offset.x
+    const rawY = icon.position.y + info.offset.y
+
     const snapped = snapToGrid(rawX, rawY, icon.size)
 
-    // Ensure icons stay within viewport bounds with margin
-    const viewportWidth = window.innerWidth || 1200
-    const viewportHeight = (window.innerHeight || 800) - 120 // Account for taskbar
+    const viewportWidth = (window.innerWidth || 1200)
+    const viewportHeight = (window.innerHeight || 800)
+    const safeY = statusBar
+    const safeHeight = Math.max(0, viewportHeight - statusBar - taskbar)
 
-    const maxX = viewportWidth - icon.size.width - 20
-    const maxY = viewportHeight - icon.size.height - 40 // Extra space for icon label
+    const maxX = viewportWidth - icon.size.width - 12
+    const maxY = safeY + safeHeight - icon.size.height - 12
 
-    const finalX = Math.min(Math.max(20, snapped.x), maxX)
-    const finalY = Math.min(Math.max(20, snapped.y), maxY)
+    const finalX = Math.min(Math.max(12, snapped.x), maxX)
+    const finalY = Math.min(Math.max(safeY + 12, snapped.y), maxY)
 
     updateIconPosition(iconId, { x: finalX, y: finalY })
   }
