@@ -82,15 +82,37 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
   return (
     <motion.div
       className={cn(
-        "fixed top-4 right-4 z-50",
+        "fixed z-50",
         className
       )}
+      style={{ left: pos.x, top: pos.y }}
+      drag
+      dragMomentum={false}
+      dragElastic={0.05}
+      onDragEnd={(_, info) => {
+        const x = Math.max(8, Math.min((window.innerWidth - 80), pos.x + info.offset.x))
+        const y = Math.max(8, Math.min((window.innerHeight - 48), pos.y + info.offset.y))
+        setPos({ x, y })
+      }}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 0.5 }}
     >
+      {/* Bubble */}
+      {bubble && (
+        <motion.button
+          onClick={() => setBubble(false)}
+          className="rounded-full bg-black/50 backdrop-blur-xl border border-white/20 text-white px-3 py-2 text-xs shadow-lg"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          title="Click to expand"
+        >
+          {performanceStats.fps} FPS • {currentProfile.toUpperCase()}
+        </motion.button>
+      )}
+
       {/* Compact View */}
-      {!isExpanded && (
+      {!bubble && !isExpanded && (
         <motion.button
           onClick={() => setIsExpanded(true)}
           className={cn(
@@ -102,7 +124,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
         >
           <div className={cn(
             "w-2 h-2 rounded-full",
-            performanceStats.fps > 50 ? "bg-green-400" : 
+            performanceStats.fps > 50 ? "bg-green-400" :
             performanceStats.fps > 30 ? "bg-yellow-400" : "bg-red-400"
           )} />
           <span className="text-sm font-medium">
