@@ -2,6 +2,7 @@ import { useEffect, useCallback } from 'react'
 import { useWindowStore } from '@/store/window-store'
 import { useDesktopStore } from '@/store/desktop-store'
 import { useSamStore } from '@/store/sam-store'
+import { useVirtualDesktopStore } from '@/store/virtual-desktop-store'
 
 export const useKeyboardShortcuts = (enabled: boolean = true) => {
   const { 
