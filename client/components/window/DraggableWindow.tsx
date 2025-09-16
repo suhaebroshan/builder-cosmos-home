@@ -366,6 +366,13 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
           isDragging && "cursor-grabbing",
           isPhone && "cursor-default"
         )}
+        onDoubleClick={(e) => {
+          if (isPhone) return
+          // Ignore double-clicks on controls
+          const target = e.target as HTMLElement
+          if (target.closest('button')) return
+          maximizeWindow(window.id)
+        }}
         onMouseDown={(e) => {
           if (window.isMaximized || isPhone || !uiConfig.allowWindowMove) return
 
@@ -396,6 +403,20 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
 
           const handleMouseUp = () => {
             setIsDragging(false)
+
+            // Edge snapping
+            const current = useWindowStore.getState().getWindow(window.id)
+            if (current && !isPhone) {
+              const snapThreshold = 32
+              if (current.position.x <= snapThreshold) {
+                useWindowStore.getState().updateWindowMode(window.id, 'split-left')
+              } else if (current.position.x + current.size.width >= viewportWidth - snapThreshold) {
+                useWindowStore.getState().updateWindowMode(window.id, 'split-right')
+              } else if (current.position.y <= snapThreshold) {
+                useWindowStore.getState().maximizeWindow(window.id)
+              }
+            }
+
             document.removeEventListener('mousemove', handleMouseMove)
             document.removeEventListener('mouseup', handleMouseUp)
           }
