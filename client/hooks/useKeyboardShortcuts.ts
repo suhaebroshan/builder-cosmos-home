@@ -82,6 +82,43 @@ export const useKeyboardShortcuts = (enabled: boolean = true) => {
       return
     }
 
+    // Command Palette
+    if (cmdKey && key.toLowerCase() === 'k') {
+      preventDefault()
+      window.dispatchEvent(new CustomEvent('nyx:toggle-command-palette'))
+      return
+    }
+
+    // Snap focused window
+    if (ctrlKey && (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'ArrowUp')) {
+      preventDefault()
+      if (focusedWindowId) {
+        if (key === 'ArrowLeft') {
+          useWindowStore.getState().updateWindowMode(focusedWindowId, 'split-left')
+        } else if (key === 'ArrowRight') {
+          useWindowStore.getState().updateWindowMode(focusedWindowId, 'split-right')
+        } else if (key === 'ArrowUp') {
+          useWindowStore.getState().maximizeWindow(focusedWindowId)
+        }
+      }
+      return
+    }
+
+    // Virtual desktop switching
+    if (ctrlKey && altKey && (key === 'ArrowRight' || key === 'ArrowLeft')) {
+      preventDefault()
+      const { nextDesktop, prevDesktop } = require('@/store/virtual-desktop-store')
+      if (key === 'ArrowRight') {
+        // @ts-ignore
+        nextDesktop()
+      } else {
+        // @ts-ignore
+        prevDesktop()
+      }
+      addMessage('Switched virtual desktop', 'sam', 'focused')
+      return
+    }
+
     if (key === 'Escape') {
       // Exit edit mode or clear selections
       preventDefault()
