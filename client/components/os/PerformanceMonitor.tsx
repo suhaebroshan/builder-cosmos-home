@@ -38,14 +38,26 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
         const newHistory = [...prev, performanceStats.memoryUsage].slice(-20)
         return newHistory
       })
-      
+
       setFpsHistory(prev => {
         const newHistory = [...prev, performanceStats.fps].slice(-20)
         return newHistory
       })
     }, 1000)
 
-    return () => clearInterval(interval)
+    const onKey = (e: KeyboardEvent) => {
+      const cmd = e.ctrlKey || e.metaKey
+      if (cmd && e.key.toLowerCase() === 'f') {
+        e.preventDefault()
+        setBubble((b) => !b)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('keydown', onKey)
+    }
   }, [performanceStats])
 
   const getProfileColor = (profileName: string) => {
