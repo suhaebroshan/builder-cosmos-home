@@ -95,6 +95,8 @@ export const CommandPalette: React.FC = () => {
           setOpen(false)
         }
       },
+      ...desktopCommands,
+      ...moveWindowCommands,
       {
         id: 'cmd-open-settings',
         type: 'command',
