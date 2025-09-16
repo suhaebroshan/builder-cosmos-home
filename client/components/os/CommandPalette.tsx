@@ -126,7 +126,7 @@ export const CommandPalette: React.FC = () => {
     ]
 
     return [...commandItems, ...appItems]
-  }, [icons, openWindow, settings, setSettings])
+  }, [icons, openWindow, settings, setThemeMode])
 
   const filtered = items.filter((item) =>
     (item.title + ' ' + (item.subtitle || ''))
