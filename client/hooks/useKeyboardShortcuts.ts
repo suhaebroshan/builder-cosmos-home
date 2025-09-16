@@ -107,13 +107,11 @@ export const useKeyboardShortcuts = (enabled: boolean = true) => {
     // Virtual desktop switching
     if (ctrlKey && altKey && (key === 'ArrowRight' || key === 'ArrowLeft')) {
       preventDefault()
-      const { nextDesktop, prevDesktop } = require('@/store/virtual-desktop-store')
+      const store = require('@/store/virtual-desktop-store') as any
       if (key === 'ArrowRight') {
-        // @ts-ignore
-        nextDesktop()
+        store.useVirtualDesktopStore.getState().nextDesktop()
       } else {
-        // @ts-ignore
-        prevDesktop()
+        store.useVirtualDesktopStore.getState().prevDesktop()
       }
       addMessage('Switched virtual desktop', 'sam', 'focused')
       return
