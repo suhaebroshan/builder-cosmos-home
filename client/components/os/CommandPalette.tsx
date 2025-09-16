@@ -91,7 +91,7 @@ export const CommandPalette: React.FC = () => {
         title: settings.mode === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme',
         icon: settings.mode === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />,
         action: () => {
-          setSettings({ ...settings, mode: settings.mode === 'dark' ? 'light' : 'dark' })
+          setThemeMode(settings.mode === 'dark' ? 'light' : 'dark')
           setOpen(false)
         }
       },
