@@ -155,18 +155,25 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
 
   // Get viewport dimensions for window constraints
   const viewportWidth = typeof globalThis.window !== 'undefined' ? globalThis.window.innerWidth : 1200
-  const viewportHeight = typeof globalThis.window !== 'undefined' ? globalThis.window.innerHeight - (isPhone ? 0 : 80) : 720 // No taskbar on phone
+  const viewportHeight = typeof globalThis.window !== 'undefined' ? globalThis.window.innerHeight : 720
+
+  // Define a consistent safe area (excludes status bar, nav bar, taskbar)
+  const statusBarHeight = uiConfig.statusBarHeight || (isPhone ? 32 : isTablet ? 28 : 0)
+  const navigationHeight = (isPhone || isTablet) ? (uiConfig.navigationHeight || 64) : 0
+  const taskbarHeight = (!isPhone && !isTablet) ? (uiConfig.taskbarHeight || 80) : 0
+  const headerHeight = 40 // Window header height
+
+  const safeArea = {
+    x: 0,
+    y: statusBarHeight,
+    width: viewportWidth,
+    height: Math.max(0, viewportHeight - statusBarHeight - navigationHeight - taskbarHeight)
+  }
 
   // Enhanced responsive window configuration
   const getResponsiveWindowConfig = () => {
-    const statusBarHeight = uiConfig.statusBarHeight || (isPhone ? 32 : isTablet ? 28 : 0)
-    const navigationHeight = isPhone || isTablet ? 64 : 0 // Bottom navigation height
-    const taskbarHeight = !isPhone && !isTablet ? 80 : 0 // Desktop taskbar
-    const headerHeight = 40 // Window header height
-
-    // Calculate available space
-    const availableHeight = viewportHeight - statusBarHeight - navigationHeight - taskbarHeight
-    const availableWidth = viewportWidth
+    const availableHeight = safeArea.height
+    const availableWidth = safeArea.width
 
     if (isPhone) {
       // Phone: Prioritize fullscreen for all apps except calculator
@@ -259,35 +266,35 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
       // Desktop mode - traditional windowing
       if (window.isMaximized) {
         return {
-          x: 0,
-          y: 0,
-          width: viewportWidth,
-          height: viewportHeight - taskbarHeight
+          x: safeArea.x,
+          y: safeArea.y,
+          width: safeArea.width,
+          height: safeArea.height
         }
       } else if (window.mode === 'split-left') {
         return {
-          x: 0,
-          y: 0,
-          width: viewportWidth / 2 - 8,
-          height: viewportHeight - taskbarHeight
+          x: safeArea.x,
+          y: safeArea.y,
+          width: safeArea.width / 2 - 8,
+          height: safeArea.height
         }
       } else if (window.mode === 'split-right') {
         return {
-          x: viewportWidth / 2 + 8,
-          y: 0,
-          width: viewportWidth / 2 - 8,
-          height: viewportHeight - taskbarHeight
+          x: safeArea.x + safeArea.width / 2 + 8,
+          y: safeArea.y,
+          width: safeArea.width / 2 - 8,
+          height: safeArea.height
         }
       } else {
         // Regular windowed mode
-        const minWidth = Math.max(300, viewportWidth * 0.2)
-        const minHeight = Math.max(200, (viewportHeight - taskbarHeight) * 0.3)
-        const maxWidth = viewportWidth * 0.9
-        const maxHeight = (viewportHeight - taskbarHeight) * 0.9
+        const minWidth = Math.max(300, safeArea.width * 0.2)
+        const minHeight = Math.max(200, safeArea.height * 0.3)
+        const maxWidth = safeArea.width * 0.95
+        const maxHeight = safeArea.height * 0.95
 
         return {
-          x: Math.max(0, Math.min(safePosition.x, viewportWidth - minWidth)),
-          y: Math.max(0, Math.min(safePosition.y, viewportHeight - taskbarHeight - minHeight)),
+          x: Math.max(safeArea.x, Math.min(safePosition.x, safeArea.x + safeArea.width - minWidth)),
+          y: Math.max(safeArea.y, Math.min(safePosition.y, safeArea.y + safeArea.height - minHeight)),
           width: Math.max(minWidth, Math.min(safeSize.width, maxWidth)),
           height: Math.max(minHeight, Math.min(safeSize.height, maxHeight))
         }
@@ -301,7 +308,7 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
     <motion.div
       ref={windowRef}
       className={cn(
-        "absolute overflow-hidden",
+        "absolute overflow-hidden flex flex-col",
         isPhone ? `rounded-none ${themeSettings.mode === 'dark' ? 'bg-black/40' : 'bg-white/40'} backdrop-blur-sm` :
         isTablet ? "rounded-xl liquid-glass-window" :
         "rounded-2xl liquid-glass-window liquid-reflection liquid-bubble",
@@ -354,6 +361,10 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
         duration: window.animationOrigin ? 0.6 : 0.4
       }}
       onClick={() => focusWindow(window.id)}
+      style={{
+        left: 0,
+        top: 0
+      }}
     >
       {/* Window Header */}
       <div
@@ -394,9 +405,14 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
             const deltaX = moveEvent.clientX - startX
             const deltaY = moveEvent.clientY - startY
 
-            // Keep window partially visible
-            const newX = Math.max(-safeSize.width + 100, Math.min(startPosX + deltaX, viewportWidth - 100))
-            const newY = Math.max(0, Math.min(startPosY + deltaY, viewportHeight - 40))
+            // Keep window within safe area
+            const minX = safeArea.x
+            const maxX = safeArea.x + safeArea.width - Math.max(200, safeSize.width * 0.3)
+            const minY = safeArea.y
+            const maxY = safeArea.y + safeArea.height - headerHeight
+
+            const newX = Math.max(minX, Math.min(startPosX + deltaX, maxX))
+            const newY = Math.max(minY, Math.min(startPosY + deltaY, maxY))
 
             updateWindowPosition(window.id, { x: newX, y: newY })
           }
@@ -486,7 +502,7 @@ export const DraggableWindow: React.FC<DraggableWindowProps> = ({ window, childr
       
       {/* Window Content */}
       <div
-        className="flex-1 overflow-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent hover:scrollbar-thumb-gray-500 liquid-glass"
+        className="flex-1 min-h-0 overflow-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent hover:scrollbar-thumb-gray-500 liquid-glass"
         style={{
           scrollbarWidth: 'thin',
           scrollbarColor: 'rgba(156, 163, 175, 0.5) transparent'
