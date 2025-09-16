@@ -74,7 +74,10 @@ export const CommandPalette: React.FC = () => {
         title: 'Open Settings',
         icon: <SettingsIcon className="w-4 h-4" />,
         action: () => {
-          openWindow({ title: 'Settings', appId: 'settings', component: require('@/components/apps/Settings').Settings, position: { x: 300, y: 100 }, size: { width: 900, height: 700 }, mode: 'windowed' })
+          const icon = icons.find(i => i.appId === 'settings')
+          if (icon) {
+            openWindow({ title: icon.name, appId: icon.appId, component: icon.component, position: icon.defaultPosition, size: icon.defaultSize, mode: 'windowed' })
+          }
           setOpen(false)
         }
       },
@@ -84,7 +87,10 @@ export const CommandPalette: React.FC = () => {
         title: 'Open Calendar',
         icon: <CalendarIcon className="w-4 h-4" />,
         action: () => {
-          openWindow({ title: 'Chrono', appId: 'calendar', component: require('@/components/apps/Calendar').Calendar, position: { x: 200, y: 80 }, size: { width: 900, height: 600 }, mode: 'windowed' })
+          const icon = icons.find(i => i.appId === 'calendar')
+          if (icon) {
+            openWindow({ title: icon.name, appId: icon.appId, component: icon.component, position: icon.defaultPosition, size: icon.defaultSize, mode: 'windowed' })
+          }
           setOpen(false)
         }
       }
