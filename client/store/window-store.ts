@@ -63,7 +63,11 @@ export const useWindowStore = create<WindowStore>((set, get) => ({
     const instanceCount = state.appInstances[windowData.appId] || 0
     const id = `${windowData.appId}-${instanceCount + 1}-${Date.now()}`
 
-    const window: Window = {
+    const desktopId = (typeof globalThis !== 'undefined' && (globalThis as any).__NYX_CURRENT_DESKTOP__ !== undefined)
+      ? (globalThis as any).__NYX_CURRENT_DESKTOP__
+      : 0
+
+    const newWindow: Window = {
       ...windowData,
       id,
       zIndex: state.nextZIndex,
@@ -72,11 +76,11 @@ export const useWindowStore = create<WindowStore>((set, get) => ({
       isPinned: false,
       mode: windowData.mode || 'windowed',
       opacity: windowData.opacity || 1,
-      desktopId: (typeof window !== 'undefined') ? ( (window as any).__NYX_CURRENT_DESKTOP__ ?? 0 ) : 0,
+      desktopId,
     }
 
     set((prevState) => ({
-      windows: [...prevState.windows, window],
+      windows: [...prevState.windows, newWindow],
       focusedWindowId: id,
       nextZIndex: prevState.nextZIndex + 1,
       appInstances: {
