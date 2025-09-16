@@ -16,6 +16,8 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
   const [isExpanded, setIsExpanded] = useState(showDetailed)
   const [memoryHistory, setMemoryHistory] = useState<number[]>([])
   const [fpsHistory, setFpsHistory] = useState<number[]>([])
+  const [bubble, setBubble] = useState(false)
+  const [pos, setPos] = useState<{x:number;y:number}>({ x: 16, y: 16 })
   
   const { 
     profile, 
