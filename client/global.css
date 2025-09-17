@@ -167,6 +167,30 @@ input, textarea, select {
     transform: var(--gpu-acceleration);
   }
 
+  /* Dense UI and Night variants */
+  .dense-ui .liquid-glass,
+  .dense-ui .liquid-glass-dark,
+  .dense-ui .liquid-glass-window,
+  .dense-ui .apple-control-panel {
+    backdrop-filter: blur(calc(var(--blur-intensity) * 1.05)) saturate(240%) brightness(140%);
+    -webkit-backdrop-filter: blur(calc(var(--blur-intensity) * 1.05)) saturate(240%) brightness(140%);
+    box-shadow:
+      0 14px 50px rgba(0, 0, 0, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.45),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  .night-ui .liquid-glass-dark,
+  .night-ui .liquid-glass-window,
+  .night-ui .apple-control-panel {
+    background-image: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.18) 0%,
+      rgba(139, 92, 246, 0.12) 25%,
+      rgba(168, 85, 247, 0.09) 50%,
+      rgba(255, 255, 255, 0.06) 75%,
+      rgba(79, 70, 229, 0.1) 100%) !important;
+  }
+
   .liquid-glass-dark {
     backdrop-filter: blur(var(--blur-intensity)) saturate(250%) brightness(140%);
     -webkit-backdrop-filter: blur(var(--blur-intensity)) saturate(250%) brightness(140%);
