@@ -20,6 +20,7 @@ import { useDeviceDetection, DeviceType } from '@/hooks/useDeviceDetection'
 import { usePerformanceManager } from '@/hooks/usePerformanceManager'
 import { aiService } from '@/services/ai-service'
 import { cn } from '@/lib/utils'
+import { useLiquidGlass } from '@/hooks/useLiquidGlass'
 
 interface User {
   id: string
@@ -99,6 +100,9 @@ export const NyxOS: React.FC = () => {
   
   // Auto-detect device type with fallback for small screens
   const selectedDeviceType: DeviceType = isPhone ? 'phone' : isTablet ? 'tablet' : 'desktop'
+
+  // Initialize Liquid Glass adaptive system
+  useLiquidGlass()
 
   // Force mobile view for small screens or touch devices
   const forcePhoneView = window.innerWidth < 768 || (window.innerWidth < 900 && 'ontouchstart' in window)
