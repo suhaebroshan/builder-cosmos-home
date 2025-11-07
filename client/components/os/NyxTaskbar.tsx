@@ -44,7 +44,7 @@ export const NyxTaskbar: React.FC = () => {
   const { windows, focusedWindowId, minimizeWindow, focusWindow, openWindow } = useWindowStore()
   const { currentEmotion, emotionIntensity } = useSamStore()
   const { setEditMode } = useDesktopStore()
-  const { setThemeMode, settings: themeSettings } = useWindowStore()
+  const { setThemeMode, settings: themeSettings } = useThemeStore()
 
   const [currentTime, setCurrentTime] = useState(new Date())
   const [isMoonMenuOpen, setIsMoonMenuOpen] = useState(false)
