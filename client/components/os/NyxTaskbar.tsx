@@ -630,11 +630,11 @@ export const NyxTaskbar: React.FC = () => {
       </AnimatePresence>
 
       {/* Click outside to close */}
-      {(isLauncherOpen || isNotificationOpen) && (
+      {(isMoonMenuOpen || isNotificationOpen) && (
         <div
           className="fixed inset-0 z-40"
           onClick={() => {
-            setIsLauncherOpen(false)
+            setIsMoonMenuOpen(false)
             setIsNotificationOpen(false)
           }}
         />
