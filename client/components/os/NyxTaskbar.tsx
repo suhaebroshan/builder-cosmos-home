@@ -484,66 +484,93 @@ export const NyxTaskbar: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* App Launcher */}
+      {/* Moon System Menu */}
       <AnimatePresence>
-        {isLauncherOpen && (
+        {isMoonMenuOpen && (
           <motion.div
-            className="absolute bottom-12 left-2 w-96 bg-black/80 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-4 shadow-2xl"
+            className="absolute bottom-12 left-2 w-80 bg-black/85 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-4 shadow-2xl"
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ duration: 0.2 }}
           >
-            <h3 className="text-white font-medium mb-3 text-sm">Frequently Used</h3>
-            <div className="grid grid-cols-3 gap-2 mb-4">
-              {frequentApps.map((app, index) => {
-                const Icon = app.icon
-                return (
-                  <motion.button
-                    key={app.label}
-                    className="p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all duration-200 flex flex-col items-center gap-1"
-                    onClick={app.action}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                  >
-                    <Icon className="w-5 h-5 text-purple-400" />
-                    <span className="text-xs text-white/70">{app.label}</span>
-                  </motion.button>
-                )
-              })}
+            {/* Search Section */}
+            <div className="mb-4">
+              <button
+                className="w-full p-2.5 bg-white/8 hover:bg-white/12 border border-white/15 rounded-lg flex items-center gap-2 transition-all group"
+                onClick={() => {
+                  const event = new KeyboardEvent('keydown', {
+                    key: 'k',
+                    ctrlKey: true,
+                    bubbles: true
+                  })
+                  window.dispatchEvent(event)
+                  setIsMoonMenuOpen(false)
+                }}
+                title="Search apps, files, web..."
+              >
+                <Search className="w-4 h-4 text-white/60 group-hover:text-white/80 transition-colors" />
+                <span className="text-xs text-white/60 group-hover:text-white/80 transition-colors">
+                  Search
+                </span>
+                <kbd className="ml-auto text-xs text-white/40 px-2 py-1 rounded bg-white/5 border border-white/10 group-hover:border-white/15">
+                  ⌘K
+                </kbd>
+              </button>
             </div>
 
-            <h3 className="text-white font-medium mb-3 text-sm">Quick Actions</h3>
-            <div className="grid grid-cols-5 gap-2 mb-4">
-              {quickActions.map((action, index) => {
+            {/* Quick Actions */}
+            <h3 className="text-white/80 font-semibold text-xs mb-2 uppercase tracking-wider">System</h3>
+            <div className="space-y-1 mb-4">
+              {quickActions.map((action) => {
                 const Icon = action.icon
                 return (
                   <motion.button
                     key={action.label}
-                    className="p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all duration-200 flex flex-col items-center gap-1"
-                    onClick={action.action}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: (frequentApps.length + index) * 0.05 }}
+                    className="w-full p-2.5 bg-white/5 hover:bg-white/10 rounded-lg flex items-center gap-3 transition-all text-left"
+                    onClick={() => {
+                      action.action()
+                      setIsMoonMenuOpen(false)
+                    }}
+                    whileHover={{ x: 4 }}
                   >
-                    <Icon className="w-4 h-4 text-gray-400" />
-                    <span className="text-xs text-white/70">{action.label}</span>
+                    <Icon className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                    <span className="text-xs text-white/80">{action.label}</span>
                   </motion.button>
                 )
               })}
             </div>
 
-            <div className="border-t border-white/10 pt-3">
+            {/* Theme Toggle */}
+            <div className="border-t border-white/10 pt-3 mt-3">
               <button
-                className="w-full p-2 text-left text-sm text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                className="w-full p-2.5 bg-white/5 hover:bg-white/10 rounded-lg flex items-center gap-3 transition-all text-left"
+                onClick={() => {
+                  setThemeMode(themeSettings.mode === 'dark' ? 'light' : 'dark')
+                  setIsMoonMenuOpen(false)
+                }}
+              >
+                {themeSettings.mode === 'dark' ? (
+                  <>
+                    <Sun className="w-4 h-4 text-yellow-400 flex-shrink-0" />
+                    <span className="text-xs text-white/80">Light Mode</span>
+                  </>
+                ) : (
+                  <>
+                    <Moon className="w-4 h-4 text-blue-300 flex-shrink-0" />
+                    <span className="text-xs text-white/80">Dark Mode</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Customize Desktop */}
+            <div className="mt-3 pt-3 border-t border-white/10">
+              <button
+                className="w-full p-2.5 bg-white/5 hover:bg-white/10 rounded-lg text-left text-xs text-white/80 transition-all"
                 onClick={() => {
                   setEditMode(true)
-                  setIsLauncherOpen(false)
+                  setIsMoonMenuOpen(false)
                 }}
               >
                 Customize Desktop
