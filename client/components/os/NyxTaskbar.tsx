@@ -378,40 +378,16 @@ export const NyxTaskbar: React.FC = () => {
         animate={{ y: 0 }}
         transition={{ duration: 0.6, delay: 0.5 }}
       >
-        {/* Left Section: App Launcher + Search */}
-        <div className="flex items-center gap-2">
+        {/* Left Section: System Menu (Moon) */}
+        <div className="flex items-center gap-2 relative">
           <motion.button
-            className="h-9 w-9 rounded-lg bg-gradient-to-br from-purple-600 to-violet-700 hover:from-purple-500 hover:to-violet-600 flex items-center justify-center transition-all duration-200 flex-shrink-0"
-            onClick={() => setIsLauncherOpen(!isLauncherOpen)}
+            className="h-9 w-9 rounded-lg bg-white/8 hover:bg-white/12 border border-white/10 flex items-center justify-center transition-all duration-200 flex-shrink-0"
+            onClick={() => setIsMoonMenuOpen(!isMoonMenuOpen)}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.92 }}
-            title="App Launcher (Nyx)"
+            title="System Menu"
           >
-            <Maximize2 className="w-4 h-4 text-white" />
-          </motion.button>
-
-          {/* Universal Search */}
-          <motion.button
-            className="h-9 px-3 rounded-lg bg-white/8 hover:bg-white/12 border border-white/10 flex items-center gap-2 transition-all duration-200 flex-shrink-0 group"
-            onClick={() => {
-              const event = new KeyboardEvent('keydown', {
-                key: 'k',
-                ctrlKey: true,
-                bubbles: true
-              })
-              window.dispatchEvent(event)
-            }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            title="Universal Search (Ctrl+K)"
-          >
-            <Search className="w-3.5 h-3.5 text-white/60 group-hover:text-white/80 transition-colors" />
-            <span className="text-xs text-white/50 group-hover:text-white/70 transition-colors">
-              Search
-            </span>
-            <kbd className="hidden sm:inline text-xs text-white/40 ml-1 px-1.5 py-0.5 rounded bg-white/5 border border-white/10">
-              ⌘K
-            </kbd>
+            <Moon className="w-4 h-4 text-white/80" />
           </motion.button>
         </div>
 
