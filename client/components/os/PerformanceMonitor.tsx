@@ -1,98 +1,107 @@
-import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Monitor, Cpu, MemoryStick, Battery, Zap, Gauge } from 'lucide-react'
-import { usePerformanceManager } from '@/hooks/usePerformanceManager'
-import { cn } from '@/lib/utils'
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Monitor, Cpu, MemoryStick, Battery, Zap, Gauge } from "lucide-react";
+import { usePerformanceManager } from "@/hooks/usePerformanceManager";
+import { cn } from "@/lib/utils";
 
 interface PerformanceMonitorProps {
-  className?: string
-  showDetailed?: boolean
+  className?: string;
+  showDetailed?: boolean;
 }
 
 export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
   className = "",
-  showDetailed = false
+  showDetailed = false,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(showDetailed)
-  const [memoryHistory, setMemoryHistory] = useState<number[]>([])
-  const [fpsHistory, setFpsHistory] = useState<number[]>([])
-  const [bubble, setBubble] = useState(false)
-  const [pos, setPos] = useState<{x:number;y:number}>({ x: 16, y: 80 })
-  
-  const { 
-    profile, 
-    currentProfile, 
-    performanceStats, 
-    autoOptimize, 
+  const [isExpanded, setIsExpanded] = useState(showDetailed);
+  const [memoryHistory, setMemoryHistory] = useState<number[]>([]);
+  const [fpsHistory, setFpsHistory] = useState<number[]>([]);
+  const [bubble, setBubble] = useState(false);
+  const [pos, setPos] = useState<{ x: number; y: number }>({ x: 16, y: 80 });
+
+  const {
+    profile,
+    currentProfile,
+    performanceStats,
+    autoOptimize,
     setCurrentProfile,
     setAutoOptimize,
     optimizeMemory,
     isLowPerformance,
-    isHighPerformance
-  } = usePerformanceManager()
+    isHighPerformance,
+  } = usePerformanceManager();
 
   // Update performance history
   useEffect(() => {
     const interval = setInterval(() => {
-      setMemoryHistory(prev => {
-        const newHistory = [...prev, performanceStats.memoryUsage].slice(-20)
-        return newHistory
-      })
+      setMemoryHistory((prev) => {
+        const newHistory = [...prev, performanceStats.memoryUsage].slice(-20);
+        return newHistory;
+      });
 
-      setFpsHistory(prev => {
-        const newHistory = [...prev, performanceStats.fps].slice(-20)
-        return newHistory
-      })
-    }, 1000)
+      setFpsHistory((prev) => {
+        const newHistory = [...prev, performanceStats.fps].slice(-20);
+        return newHistory;
+      });
+    }, 1000);
 
     const onKey = (e: KeyboardEvent) => {
-      const cmd = e.ctrlKey || e.metaKey
-      if (cmd && e.key.toLowerCase() === 'f') {
-        e.preventDefault()
-        setBubble((b) => !b)
+      const cmd = e.ctrlKey || e.metaKey;
+      if (cmd && e.key.toLowerCase() === "f") {
+        e.preventDefault();
+        setBubble((b) => !b);
       }
-    }
-    window.addEventListener('keydown', onKey)
+    };
+    window.addEventListener("keydown", onKey);
 
     return () => {
-      clearInterval(interval)
-      window.removeEventListener('keydown', onKey)
-    }
-  }, [performanceStats])
+      clearInterval(interval);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [performanceStats]);
 
   const getProfileColor = (profileName: string) => {
     switch (profileName) {
-      case 'ultra': return 'text-green-400 bg-green-500/20'
-      case 'high': return 'text-blue-400 bg-blue-500/20'
-      case 'medium': return 'text-yellow-400 bg-yellow-500/20'
-      case 'low': return 'text-orange-400 bg-orange-500/20'
-      case 'potato': return 'text-red-400 bg-red-500/20'
-      default: return 'text-gray-400 bg-gray-500/20'
+      case "ultra":
+        return "text-green-400 bg-green-500/20";
+      case "high":
+        return "text-blue-400 bg-blue-500/20";
+      case "medium":
+        return "text-yellow-400 bg-yellow-500/20";
+      case "low":
+        return "text-orange-400 bg-orange-500/20";
+      case "potato":
+        return "text-red-400 bg-red-500/20";
+      default:
+        return "text-gray-400 bg-gray-500/20";
     }
-  }
+  };
 
   const formatMemory = (bytes: number) => {
-    if (bytes === 0) return '0 B'
-    const k = 1024
-    const sizes = ['B', 'KB', 'MB', 'GB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i]
-  }
+    if (bytes === 0) return "0 B";
+    const k = 1024;
+    const sizes = ["B", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+  };
 
   return (
     <motion.div
-      className={cn(
-        "fixed z-50",
-        className
-      )}
+      className={cn("fixed z-50", className)}
       style={{ left: pos.x, top: pos.y }}
       drag
       dragMomentum={false}
       dragElastic={0.05}
       onDragEnd={(_, info) => {
-        const x = Math.max(8, Math.min((window.innerWidth - 80), pos.x + info.offset.x))
-        const y = Math.max(8, Math.min((window.innerHeight - 48), pos.y + info.offset.y))
-        setPos({ x, y })
+        const x = Math.max(
+          8,
+          Math.min(window.innerWidth - 80, pos.x + info.offset.x),
+        );
+        const y = Math.max(
+          8,
+          Math.min(window.innerHeight - 48, pos.y + info.offset.y),
+        );
+        setPos({ x, y });
       }}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -117,23 +126,30 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
           onClick={() => setIsExpanded(true)}
           className={cn(
             "apple-control-panel p-3 text-white/80 hover:text-white transition-all duration-200",
-            "flex items-center gap-2"
+            "flex items-center gap-2",
           )}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <div className={cn(
-            "w-2 h-2 rounded-full",
-            performanceStats.fps > 50 ? "bg-green-400" :
-            performanceStats.fps > 30 ? "bg-yellow-400" : "bg-red-400"
-          )} />
+          <div
+            className={cn(
+              "w-2 h-2 rounded-full",
+              performanceStats.fps > 50
+                ? "bg-green-400"
+                : performanceStats.fps > 30
+                  ? "bg-yellow-400"
+                  : "bg-red-400",
+            )}
+          />
           <span className="text-sm font-medium">
             {performanceStats.fps} FPS
           </span>
-          <div className={cn(
-            "px-2 py-1 rounded-lg text-xs font-medium",
-            getProfileColor(currentProfile)
-          )}>
+          <div
+            className={cn(
+              "px-2 py-1 rounded-lg text-xs font-medium",
+              getProfileColor(currentProfile),
+            )}
+          >
             {currentProfile.toUpperCase()}
           </div>
         </motion.button>
@@ -203,9 +219,7 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
                   {performanceStats.batteryLevel}%
                 </div>
                 {performanceStats.isLowPowerMode && (
-                  <div className="text-xs text-orange-400">
-                    Low Power Mode
-                  </div>
+                  <div className="text-xs text-orange-400">Low Power Mode</div>
                 )}
               </div>
 
@@ -214,14 +228,20 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
                   <Zap className="w-4 h-4 text-yellow-400" />
                   <span className="text-white/80 text-sm">Profile</span>
                 </div>
-                <div className={cn(
-                  "text-sm font-bold",
-                  currentProfile === 'ultra' ? 'text-green-400' :
-                  currentProfile === 'high' ? 'text-blue-400' :
-                  currentProfile === 'medium' ? 'text-yellow-400' :
-                  currentProfile === 'low' ? 'text-orange-400' :
-                  'text-red-400'
-                )}>
+                <div
+                  className={cn(
+                    "text-sm font-bold",
+                    currentProfile === "ultra"
+                      ? "text-green-400"
+                      : currentProfile === "high"
+                        ? "text-blue-400"
+                        : currentProfile === "medium"
+                          ? "text-yellow-400"
+                          : currentProfile === "low"
+                            ? "text-orange-400"
+                            : "text-red-400",
+                  )}
+                >
                   {currentProfile.toUpperCase()}
                 </div>
               </div>
@@ -237,34 +257,38 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
                     onClick={() => setAutoOptimize(!autoOptimize)}
                     className={cn(
                       "w-8 h-4 rounded-full transition-colors relative",
-                      autoOptimize ? "bg-blue-500" : "bg-gray-600"
+                      autoOptimize ? "bg-blue-500" : "bg-gray-600",
                     )}
                   >
-                    <div className={cn(
-                      "w-3 h-3 bg-white rounded-full absolute top-0.5 transition-transform",
-                      autoOptimize ? "translate-x-4" : "translate-x-0.5"
-                    )} />
+                    <div
+                      className={cn(
+                        "w-3 h-3 bg-white rounded-full absolute top-0.5 transition-transform",
+                        autoOptimize ? "translate-x-4" : "translate-x-0.5",
+                      )}
+                    />
                   </button>
                 </div>
               </div>
 
               <div className="flex gap-1">
-                {(['potato', 'low', 'medium', 'high', 'ultra'] as const).map((profileName) => (
-                  <button
-                    key={profileName}
-                    onClick={() => setCurrentProfile(profileName)}
-                    disabled={autoOptimize}
-                    className={cn(
-                      "flex-1 px-2 py-1 rounded-lg text-xs font-medium transition-all",
-                      currentProfile === profileName 
-                        ? getProfileColor(profileName)
-                        : "text-white/60 bg-white/10 hover:bg-white/20",
-                      autoOptimize && "opacity-50 cursor-not-allowed"
-                    )}
-                  >
-                    {profileName}
-                  </button>
-                ))}
+                {(["potato", "low", "medium", "high", "ultra"] as const).map(
+                  (profileName) => (
+                    <button
+                      key={profileName}
+                      onClick={() => setCurrentProfile(profileName)}
+                      disabled={autoOptimize}
+                      className={cn(
+                        "flex-1 px-2 py-1 rounded-lg text-xs font-medium transition-all",
+                        currentProfile === profileName
+                          ? getProfileColor(profileName)
+                          : "text-white/60 bg-white/10 hover:bg-white/20",
+                        autoOptimize && "opacity-50 cursor-not-allowed",
+                      )}
+                    >
+                      {profileName}
+                    </button>
+                  ),
+                )}
               </div>
             </div>
 
@@ -273,12 +297,16 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
               <div>
                 <div className="flex justify-between text-sm mb-1">
                   <span className="text-white/80">Animation Quality</span>
-                  <span className="text-white/60">{profile.animationDuration}ms</span>
+                  <span className="text-white/60">
+                    {profile.animationDuration}ms
+                  </span>
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-1.5">
-                  <div 
+                  <div
                     className="bg-blue-400 h-1.5 rounded-full transition-all duration-300"
-                    style={{ width: `${Math.min((profile.animationDuration / 1000) * 100, 100)}%` }}
+                    style={{
+                      width: `${Math.min((profile.animationDuration / 1000) * 100, 100)}%`,
+                    }}
                   />
                 </div>
               </div>
@@ -289,9 +317,11 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
                   <span className="text-white/60">{profile.particleCount}</span>
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-1.5">
-                  <div 
+                  <div
                     className="bg-purple-400 h-1.5 rounded-full transition-all duration-300"
-                    style={{ width: `${Math.min((profile.particleCount / 100) * 100, 100)}%` }}
+                    style={{
+                      width: `${Math.min((profile.particleCount / 100) * 100, 100)}%`,
+                    }}
                   />
                 </div>
               </div>
@@ -300,13 +330,15 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
                 <div className="flex justify-between text-sm mb-1">
                   <span className="text-white/80">Effects Quality</span>
                   <span className="text-white/60">
-                    {profile.enableAdvancedEffects ? 'High' : 'Basic'}
+                    {profile.enableAdvancedEffects ? "High" : "Basic"}
                   </span>
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-1.5">
-                  <div 
+                  <div
                     className="bg-green-400 h-1.5 rounded-full transition-all duration-300"
-                    style={{ width: profile.enableAdvancedEffects ? '100%' : '30%' }}
+                    style={{
+                      width: profile.enableAdvancedEffects ? "100%" : "30%",
+                    }}
                   />
                 </div>
               </div>
@@ -321,10 +353,13 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
               >
                 <div className="flex items-center gap-2 mb-1">
                   <Zap className="w-4 h-4 text-orange-400" />
-                  <span className="text-orange-400 text-sm font-medium">Performance Tip</span>
+                  <span className="text-orange-400 text-sm font-medium">
+                    Performance Tip
+                  </span>
                 </div>
                 <p className="text-white/80 text-xs">
-                  Running in low performance mode. Consider closing unused apps or switching to a more powerful device for better experience.
+                  Running in low performance mode. Consider closing unused apps
+                  or switching to a more powerful device for better experience.
                 </p>
               </motion.div>
             )}
@@ -338,7 +373,9 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
                 Optimize Memory
               </button>
               <button
-                onClick={() => window.dispatchEvent(new CustomEvent('nyx:performance-reset'))}
+                onClick={() =>
+                  window.dispatchEvent(new CustomEvent("nyx:performance-reset"))
+                }
                 className="flex-1 apple-button py-2 text-sm text-white/80 hover:text-white transition-colors"
               >
                 Reset Stats
@@ -355,5 +392,5 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
         )}
       </AnimatePresence>
     </motion.div>
-  )
-}
+  );
+};
