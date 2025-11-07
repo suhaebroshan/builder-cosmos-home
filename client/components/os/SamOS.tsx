@@ -313,8 +313,8 @@ export const NyxOS: React.FC = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: profile.useReducedMotion ? 0.3 : 1 }}
       >
-        {/* Enhanced Live Wallpaper System with Theme-based Dynamic Effects */}
-        <EnhancedLiveWallpaper />
+        {/* Wallpaper */}
+        <SpaceWallpaper />
 
         {/* Emotional Overlay */}
         <div
