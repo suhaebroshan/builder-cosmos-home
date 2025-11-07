@@ -540,17 +540,14 @@ export const NyxTaskbar: React.FC = () => {
           >
             {/* Search Section */}
             <div className="mb-4">
-              <button
+              <motion.button
                 className="w-full p-2.5 bg-white/8 hover:bg-white/12 border border-white/15 rounded-lg flex items-center gap-2 transition-all group"
                 onClick={() => {
-                  const event = new KeyboardEvent('keydown', {
-                    key: 'k',
-                    ctrlKey: true,
-                    bubbles: true
-                  })
-                  window.dispatchEvent(event)
+                  window.dispatchEvent(new CustomEvent('nyx:toggle-command-palette'))
                   setIsMoonMenuOpen(false)
                 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 title="Search apps, files, web..."
               >
                 <Search className="w-4 h-4 text-white/60 group-hover:text-white/80 transition-colors" />
@@ -560,7 +557,7 @@ export const NyxTaskbar: React.FC = () => {
                 <kbd className="ml-auto text-xs text-white/40 px-2 py-1 rounded bg-white/5 border border-white/10 group-hover:border-white/15">
                   ⌘K
                 </kbd>
-              </button>
+              </motion.button>
             </div>
 
             {/* Quick Actions */}
