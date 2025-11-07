@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useWindowStore } from '@/store/window-store'
 import { useSamStore } from '@/store/sam-store'
 import { useDesktopStore } from '@/store/desktop-store'
+import { useThemeStore } from '@/store/theme-store'
 import {
   Menu,
   Wifi,
