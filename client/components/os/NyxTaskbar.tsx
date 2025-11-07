@@ -34,7 +34,8 @@ import {
   Gamepad2,
   HelpCircle,
   Music,
-  LogOut
+  LogOut,
+  Search
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
