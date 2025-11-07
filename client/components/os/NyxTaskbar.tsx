@@ -215,6 +215,7 @@ export const NyxTaskbar: React.FC = () => {
           position: { x: 100, y: 100 },
           size: { width: 900, height: 700 }
         })
+        addMessage('⚙️ Opening Settings', 'sam', 'focused')
       }
     },
     { icon: Monitor, label: 'Display', action: async () => {
@@ -226,6 +227,7 @@ export const NyxTaskbar: React.FC = () => {
         position: { x: 100, y: 100 },
         size: { width: 900, height: 700 }
       })
+      addMessage('🖥️ Opening Display Settings', 'sam', 'focused')
     }},
     { icon: systemStats.wifi ? Wifi : WifiOff, label: systemStats.wifi ? 'Connected' : 'Offline', action: () => {
       // Toggle network status simulation
