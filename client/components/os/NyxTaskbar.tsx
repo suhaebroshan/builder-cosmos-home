@@ -69,6 +69,18 @@ export const NyxTaskbar: React.FC = () => {
     return () => clearInterval(interval)
   }, [])
 
+  // Apply theme changes to document
+  useEffect(() => {
+    const root = document.documentElement
+    if (themeSettings.mode === 'dark') {
+      root.classList.remove('light')
+      root.classList.add('dark')
+    } else {
+      root.classList.remove('dark')
+      root.classList.add('light')
+    }
+  }, [themeSettings.mode])
+
   // Initialize real system information
   useEffect(() => {
     // Battery API
