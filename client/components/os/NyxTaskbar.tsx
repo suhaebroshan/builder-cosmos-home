@@ -230,10 +230,12 @@ export const NyxTaskbar: React.FC = () => {
     { icon: systemStats.wifi ? Wifi : WifiOff, label: systemStats.wifi ? 'Connected' : 'Offline', action: () => {
       // Toggle network status simulation
       setSystemStats(prev => ({ ...prev, wifi: !prev.wifi }))
+      addMessage(systemStats.wifi ? 'Network disconnected' : 'Network connected', 'sam', 'neutral')
     }},
     { icon: systemStats.bluetooth ? Bluetooth : BluetoothOff, label: systemStats.bluetooth ? 'Bluetooth On' : 'Bluetooth Off', action: () => {
       // Toggle bluetooth status simulation
       setSystemStats(prev => ({ ...prev, bluetooth: !prev.bluetooth }))
+      addMessage(systemStats.bluetooth ? 'Bluetooth disabled' : 'Bluetooth enabled', 'sam', 'neutral')
     }},
     { icon: LogOut, label: 'Shutdown', action: () => {
       if (confirm('Shutdown Nyx OS?')) {
