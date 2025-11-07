@@ -586,12 +586,15 @@ export const NyxTaskbar: React.FC = () => {
 
             {/* Theme Toggle */}
             <div className="border-t border-white/10 pt-3 mt-3">
-              <button
+              <motion.button
                 className="w-full p-2.5 bg-white/5 hover:bg-white/10 rounded-lg flex items-center gap-3 transition-all text-left"
                 onClick={() => {
-                  setThemeMode(themeSettings.mode === 'dark' ? 'light' : 'dark')
+                  const newMode = themeSettings.mode === 'dark' ? 'light' : 'dark'
+                  setThemeMode(newMode)
+                  addMessage(`${newMode === 'dark' ? '🌙' : '☀️'} Switched to ${newMode} mode`, 'sam', 'happy')
                   setIsMoonMenuOpen(false)
                 }}
+                whileHover={{ x: 4 }}
               >
                 {themeSettings.mode === 'dark' ? (
                   <>
@@ -604,7 +607,7 @@ export const NyxTaskbar: React.FC = () => {
                     <span className="text-xs text-white/80">Dark Mode</span>
                   </>
                 )}
-              </button>
+              </motion.button>
             </div>
 
             {/* Customize Desktop */}
