@@ -203,11 +203,43 @@ export const NyxTaskbar: React.FC = () => {
   }
 
   const quickActions = [
-    { icon: Settings, label: 'Settings', action: () => window.dispatchEvent(new CustomEvent('nyx:open-settings')) },
-    { icon: Monitor, label: 'Display', action: () => {} },
-    { icon: systemStats.wifi ? Wifi : WifiOff, label: 'Network', action: () => {} },
-    { icon: systemStats.bluetooth ? Bluetooth : BluetoothOff, label: 'Bluetooth', action: () => {} },
-    { icon: LogOut, label: 'Shutdown', action: () => window.dispatchEvent(new CustomEvent('nyx:shutdown')) },
+    {
+      icon: Settings,
+      label: 'Settings',
+      action: async () => {
+        const { Settings: SettingsApp } = await import('@/components/apps/Settings')
+        openWindow({
+          appId: 'settings',
+          title: 'Settings',
+          component: SettingsApp,
+          position: { x: 100, y: 100 },
+          size: { width: 900, height: 700 }
+        })
+      }
+    },
+    { icon: Monitor, label: 'Display', action: async () => {
+      const { Settings: SettingsApp } = await import('@/components/apps/Settings')
+      openWindow({
+        appId: 'settings-display',
+        title: 'Display Settings',
+        component: SettingsApp,
+        position: { x: 100, y: 100 },
+        size: { width: 900, height: 700 }
+      })
+    }},
+    { icon: systemStats.wifi ? Wifi : WifiOff, label: systemStats.wifi ? 'Connected' : 'Offline', action: () => {
+      // Toggle network status simulation
+      setSystemStats(prev => ({ ...prev, wifi: !prev.wifi }))
+    }},
+    { icon: systemStats.bluetooth ? Bluetooth : BluetoothOff, label: systemStats.bluetooth ? 'Bluetooth On' : 'Bluetooth Off', action: () => {
+      // Toggle bluetooth status simulation
+      setSystemStats(prev => ({ ...prev, bluetooth: !prev.bluetooth }))
+    }},
+    { icon: LogOut, label: 'Shutdown', action: () => {
+      if (confirm('Shutdown Nyx OS?')) {
+        window.location.reload()
+      }
+    }},
   ]
 
   const frequentApps = [
