@@ -370,22 +370,46 @@ export const NyxTaskbar: React.FC = () => {
 
       {/* Main Taskbar - Cleaner, Mac-inspired layout */}
       <motion.div
-        className="h-14 liquid-glass-dark border-t border-purple-500/20 flex items-center justify-between px-6 liquid-reflection gap-4"
+        className="h-14 liquid-glass-dark border-t border-purple-500/20 flex items-center justify-between px-4 liquid-reflection gap-3"
         style={{ boxShadow: getEmotionGlow() }}
         initial={{ y: 56 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, delay: 0.5 }}
       >
-        {/* Left Section: App Launcher */}
-        <div className="flex items-center gap-3">
+        {/* Left Section: App Launcher + Search */}
+        <div className="flex items-center gap-2">
           <motion.button
             className="h-9 w-9 rounded-lg bg-gradient-to-br from-purple-600 to-violet-700 hover:from-purple-500 hover:to-violet-600 flex items-center justify-center transition-all duration-200 flex-shrink-0"
             onClick={() => setIsLauncherOpen(!isLauncherOpen)}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.92 }}
-            title="App Launcher"
+            title="App Launcher (Nyx)"
           >
             <Maximize2 className="w-4 h-4 text-white" />
+          </motion.button>
+
+          {/* Universal Search */}
+          <motion.button
+            className="h-9 px-3 rounded-lg bg-white/8 hover:bg-white/12 border border-white/10 flex items-center gap-2 transition-all duration-200 flex-shrink-0 group"
+            onClick={() => {
+              const event = new KeyboardEvent('keydown', {
+                key: 'k',
+                ctrlKey: true,
+                bubbles: true
+              })
+              window.dispatchEvent(event)
+            }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            title="Universal Search (Ctrl+K)"
+          >
+            <Search className="w-3.5 h-3.5 text-white/60 group-hover:text-white/80 transition-colors" />
+            <span className="text-xs text-white/50 group-hover:text-white/70 transition-colors">
+              Search
+            </span>
+            <kbd className="hidden sm:inline text-xs text-white/40 ml-1 px-1.5 py-0.5 rounded bg-white/5 border border-white/10">
+              ⌘K
+            </kbd>
           </motion.button>
         </div>
 
