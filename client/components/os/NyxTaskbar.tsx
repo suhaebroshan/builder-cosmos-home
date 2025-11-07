@@ -42,7 +42,7 @@ import { cn } from '@/lib/utils'
 
 export const NyxTaskbar: React.FC = () => {
   const { windows, focusedWindowId, minimizeWindow, focusWindow, openWindow } = useWindowStore()
-  const { currentEmotion, emotionIntensity } = useSamStore()
+  const { currentEmotion, emotionIntensity, addMessage } = useSamStore()
   const { setEditMode } = useDesktopStore()
   const { setThemeMode, settings: themeSettings } = useThemeStore()
 
