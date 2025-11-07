@@ -507,3 +507,13 @@ input, textarea, select {
     --frame-rate-target: 30;
   }
 }
+
+/* Utility classes */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
