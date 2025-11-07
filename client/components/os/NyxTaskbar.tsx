@@ -367,38 +367,41 @@ export const NyxTaskbar: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Main Taskbar */}
+      {/* Main Taskbar - Cleaner, Mac-inspired layout */}
       <motion.div
-        className="h-12 liquid-glass-dark border-t border-purple-500/20 flex items-center px-2 liquid-reflection"
+        className="h-14 liquid-glass-dark border-t border-purple-500/20 flex items-center justify-between px-6 liquid-reflection gap-4"
         style={{ boxShadow: getEmotionGlow() }}
-        initial={{ y: 48 }}
+        initial={{ y: 56 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, delay: 0.5 }}
       >
-        {/* Nyx Logo / Start Button */}
-        <motion.button
-          className="h-10 w-10 rounded-lg bg-gradient-to-br from-purple-600 to-violet-700 hover:from-purple-500 hover:to-violet-600 flex items-center justify-center transition-all duration-200 mr-2"
-          onClick={() => setIsLauncherOpen(!isLauncherOpen)}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Menu className="w-5 h-5 text-white" />
-        </motion.button>
+        {/* Left Section: App Launcher */}
+        <div className="flex items-center gap-3">
+          <motion.button
+            className="h-9 w-9 rounded-lg bg-gradient-to-br from-purple-600 to-violet-700 hover:from-purple-500 hover:to-violet-600 flex items-center justify-center transition-all duration-200 flex-shrink-0"
+            onClick={() => setIsLauncherOpen(!isLauncherOpen)}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.92 }}
+            title="App Launcher"
+          >
+            <Maximize2 className="w-4 h-4 text-white" />
+          </motion.button>
+        </div>
 
-        {/* Window Tasks */}
-        <div className="flex items-center gap-1 flex-1 mx-2">
-          {windows.map((window) => {
+        {/* Center Section: Window Tasks */}
+        <div className="flex items-center gap-2 flex-1 overflow-x-auto hide-scrollbar">
+          {windows.slice(0, 8).map((window) => {
             const isActive = focusedWindowId === window.id
             const isMinimized = window.isMinimized
-            
+
             return (
               <motion.button
                 key={window.id}
                 className={cn(
-                  "h-8 px-3 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-2 max-w-48",
-                  isActive 
-                    ? "bg-purple-600/30 text-purple-200 border border-purple-400/30" 
-                    : "bg-white/5 text-white/70 hover:bg-white/10 border border-transparent",
+                  "h-8 px-3 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-2 flex-shrink-0 whitespace-nowrap",
+                  isActive
+                    ? "bg-purple-600/40 text-purple-100 border border-purple-400/40"
+                    : "bg-white/8 text-white/70 hover:bg-white/12 border border-white/10",
                   isMinimized && "opacity-60"
                 )}
                 onClick={() => {
@@ -412,56 +415,52 @@ export const NyxTaskbar: React.FC = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
               >
-                <div className="truncate">{window.title}</div>
+                <div className="truncate max-w-32">{window.title}</div>
                 {isMinimized && <Minimize2 className="w-3 h-3 flex-shrink-0" />}
               </motion.button>
             )
           })}
+          {windows.length > 8 && (
+            <div className="text-xs text-white/50 px-2">+{windows.length - 8}</div>
+          )}
         </div>
 
-        {/* System Tray */}
-        <div className="flex items-center gap-1">
-          {/* Connectivity Icons */}
-          <div className="flex items-center gap-1 px-2">
+        {/* Right Section: System Status */}
+        <div className="flex items-center gap-3 flex-shrink-0">
+          {/* Compact System Icons */}
+          <div className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-lg border border-white/10">
             {systemStats.wifi ? (
-              <Wifi className="w-4 h-4 text-green-400" title="Network: Connected" />
+              <Wifi className="w-3.5 h-3.5 text-green-400" title="Connected" />
             ) : (
-              <WifiOff className="w-4 h-4 text-red-400" title="Network: Offline" />
+              <WifiOff className="w-3.5 h-3.5 text-red-400" title="Offline" />
             )}
 
-            {systemStats.bluetooth ? (
-              <Bluetooth className="w-4 h-4 text-blue-400" title="Bluetooth: Available" />
-            ) : (
-              <BluetoothOff className="w-4 h-4 text-gray-500" title="Bluetooth: Unavailable" />
-            )}
-            
             {systemStats.volume > 0 ? (
-              <Volume2 className="w-4 h-4 text-white/70" title={`Volume: ${Math.round(systemStats.volume * 100)}%`} />
+              <Volume2 className="w-3.5 h-3.5 text-white/70" />
             ) : (
-              <VolumeX className="w-4 h-4 text-red-400" title="Volume: Muted" />
+              <VolumeX className="w-3.5 h-3.5 text-red-400" />
             )}
-          </div>
 
-          {/* Battery */}
-          <div className="flex items-center gap-1 px-2" title={`Battery: ${Math.round(systemStats.batteryLevel * 100)}%${systemStats.batteryCharging ? ' (Charging)' : ''}`}>
-            {React.createElement(getBatteryIcon(), { className: cn('w-4 h-4', getBatteryColor()) })}
-            <span className="text-xs text-white/70">
+            <div className="w-px h-4 bg-white/10" />
+
+            <span className="text-xs text-white/70 font-medium">
               {Math.round(systemStats.batteryLevel * 100)}%
-              {systemStats.batteryCharging && ' ⚡'}
             </span>
+            {React.createElement(getBatteryIcon(), { className: cn('w-3.5 h-3.5', getBatteryColor()) })}
           </div>
 
           {/* Notifications */}
           <motion.button
             className="relative p-2 hover:bg-white/10 rounded-lg transition-colors"
             onClick={() => setIsNotificationOpen(!isNotificationOpen)}
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.92 }}
           >
             {systemStats.notifications > 0 ? (
               <>
                 <Bell className="w-4 h-4 text-white/70" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                  {systemStats.notifications}
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
+                  {Math.min(systemStats.notifications, 9)}
                 </span>
               </>
             ) : (
@@ -469,17 +468,14 @@ export const NyxTaskbar: React.FC = () => {
             )}
           </motion.button>
 
-          {/* Date & Time */}
+          {/* Time Display */}
           <button
-            className="text-right px-3 border-l border-white/10 ml-2 hover:bg-white/10 rounded transition-colors"
+            className="text-right px-3 py-2 hover:bg-white/10 rounded-lg transition-colors"
             onClick={() => setIsNotificationOpen(!isNotificationOpen)}
-            title="Click for system information"
+            title="System Information"
           >
-            <div className="text-xs text-white/90 font-medium leading-tight">
+            <div className="text-xs text-white/90 font-medium">
               {formatTime(currentTime)}
-            </div>
-            <div className="text-xs text-white/60 leading-tight">
-              {formatDate(currentTime)}
             </div>
           </button>
         </div>
