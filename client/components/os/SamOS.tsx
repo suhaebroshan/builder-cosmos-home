@@ -324,44 +324,49 @@ export const NyxOS: React.FC = () => {
           }}
         />
 
-        {/* User Info & Theme Toggle - Hidden on phone and tablet */}
+        {/* Unified Header - User Info & Theme Toggle */}
         {actualDeviceType === 'desktop' && (
           <motion.div
-            className="absolute top-4 left-4 flex items-center gap-3 z-30"
+            className="absolute top-4 left-4 z-30"
             initial={{ opacity: 0, x: profile.useReducedMotion ? -10 : -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: profile.useReducedMotion ? 0.1 : 0.2, duration: profile.animationDuration / 1000 }}
           >
-          <div className={cn(
-            "backdrop-blur-xl rounded-2xl px-4 py-2 shadow-lg flex items-center gap-3",
-            themeSettings.mode === 'dark'
-              ? "bg-black/40 border border-purple-500/30"
-              : "bg-white/40 border border-blue-300/40"
-          )}>
-            <div className="text-lg">{currentUser?.avatar}</div>
-            <div>
-              <div className={cn(
-                "text-sm font-medium",
-                themeSettings.mode === 'dark' ? "text-white" : "text-gray-800"
-              )}>{currentUser?.displayName}</div>
-              <div className={cn(
-                "text-xs",
-                themeSettings.mode === 'dark' ? "text-purple-300/70" : "text-blue-600/70"
-              )}>@{currentUser?.username}</div>
-            </div>
-          </div>
-
-          <button
-            onClick={() => setThemeMode(themeSettings.mode === 'dark' ? 'light' : 'dark')}
-            className={cn(
-              "backdrop-blur-xl rounded-xl p-3 transition-all shadow-lg hover:scale-105",
+            <div className={cn(
+              "backdrop-blur-xl rounded-2xl px-4 py-2.5 shadow-lg flex items-center gap-3 border",
               themeSettings.mode === 'dark'
-                ? "bg-black/40 border border-purple-500/30 hover:bg-black/50"
-                : "bg-white/40 border border-blue-300/40 hover:bg-white/50"
-            )}
-          >
-            {themeSettings.mode === 'dark' ? '☀️' : '🌙'}
-          </button>
+                ? "bg-black/35 border-purple-500/30"
+                : "bg-white/35 border-blue-300/40"
+            )}>
+              <div className="text-lg">{currentUser?.avatar}</div>
+              <div className="flex flex-col">
+                <div className={cn(
+                  "text-sm font-semibold",
+                  themeSettings.mode === 'dark' ? "text-white" : "text-gray-900"
+                )}>{currentUser?.displayName}</div>
+                <div className={cn(
+                  "text-xs",
+                  themeSettings.mode === 'dark' ? "text-purple-300/60" : "text-blue-700/60"
+                )}>@{currentUser?.username}</div>
+              </div>
+
+              <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/20 to-transparent mx-1" />
+
+              <motion.button
+                onClick={() => setThemeMode(themeSettings.mode === 'dark' ? 'light' : 'dark')}
+                className={cn(
+                  "p-2 rounded-lg transition-all duration-200 hover:scale-110",
+                  themeSettings.mode === 'dark'
+                    ? "hover:bg-white/10"
+                    : "hover:bg-white/20"
+                )}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                title={`Switch to ${themeSettings.mode === 'dark' ? 'Light' : 'Dark'} Theme`}
+              >
+                {themeSettings.mode === 'dark' ? '☀️' : '🌙'}
+              </motion.button>
+            </div>
           </motion.div>
         )}
 
