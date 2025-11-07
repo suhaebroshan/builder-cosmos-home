@@ -612,15 +612,17 @@ export const NyxTaskbar: React.FC = () => {
 
             {/* Customize Desktop */}
             <div className="mt-3 pt-3 border-t border-white/10">
-              <button
+              <motion.button
                 className="w-full p-2.5 bg-white/5 hover:bg-white/10 rounded-lg text-left text-xs text-white/80 transition-all"
                 onClick={() => {
                   setEditMode(true)
+                  addMessage('✏️ Desktop customization enabled', 'sam', 'focused')
                   setIsMoonMenuOpen(false)
                 }}
+                whileHover={{ x: 4 }}
               >
                 Customize Desktop
-              </button>
+              </motion.button>
             </div>
           </motion.div>
         )}
