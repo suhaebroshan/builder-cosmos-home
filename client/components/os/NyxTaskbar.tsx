@@ -43,9 +43,10 @@ export const NyxTaskbar: React.FC = () => {
   const { windows, focusedWindowId, minimizeWindow, focusWindow, openWindow } = useWindowStore()
   const { currentEmotion, emotionIntensity } = useSamStore()
   const { setEditMode } = useDesktopStore()
-  
+  const { setThemeMode, settings: themeSettings } = useWindowStore()
+
   const [currentTime, setCurrentTime] = useState(new Date())
-  const [isLauncherOpen, setIsLauncherOpen] = useState(false)
+  const [isMoonMenuOpen, setIsMoonMenuOpen] = useState(false)
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   const [systemStats, setSystemStats] = useState({
     wifi: navigator.onLine,
