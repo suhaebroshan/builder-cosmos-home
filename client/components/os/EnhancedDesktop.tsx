@@ -53,6 +53,7 @@ import {
 import { cn } from '@/lib/utils'
 import { DesktopIcon } from './DesktopIcon'
 import { CommandPalette } from './CommandPalette'
+import { CircularDesktop } from './CircularDesktop'
 
 export const EnhancedDesktop: React.FC = () => {
   const { openWindow, windows, minimizeWindow, focusWindow, getWindowsByApp } = useWindowStore()
