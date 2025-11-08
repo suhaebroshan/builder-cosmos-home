@@ -171,10 +171,11 @@ export const CircularDesktop: React.FC = () => {
                 onDoubleClick={() => handleIconDoubleClick(icon.appId)}
                 className={cn(
                   'relative rounded-full flex items-center justify-center transition-all duration-200',
-                  'glass-purple hover:shadow-purple-500/60',
-                  'hover:scale-110 active:scale-95',
+                  'glass-purple',
+                  'hover:shadow-purple-500/60 hover:scale-110 active:scale-92',
                   'group cursor-pointer',
-                  isSelected && 'ring-2 ring-purple-400 shadow-lg shadow-purple-500/40'
+                  'backdrop-blur-xl border border-purple-400/40',
+                  isSelected && 'ring-2 ring-purple-400 shadow-xl shadow-purple-500/50'
                 )}
                 style={{
                   width: iconSize,
@@ -182,13 +183,13 @@ export const CircularDesktop: React.FC = () => {
                 }}
                 whileHover={{ scale: 1.12 }}
                 whileTap={{ scale: 0.92 }}
-                title={`${icon.name} - Double-click to select`}
+                title={`${icon.name} - Click to open, double-click to select`}
               >
                 {/* Icon content */}
-                <div className="relative z-10 flex items-center justify-center">
+                <div className="relative z-20 flex items-center justify-center pointer-events-none">
                   <Icon
-                    className="text-white/95 group-hover:text-white transition-colors"
-                    size={Math.max(28, iconSize * 0.55)}
+                    className="text-white/95 group-hover:text-white transition-colors duration-200"
+                    size={Math.max(28, iconSize * 0.6)}
                   />
                 </div>
 
@@ -196,7 +197,7 @@ export const CircularDesktop: React.FC = () => {
                 <motion.div
                   className="absolute inset-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                   style={{
-                    background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15), transparent)',
+                    background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.2), transparent)',
                     pointerEvents: 'none',
                   }}
                 />
@@ -206,7 +207,7 @@ export const CircularDesktop: React.FC = () => {
                   <motion.div
                     className="absolute inset-0 rounded-full"
                     style={{
-                      background: 'radial-gradient(circle, rgba(168, 85, 247, 0.3), transparent)',
+                      background: 'radial-gradient(circle, rgba(168, 85, 247, 0.4), transparent)',
                     }}
                     animate={{ opacity: [0.3, 0.6, 0.3] }}
                     transition={{ duration: 2, repeat: Infinity }}
@@ -215,7 +216,7 @@ export const CircularDesktop: React.FC = () => {
 
                 {/* Hover outer ring */}
                 <motion.div
-                  className="absolute inset-0 rounded-full border border-purple-300/0 group-hover:border-purple-300/30 transition-colors duration-200"
+                  className="absolute inset-0 rounded-full border border-purple-300/0 group-hover:border-purple-300/40 transition-colors duration-200"
                   style={{ pointerEvents: 'none' }}
                 />
               </motion.button>
