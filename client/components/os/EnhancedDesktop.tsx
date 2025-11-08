@@ -536,55 +536,12 @@ export const EnhancedDesktop: React.FC = () => {
     <MobileNavigation>
       <div
         {...desktopFocusable.focusableProps}
-        className={cn(
-        "absolute inset-0 select-none focus:outline-none",
-        isPhone ? "p-4 pt-12 pb-16" : isTablet ? "p-6 pt-14 pb-16" : "p-8"
-      )}
-      onClick={handleDesktopClick}
-      onContextMenu={handleDesktopRightClick}
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) {
-          const timeout = setTimeout(() => handleDesktopLongPress(e), 500)
-          setEditModeTimeout(timeout)
-        }
-      }}
-      onMouseUp={() => {
-        if (editModeTimeout) {
-          clearTimeout(editModeTimeout)
-          setEditModeTimeout(null)
-        }
-      }}
-    >
-      {/* Free Icons */}
-      <AnimatePresence>
-        {freeIcons.map((icon, index) => {
-          const isSelected = selectedIcons.includes(icon.id)
-          const isOpen = windows.some(w => w.title === icon.name && !w.isMinimized)
-          const isFocused = focusedIconIndex === index
-
-          return (
-            <DesktopIcon
-              key={icon.id}
-              icon={icon}
-              index={index}
-              isSelected={isSelected}
-              isOpen={isOpen}
-              isEditMode={isEditMode}
-              isFocused={isFocused}
-              onOpen={() => openApp(icon)}
-              onSelect={(multiSelect) => selectIcon(icon.id, multiSelect)}
-              onPositionUpdate={(info) => handleIconDragEnd(icon.id, info)}
-              onDelete={() => handleDeleteIcon(icon.id)}
-              onDuplicate={() => handleDuplicateIcon(icon.id)}
-              onStartEdit={() => {
-                setEditMode(true)
-                setEmotion('focused', 0.8)
-                addMessage("Icon edit mode activated! Customize away, bruv.", 'sam', 'focused')
-              }}
-            />
-          )
-        })}
-      </AnimatePresence>
+        className="absolute inset-0 select-none focus:outline-none"
+        onClick={handleDesktopClick}
+        onContextMenu={handleDesktopRightClick}
+      >
+        {/* Circular Desktop Layout */}
+        <CircularDesktop />
       
       {/* Edit Mode Controls */}
       <AnimatePresence>
