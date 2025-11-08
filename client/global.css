@@ -303,6 +303,52 @@ select {
     transform: var(--gpu-acceleration);
   }
 
+  /* Grayish-Purple Liquid Glass (for app UIs) */
+  .glass-purple {
+    backdrop-filter: blur(calc(var(--blur-intensity) * 1.1)) saturate(240%)
+      brightness(135%);
+    -webkit-backdrop-filter: blur(calc(var(--blur-intensity) * 1.1))
+      saturate(240%) brightness(135%);
+    background: linear-gradient(
+      135deg,
+      rgba(147, 112, 219, 0.12) 0%,
+      rgba(168, 85, 247, 0.1) 25%,
+      rgba(139, 92, 246, 0.08) 50%,
+      rgba(126, 103, 214, 0.09) 75%,
+      rgba(147, 112, 219, 0.08) 100%
+    );
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    box-shadow:
+      0 12px 40px rgba(139, 92, 246, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 0 rgba(139, 92, 246, 0.15),
+      0 4px 16px rgba(0, 0, 0, 0.08);
+    transform: var(--gpu-acceleration);
+  }
+
+  .glass-purple-dark {
+    backdrop-filter: blur(calc(var(--blur-intensity) * 1.2)) saturate(250%)
+      brightness(125%);
+    -webkit-backdrop-filter: blur(calc(var(--blur-intensity) * 1.2))
+      saturate(250%) brightness(125%);
+    background: linear-gradient(
+      145deg,
+      rgba(111, 66, 193, 0.15) 0%,
+      rgba(139, 92, 246, 0.12) 20%,
+      rgba(120, 81, 169, 0.08) 40%,
+      rgba(168, 85, 247, 0.1) 60%,
+      rgba(126, 103, 214, 0.06) 80%,
+      rgba(103, 58, 183, 0.09) 100%
+    );
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.15),
+      inset 0 2px 0 rgba(255, 255, 255, 0.15),
+      inset 0 -1px 0 rgba(139, 92, 246, 0.2),
+      0 8px 32px rgba(139, 92, 246, 0.08);
+    transform: var(--gpu-acceleration);
+  }
+
   /* Light Mode Variants */
   .light .liquid-glass {
     backdrop-filter: blur(calc(var(--blur-intensity) * 0.75)) saturate(200%)
