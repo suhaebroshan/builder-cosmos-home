@@ -330,7 +330,7 @@ export const EnhancedDesktop: React.FC = () => {
         {
           appId: 'file-converter',
           name: 'Converter',
-          icon: ConvertVertical,
+          icon: ArrowRightLeft,
           component: FileConverter,
           defaultSize: { width: 900, height: 700 },
           defaultPosition: { x: 260, y: 80 },
