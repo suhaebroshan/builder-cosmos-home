@@ -56,7 +56,7 @@ import {
   FileCode,
   Presentation,
   BarChart3,
-  ConvertVertical,
+  ArrowRightLeft,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { DesktopIcon } from './DesktopIcon'
