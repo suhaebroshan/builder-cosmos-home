@@ -25,6 +25,10 @@ import { WebBrowser } from '@/components/apps/WebBrowser'
 import { Game2048 } from '@/components/apps/Game2048'
 import { NyxManual } from '@/components/apps/NyxManual'
 import { WindowsMediaPlayer } from '@/components/apps/WindowsMediaPlayer'
+import { DocumentEditor } from '@/components/apps/DocumentEditor'
+import { Presentations } from '@/components/apps/Presentations'
+import { Spreadsheet } from '@/components/apps/Spreadsheet'
+import { FileConverter } from '@/components/apps/FileConverter'
 import { AppErrorBoundary } from '@/components/apps/AppErrorBoundary'
 import {
   MessageCircle,
@@ -48,7 +52,11 @@ import {
   Chrome,
   Grid3x3,
   HelpCircle,
-  Music
+  Music,
+  FileCode,
+  Presentation,
+  BarChart3,
+  ConvertVertical,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { DesktopIcon } from './DesktopIcon'
