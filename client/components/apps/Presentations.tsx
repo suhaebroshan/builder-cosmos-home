@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Plus,
@@ -19,6 +19,7 @@ import {
   Move,
   Maximize2,
 } from 'lucide-react'
+import PptxGenJs from 'pptxgenjs'
 import { cn } from '@/lib/utils'
 
 interface SlideElement {
@@ -35,7 +36,6 @@ interface SlideElement {
   fontFamily?: string
   shape?: 'rectangle' | 'circle' | 'triangle'
   animation?: 'fade' | 'slide' | 'bounce' | 'zoom' | 'rotate' | 'none'
-  transition?: 'fade' | 'push' | 'wipe' | 'none'
   imageUrl?: string
   rotation?: number
 }
@@ -46,7 +46,6 @@ interface Slide {
   bgColor: string
   textColor: string
   elements: SlideElement[]
-  transition: 'fade' | 'push' | 'wipe' | 'none'
 }
 
 const SLIDE_TEMPLATES = [
@@ -57,19 +56,6 @@ const SLIDE_TEMPLATES = [
 
 const FONTS = ['Inter', 'Georgia', 'Courier', 'Comic Sans MS', 'Trebuchet MS']
 const ANIMATIONS = ['none', 'fade', 'slide', 'bounce', 'zoom', 'rotate']
-const TRANSITIONS = ['none', 'fade', 'push', 'wipe']
-
-const getAnimationVariants = (animation: string) => {
-  const variants: Record<string, any> = {
-    'none': { initial: { opacity: 1 }, animate: { opacity: 1 } },
-    'fade': { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.6 } },
-    'slide': { initial: { x: -100, opacity: 0 }, animate: { x: 0, opacity: 1 }, transition: { duration: 0.6 } },
-    'bounce': { initial: { y: 50, opacity: 0 }, animate: { y: 0, opacity: 1 }, transition: { type: 'bounce', stiffness: 300 } },
-    'zoom': { initial: { scale: 0, opacity: 0 }, animate: { scale: 1, opacity: 1 }, transition: { duration: 0.5 } },
-    'rotate': { initial: { rotate: -180, opacity: 0 }, animate: { rotate: 0, opacity: 1 }, transition: { duration: 0.6 } },
-  }
-  return variants[animation] || variants['fade']
-}
 
 export const Presentations: React.FC<{ windowId?: string }> = ({ windowId }) => {
   const [presentations, setPresentations] = useState([
@@ -94,11 +80,9 @@ export const Presentations: React.FC<{ windowId?: string }> = ({ windowId }) => 
               fontSize: 24,
               fontFamily: 'Inter',
               animation: 'slide',
-              transition: 'fade',
               color: '#ffffff'
             }
-          ],
-          transition: 'fade'
+          ]
         }
       ]
     }
@@ -109,6 +93,7 @@ export const Presentations: React.FC<{ windowId?: string }> = ({ windowId }) => 
   const [showTemplates, setShowTemplates] = useState(false)
   const [selectedElement, setSelectedElement] = useState<string | null>(null)
   const [editingElement, setEditingElement] = useState<string | null>(null)
+  const [resizingElement, setResizingElement] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const activePresentation = presentations.find(p => p.id === activePresentationId)
@@ -123,8 +108,7 @@ export const Presentations: React.FC<{ windowId?: string }> = ({ windowId }) => 
       title: `Slide ${activePresentation.slides.length + 1}`,
       bgColor: template.bgColor,
       textColor: template.textColor,
-      elements: [],
-      transition: 'fade'
+      elements: []
     }
 
     setPresentations(prev => prev.map(p =>
@@ -165,8 +149,7 @@ export const Presentations: React.FC<{ windowId?: string }> = ({ windowId }) => 
       fontSize: 16,
       fontFamily: 'Inter',
       shape: 'rectangle',
-      animation: 'fade',
-      transition: 'fade'
+      animation: 'fade'
     }
 
     updateSlide({
@@ -221,36 +204,69 @@ export const Presentations: React.FC<{ windowId?: string }> = ({ windowId }) => 
     }
   }
 
-  const exportPresentation = () => {
-    const htmlContent = activePresentation?.slides.map((slide, i) => `
-      <div style="width: 100%; height: 100vh; background: linear-gradient(135deg, var(--slide-bg)); padding: 60px; display: flex; flex-direction: column; justify-content: center; position: relative;">
-        ${slide.elements.map(el => {
-          if (el.type === 'text') {
-            return `<div style="position: absolute; left: ${el.x}px; top: ${el.y}px; width: ${el.width}px; color: ${el.color}; font-family: ${el.fontFamily}; font-size: ${el.fontSize}px; z-index: ${el.id === selectedElement ? 10 : 1};">${el.content}</div>`
-          }
-          if (el.type === 'shape') {
-            return `<div style="position: absolute; left: ${el.x}px; top: ${el.y}px; width: ${el.width}px; height: ${el.height}px; background: ${el.bgColor}; border-radius: ${el.shape === 'circle' ? '50%' : '0'}; z-index: 1;"></div>`
-          }
-          return ''
-        }).join('')}
-      </div>
-    `).join('')
+  const exportAsPPTX = () => {
+    const prs = new PptxGenJs()
+    prs.defineLayout({ name: 'LAYOUT1', width: 10, height: 5.625 })
+    prs.defaultLayout = 'LAYOUT1'
 
-    const html = `<!DOCTYPE html><html><head><title>${activePresentation?.name}</title><style>* { margin: 0; padding: 0; }</style></head><body>${htmlContent}</body></html>`
+    activePresentation?.slides.forEach(slide => {
+      const pptSlide = prs.addSlide()
 
-    const blob = new Blob([html], { type: 'text/html' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${activePresentation?.name || 'presentation'}.html`
-    a.click()
+      // Add background
+      const bgGradient = slide.bgColor.split(' ')
+      const fromColor = bgGradient[1]?.replace('from-', '')?.replace(/\d+/, 'AA') || '663399'
+      const toColor = bgGradient[3]?.replace('to-', '')?.replace(/\d+/, 'AA') || '6366F1'
+
+      pptSlide.background = { fill: fromColor }
+
+      // Add elements
+      slide.elements.forEach(element => {
+        if (element.type === 'text') {
+          pptSlide.addText(element.content, {
+            x: element.x / 100,
+            y: element.y / 100,
+            w: element.width / 100,
+            h: element.height / 100,
+            fontSize: element.fontSize || 14,
+            fontFace: element.fontFamily || 'Arial',
+            color: element.color?.replace('#', '') || 'FFFFFF',
+            align: 'left'
+          })
+        }
+
+        if (element.type === 'shape') {
+          pptSlide.addShape(
+            element.shape === 'circle' ? 'ellipse' : element.shape === 'rectangle' ? 'rect' : 'rect',
+            {
+              x: element.x / 100,
+              y: element.y / 100,
+              w: element.width / 100,
+              h: element.height / 100,
+              fill: { color: element.bgColor?.replace('#', '') || '6366F1' }
+            }
+          )
+        }
+
+        if (element.type === 'image' && element.imageUrl) {
+          pptSlide.addImage({
+            data: element.imageUrl,
+            x: element.x / 100,
+            y: element.y / 100,
+            w: element.width / 100,
+            h: element.height / 100
+          })
+        }
+      })
+    })
+
+    prs.save({ fileName: `${activePresentation?.name || 'presentation'}.pptx` })
   }
 
   if (!activePresentation || !activeSlide) return null
 
   return (
     <div className="w-full h-full flex bg-gray-900">
-      {/* Left Sidebar - Slides */}
+      {/* Left Sidebar */}
       <motion.div
         className="w-64 glass-purple-dark border-r border-purple-400/20 overflow-y-auto p-4 flex flex-col gap-2"
         initial={{ opacity: 0, x: -20 }}
@@ -303,7 +319,7 @@ export const Presentations: React.FC<{ windowId?: string }> = ({ windowId }) => 
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <div className={`text-xs font-semibold text-white truncate`}>Slide {index + 1}</div>
+              <div className="text-xs font-semibold text-white truncate">Slide {index + 1}</div>
               <div className="text-xs text-white/60">{slide.elements.length} elements</div>
               {activeSlideIndex === index && (
                 <motion.button
@@ -356,11 +372,12 @@ export const Presentations: React.FC<{ windowId?: string }> = ({ windowId }) => 
           </button>
           <div className="w-px h-6 bg-white/20" />
           <button
-            onClick={exportPresentation}
+            onClick={exportAsPPTX}
             className="p-2 hover:bg-white/20 rounded text-white transition-colors"
-            title="Export"
+            title="Export as PPTX"
           >
-            <Download className="w-4 h-4" />
+            <Download className="w-4 h-4 inline mr-1" />
+            <span className="text-xs">PPTX</span>
           </button>
           <button
             onClick={() => setIsPresenting(!isPresenting)}
@@ -386,90 +403,153 @@ export const Presentations: React.FC<{ windowId?: string }> = ({ windowId }) => 
               )}
             >
               <AnimatePresence>
-                {activeSlide.elements.map((element) => {
-                  const animVariants = getAnimationVariants(element.animation || 'fade')
-                  
-                  return (
-                    <motion.div
-                      key={element.id}
-                      {...animVariants}
-                      className={cn(
-                        'absolute cursor-move rounded',
-                        selectedElement === element.id && 'ring-2 ring-yellow-400'
-                      )}
-                      style={{
-                        left: element.x,
-                        top: element.y,
-                        width: element.width,
-                        height: element.height,
-                      }}
-                      onClick={() => setSelectedElement(element.id)}
-                      onDoubleClick={() => setEditingElement(element.id)}
-                      drag
-                      dragMomentum={false}
-                      onDragEnd={(_, info) => {
-                        updateElement(element.id, {
-                          x: Math.max(0, element.x + info.offset.x),
-                          y: Math.max(0, element.y + info.offset.y)
-                        })
-                      }}
-                    >
-                      {element.type === 'text' && (
-                        <div
-                          className="w-full h-full flex items-center justify-center p-2"
-                          style={{
-                            fontSize: element.fontSize,
-                            fontFamily: element.fontFamily,
-                            color: element.color,
-                            transform: `rotate(${element.rotation || 0}deg)`
-                          }}
-                        >
-                          {editingElement === element.id ? (
-                            <input
-                              type="text"
-                              value={element.content}
-                              onChange={(e) => updateElement(element.id, { content: e.target.value })}
-                              onBlur={() => setEditingElement(null)}
-                              className="w-full h-full bg-transparent outline-none text-center"
-                              autoFocus
-                            />
-                          ) : (
-                            element.content
-                          )}
-                        </div>
-                      )}
-                      
-                      {element.type === 'shape' && (
-                        <div
-                          className="w-full h-full"
-                          style={{
-                            backgroundColor: element.bgColor,
-                            borderRadius: element.shape === 'circle' ? '50%' : element.shape === 'triangle' ? '0' : '8px',
-                            transform: `rotate(${element.rotation || 0}deg)`
-                          }}
-                        />
-                      )}
-                      
-                      {element.type === 'image' && (
-                        element.imageUrl ? (
-                          <img
-                            src={element.imageUrl}
-                            alt="Slide element"
-                            className="w-full h-full object-cover rounded"
-                            style={{ transform: `rotate(${element.rotation || 0}deg)` }}
+                {activeSlide.elements.map((element) => (
+                  <motion.div
+                    key={element.id}
+                    className={cn(
+                      'absolute cursor-move rounded group',
+                      selectedElement === element.id && 'ring-2 ring-yellow-400'
+                    )}
+                    style={{
+                      left: element.x,
+                      top: element.y,
+                      width: element.width,
+                      height: element.height,
+                    }}
+                    onClick={() => setSelectedElement(element.id)}
+                    onDoubleClick={() => setEditingElement(element.id)}
+                    drag
+                    dragMomentum={false}
+                    onDragEnd={(_, info) => {
+                      updateElement(element.id, {
+                        x: Math.max(0, element.x + info.offset.x),
+                        y: Math.max(0, element.y + info.offset.y)
+                      })
+                    }}
+                  >
+                    {/* Content */}
+                    {element.type === 'text' && (
+                      <div
+                        className="w-full h-full flex items-center justify-center p-2"
+                        style={{
+                          fontSize: element.fontSize,
+                          fontFamily: element.fontFamily,
+                          color: element.color,
+                        }}
+                      >
+                        {editingElement === element.id ? (
+                          <input
+                            type="text"
+                            value={element.content}
+                            onChange={(e) => updateElement(element.id, { content: e.target.value })}
+                            onBlur={() => setEditingElement(null)}
+                            className="w-full h-full bg-transparent outline-none text-center"
+                            autoFocus
                           />
                         ) : (
-                          <button
-                            onClick={() => fileInputRef.current?.click()}
-                            className="w-full h-full flex items-center justify-center bg-gray-700/50 rounded hover:bg-gray-700"
-                          >
-                            <ImageIcon className="w-6 h-6 text-white/50" />
-                          </button>
-                        )
-                      )}
-                    </motion.div>
-                  )
-                })}
+                          element.content
+                        )}
+                      </div>
+                    )}
+
+                    {element.type === 'shape' && (
+                      <div
+                        className="w-full h-full"
+                        style={{
+                          backgroundColor: element.bgColor,
+                          borderRadius: element.shape === 'circle' ? '50%' : '8px',
+                        }}
+                      />
+                    )}
+
+                    {element.type === 'image' && (
+                      element.imageUrl ? (
+                        <img
+                          src={element.imageUrl}
+                          alt="Slide element"
+                          className="w-full h-full object-cover rounded"
+                        />
+                      ) : (
+                        <button
+                          onClick={() => fileInputRef.current?.click()}
+                          className="w-full h-full flex items-center justify-center bg-gray-700/50 rounded hover:bg-gray-700"
+                        >
+                          <ImageIcon className="w-6 h-6 text-white/50" />
+                        </button>
+                      )
+                    )}
+
+                    {/* Resize Handles */}
+                    {selectedElement === element.id && (
+                      <>
+                        {/* SE Corner (Main resize handle) */}
+                        <motion.div
+                          className="absolute bottom-0 right-0 w-3 h-3 bg-yellow-400 rounded-tl cursor-se-resize"
+                          style={{ transform: 'translate(1.5px, 1.5px)' }}
+                          onMouseDown={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            const startX = e.clientX
+                            const startY = e.clientY
+                            const startWidth = element.width
+                            const startHeight = element.height
+
+                            const handleMouseMove = (moveEvent: MouseEvent) => {
+                              const deltaX = moveEvent.clientX - startX
+                              const deltaY = moveEvent.clientY - startY
+                              updateElement(element.id, {
+                                width: Math.max(50, startWidth + deltaX),
+                                height: Math.max(50, startHeight + deltaY)
+                              })
+                            }
+
+                            const handleMouseUp = () => {
+                              document.removeEventListener('mousemove', handleMouseMove)
+                              document.removeEventListener('mouseup', handleMouseUp)
+                            }
+
+                            document.addEventListener('mousemove', handleMouseMove)
+                            document.addEventListener('mouseup', handleMouseUp)
+                          }}
+                        />
+                        {/* NW Corner */}
+                        <motion.div
+                          className="absolute top-0 left-0 w-3 h-3 bg-yellow-400 rounded-br cursor-nw-resize"
+                          style={{ transform: 'translate(-1.5px, -1.5px)' }}
+                          onMouseDown={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            const startX = e.clientX
+                            const startY = e.clientY
+                            const startX_ = element.x
+                            const startY_ = element.y
+                            const startWidth = element.width
+                            const startHeight = element.height
+
+                            const handleMouseMove = (moveEvent: MouseEvent) => {
+                              const deltaX = moveEvent.clientX - startX
+                              const deltaY = moveEvent.clientY - startY
+                              updateElement(element.id, {
+                                x: Math.max(0, startX_ + deltaX),
+                                y: Math.max(0, startY_ + deltaY),
+                                width: Math.max(50, startWidth - deltaX),
+                                height: Math.max(50, startHeight - deltaY)
+                              })
+                            }
+
+                            const handleMouseUp = () => {
+                              document.removeEventListener('mousemove', handleMouseMove)
+                              document.removeEventListener('mouseup', handleMouseUp)
+                            }
+
+                            document.addEventListener('mousemove', handleMouseMove)
+                            document.addEventListener('mouseup', handleMouseUp)
+                          }}
+                        />
+                      </>
+                    )}
+                  </motion.div>
+                ))}
               </AnimatePresence>
             </motion.div>
           </motion.div>
@@ -483,105 +563,33 @@ export const Presentations: React.FC<{ windowId?: string }> = ({ windowId }) => 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            {activeSlide.elements.map((element) => {
-              const animVariants = getAnimationVariants(element.animation || 'fade')
-              return (
-                <motion.div
-                  key={element.id}
-                  {...animVariants}
-                  className="absolute"
-                  style={{
-                    left: element.x,
-                    top: element.y,
-                    width: element.width,
-                    height: element.height,
-                  }}
-                >
-                  {element.type === 'text' && (
-                    <div style={{ fontSize: element.fontSize, fontFamily: element.fontFamily, color: element.color }}>
-                      {element.content}
-                    </div>
-                  )}
-                  {element.type === 'shape' && (
-                    <div style={{ backgroundColor: element.bgColor, borderRadius: element.shape === 'circle' ? '50%' : '0', width: '100%', height: '100%' }} />
-                  )}
-                  {element.type === 'image' && element.imageUrl && (
-                    <img src={element.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  )}
-                </motion.div>
-              )
-            })}
-          </motion.div>
-        )}
-
-        {/* Properties Panel */}
-        {selectedElement && activeSlide.elements.find(el => el.id === selectedElement) && (
-          <motion.div
-            className="glass-purple-dark border-t border-purple-400/20 px-6 py-4 max-h-32 overflow-y-auto"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-          >
-            {(() => {
-              const element = activeSlide.elements.find(el => el.id === selectedElement)!
-              return (
-                <div className="grid grid-cols-4 gap-4 text-xs text-white">
-                  {element.type === 'text' && (
-                    <>
-                      <select
-                        value={element.fontFamily}
-                        onChange={(e) => updateElement(element.id, { fontFamily: e.target.value })}
-                        className="p-1 bg-gray-800 border border-purple-400/20 rounded text-white"
-                      >
-                        {FONTS.map(f => <option key={f} value={f}>{f}</option>)}
-                      </select>
-                      <input
-                        type="number"
-                        value={element.fontSize}
-                        onChange={(e) => updateElement(element.id, { fontSize: parseInt(e.target.value) })}
-                        className="p-1 bg-gray-800 border border-purple-400/20 rounded text-white"
-                        placeholder="Font size"
-                      />
-                      <input
-                        type="color"
-                        value={element.color}
-                        onChange={(e) => updateElement(element.id, { color: e.target.value })}
-                        className="p-1 bg-gray-800 border border-purple-400/20 rounded"
-                      />
-                      <select
-                        value={element.animation}
-                        onChange={(e) => updateElement(element.id, { animation: e.target.value as any })}
-                        className="p-1 bg-gray-800 border border-purple-400/20 rounded text-white"
-                      >
-                        {ANIMATIONS.map(a => <option key={a} value={a}>{a}</option>)}
-                      </select>
-                    </>
-                  )}
-                  {element.type === 'shape' && (
-                    <>
-                      <input
-                        type="color"
-                        value={element.bgColor}
-                        onChange={(e) => updateElement(element.id, { bgColor: e.target.value })}
-                        className="p-1 bg-gray-800 border border-purple-400/20 rounded"
-                      />
-                      <select
-                        value={element.animation}
-                        onChange={(e) => updateElement(element.id, { animation: e.target.value as any })}
-                        className="p-1 bg-gray-800 border border-purple-400/20 rounded text-white"
-                      >
-                        {ANIMATIONS.map(a => <option key={a} value={a}>{a}</option>)}
-                      </select>
-                    </>
-                  )}
-                  <button
-                    onClick={() => deleteElement(element.id)}
-                    className="p-1 bg-red-500/20 hover:bg-red-500/30 rounded text-red-400"
-                  >
-                    Delete
-                  </button>
-                </div>
-              )
-            })()}
+            {activeSlide.elements.map((element) => (
+              <motion.div
+                key={element.id}
+                className="absolute"
+                style={{
+                  left: element.x,
+                  top: element.y,
+                  width: element.width,
+                  height: element.height,
+                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                {element.type === 'text' && (
+                  <div style={{ fontSize: element.fontSize, fontFamily: element.fontFamily, color: element.color }}>
+                    {element.content}
+                  </div>
+                )}
+                {element.type === 'shape' && (
+                  <div style={{ backgroundColor: element.bgColor, borderRadius: element.shape === 'circle' ? '50%' : '0', width: '100%', height: '100%' }} />
+                )}
+                {element.type === 'image' && element.imageUrl && (
+                  <img src={element.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                )}
+              </motion.div>
+            ))}
           </motion.div>
         )}
 
