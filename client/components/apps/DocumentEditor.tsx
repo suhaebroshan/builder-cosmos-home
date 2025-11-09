@@ -16,6 +16,8 @@ import {
   Download,
   FileText,
   MoreVertical,
+  Palette,
+  Type,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -47,13 +49,13 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
         id: 'sec-1',
         type: 'heading1',
         content: 'Welcome to Document Editor',
-        style: { fontSize: 28, bold: true }
+        style: { fontSize: 28, bold: true, color: '#e0e7ff' }
       },
       {
         id: 'sec-2',
         type: 'paragraph',
         content: 'Start typing to create your document. Use the formatting tools above to style your text.',
-        style: { fontSize: 14 }
+        style: { fontSize: 14, color: '#d1d5db' }
       }
     ]
   })
@@ -64,9 +66,9 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
     alignment: 'left',
     fontSize: 14,
     fontFamily: 'Inter',
-    color: '#000000'
+    color: '#d1d5db'
   })
-  const [showMenu, setShowMenu] = useState(false)
+  const [activeFormat, setActiveFormat] = useState<string | null>(null)
   const editorRef = useRef<HTMLDivElement>(null)
 
   const activeDoc = documents.find(d => d.id === activeDocId)
@@ -92,6 +94,7 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
       ...prev,
       [activeDocId]: [...(prev[activeDocId] || []), newSection]
     }))
+    setActiveFormat(null)
   }
 
   const deleteSection = (sectionId: string) => {
@@ -136,18 +139,18 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
 
   const getHeadingStyle = (type: string): React.CSSProperties => {
     const styles: Record<string, React.CSSProperties> = {
-      'heading1': { fontSize: 28, fontWeight: 'bold', marginTop: 24, marginBottom: 16 },
-      'heading2': { fontSize: 22, fontWeight: 'bold', marginTop: 18, marginBottom: 12 },
-      'heading3': { fontSize: 18, fontWeight: 'bold', marginTop: 12, marginBottom: 8 },
-      'paragraph': { fontSize: 14, marginBottom: 12, lineHeight: 1.6 },
-      'list': { marginLeft: 24, marginBottom: 12 },
-      'ordered-list': { marginLeft: 24, marginBottom: 12 }
+      'heading1': { fontSize: 28, fontWeight: 'bold', marginTop: 24, marginBottom: 16, color: '#e0e7ff' },
+      'heading2': { fontSize: 22, fontWeight: 'bold', marginTop: 18, marginBottom: 12, color: '#e0e7ff' },
+      'heading3': { fontSize: 18, fontWeight: 'bold', marginTop: 12, marginBottom: 8, color: '#e0e7ff' },
+      'paragraph': { fontSize: 14, marginBottom: 12, lineHeight: 1.6, color: '#d1d5db' },
+      'list': { marginLeft: 24, marginBottom: 12, color: '#d1d5db' },
+      'ordered-list': { marginLeft: 24, marginBottom: 12, color: '#d1d5db' }
     }
     return styles[type] || styles['paragraph']
   }
 
   return (
-    <div className="w-full h-full flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="w-full h-full flex flex-col bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       {/* Header */}
       <motion.div
         className="glass-purple-dark px-6 py-4 border-b border-purple-400/20 flex items-center justify-between"
@@ -259,7 +262,7 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
+        <div className="max-w-4xl mx-auto glass-purple-dark rounded-lg shadow-2xl p-8">
           <AnimatePresence mode="popLayout">
             {activeContent.length === 0 ? (
               <motion.div
@@ -267,7 +270,7 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
-                <p>Start typing or click the + button to add content</p>
+                <p className="text-white/60">Start typing or click the + button to add content</p>
               </motion.div>
             ) : (
               activeContent.map((section, index) => (
@@ -281,21 +284,21 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
                 >
                   {section.type === 'list' && (
                     <ul style={getHeadingStyle(section.type)}>
-                      <li className="text-gray-800">{section.content}</li>
+                      <li>{section.content}</li>
                     </ul>
                   )}
                   {section.type === 'ordered-list' && (
                     <ol style={getHeadingStyle(section.type)}>
-                      <li className="text-gray-800">{section.content}</li>
+                      <li>{section.content}</li>
                     </ol>
                   )}
                   {(section.type === 'heading1' || section.type === 'heading2' || section.type === 'heading3') && (
-                    <div style={getHeadingStyle(section.type)} className="text-gray-800">
+                    <div style={getHeadingStyle(section.type)}>
                       {section.content || `Type your ${section.type} here...`}
                     </div>
                   )}
                   {section.type === 'paragraph' && (
-                    <div style={getHeadingStyle(section.type)} className="text-gray-700">
+                    <div style={getHeadingStyle(section.type)}>
                       {section.content || 'Start typing here...'}
                     </div>
                   )}
@@ -304,7 +307,7 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
                     type="text"
                     value={section.content}
                     onChange={(e) => updateSection(section.id, e.target.value)}
-                    className="absolute inset-0 w-full bg-transparent outline-none opacity-0 hover:opacity-100 focus:opacity-100"
+                    className="absolute inset-0 w-full bg-transparent outline-none opacity-0 hover:opacity-100 focus:opacity-100 text-white"
                     style={getHeadingStyle(section.type)}
                   />
 
