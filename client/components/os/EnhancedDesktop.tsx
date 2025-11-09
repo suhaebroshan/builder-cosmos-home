@@ -294,6 +294,50 @@ export const EnhancedDesktop: React.FC = () => {
           description: 'Windows-style media player for all your audio needs',
           position: getGridPosition(16),
           size: { width: 64, height: 64 }
+        },
+        {
+          appId: 'document-editor',
+          name: 'Word',
+          icon: FileCode,
+          component: DocumentEditor,
+          defaultSize: { width: 1000, height: 700 },
+          defaultPosition: { x: 200, y: 100 },
+          description: 'Full-featured document editor with formatting and export',
+          position: getGridPosition(17),
+          size: { width: 64, height: 64 }
+        },
+        {
+          appId: 'presentations',
+          name: 'PowerPoint',
+          icon: Presentation,
+          component: Presentations,
+          defaultSize: { width: 1200, height: 800 },
+          defaultPosition: { x: 220, y: 120 },
+          description: 'Create stunning presentations with slides and animations',
+          position: getGridPosition(18),
+          size: { width: 64, height: 64 }
+        },
+        {
+          appId: 'spreadsheet',
+          name: 'Excel',
+          icon: BarChart3,
+          component: Spreadsheet,
+          defaultSize: { width: 1100, height: 700 },
+          defaultPosition: { x: 240, y: 100 },
+          description: 'Spreadsheet application with formulas and calculations',
+          position: getGridPosition(19),
+          size: { width: 64, height: 64 }
+        },
+        {
+          appId: 'file-converter',
+          name: 'Converter',
+          icon: ConvertVertical,
+          component: FileConverter,
+          defaultSize: { width: 900, height: 700 },
+          defaultPosition: { x: 260, y: 80 },
+          description: 'Convert files between different formats',
+          position: getGridPosition(20),
+          size: { width: 64, height: 64 }
         }
       ]
       
