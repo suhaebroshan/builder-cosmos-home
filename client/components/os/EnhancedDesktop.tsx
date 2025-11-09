@@ -588,12 +588,31 @@ export const EnhancedDesktop: React.FC = () => {
     <MobileNavigation>
       <div
         {...desktopFocusable.focusableProps}
-        className="absolute inset-0 select-none focus:outline-none"
+        className="absolute inset-0 select-none focus:outline-none overflow-hidden"
         onClick={handleDesktopClick}
         onContextMenu={handleDesktopRightClick}
+        ref={desktopRef}
       >
-        {/* Circular Desktop Layout */}
-        <CircularDesktop />
+        {/* Grid Desktop Layout */}
+        <AnimatePresence>
+          {freeIcons.map((icon, index) => (
+            <DesktopIcon
+              key={icon.id}
+              icon={icon}
+              index={index}
+              isSelected={selectedIcons.includes(icon.id)}
+              isOpen={getWindowsByApp(icon.appId).length > 0}
+              isEditMode={isEditMode}
+              isFocused={focusedIconIndex === index}
+              onOpen={() => openApp(icon)}
+              onSelect={(multiSelect) => selectIcon(icon.id, multiSelect)}
+              onPositionUpdate={(info) => handleIconDragEnd(icon.id, info)}
+              onDelete={() => handleDeleteIcon(icon.id)}
+              onDuplicate={() => handleDuplicateIcon(icon.id)}
+              onStartEdit={() => setEditMode(true)}
+            />
+          ))}
+        </AnimatePresence>
       
       {/* Edit Mode Controls */}
       <AnimatePresence>
