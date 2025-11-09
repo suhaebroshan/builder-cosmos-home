@@ -19,6 +19,7 @@ import {
   Palette,
   Type,
 } from 'lucide-react'
+import { Document, Packer, Paragraph, HeadingLevel, TextRun, AlignmentType } from 'docx'
 import { cn } from '@/lib/utils'
 
 interface TextStyle {
@@ -43,19 +44,14 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
     { id: '1', name: 'Untitled Document', lastModified: new Date() }
   ])
   const [activeDocId, setActiveDocId] = useState('1')
+  const [docTitle, setDocTitle] = useState('Untitled Document')
   const [sections, setSections] = useState<Record<string, DocumentSection[]>>({
     '1': [
       {
         id: 'sec-1',
-        type: 'heading1',
-        content: 'Welcome to Document Editor',
-        style: { fontSize: 28, bold: true, color: '#e0e7ff' }
-      },
-      {
-        id: 'sec-2',
         type: 'paragraph',
-        content: 'Start typing to create your document. Use the formatting tools above to style your text.',
-        style: { fontSize: 14, color: '#d1d5db' }
+        content: 'Start typing your document here...',
+        style: { fontSize: 14, bold: false, color: '#d1d5db', fontFamily: 'Inter' }
       }
     ]
   })
@@ -68,17 +64,25 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
     fontFamily: 'Inter',
     color: '#d1d5db'
   })
-  const [activeFormat, setActiveFormat] = useState<string | null>(null)
-  const editorRef = useRef<HTMLDivElement>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
 
   const activeDoc = documents.find(d => d.id === activeDocId)
   const activeContent = sections[activeDocId] || []
 
-  const updateSection = (sectionId: string, content: string, type?: DocumentSection['type']) => {
+  const updateSection = (sectionId: string, content: string) => {
     setSections(prev => ({
       ...prev,
       [activeDocId]: prev[activeDocId].map(s =>
-        s.id === sectionId ? { ...s, content, type: type || s.type } : s
+        s.id === sectionId ? { ...s, content } : s
+      )
+    }))
+  }
+
+  const updateSectionType = (sectionId: string, type: DocumentSection['type']) => {
+    setSections(prev => ({
+      ...prev,
+      [activeDocId]: prev[activeDocId].map(s =>
+        s.id === sectionId ? { ...s, type } : s
       )
     }))
   }
@@ -94,7 +98,7 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
       ...prev,
       [activeDocId]: [...(prev[activeDocId] || []), newSection]
     }))
-    setActiveFormat(null)
+    setEditingId(newSection.id)
   }
 
   const deleteSection = (sectionId: string) => {
@@ -106,34 +110,91 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
 
   const createNewDocument = () => {
     const newId = `doc-${Date.now()}`
-    setDocuments(prev => [...prev, { id: newId, name: 'Untitled Document', lastModified: new Date() }])
+    const newName = `Untitled Document ${documents.length}`
+    setDocuments(prev => [...prev, { id: newId, name: newName, lastModified: new Date() }])
     setSections(prev => ({
       ...prev,
       [newId]: [{ id: 'sec-1', type: 'paragraph', content: '', style: selectedStyle }]
     }))
     setActiveDocId(newId)
+    setDocTitle(newName)
   }
 
-  const exportAsHTML = () => {
-    const html = activeContent.map(section => {
-      const tagMap = {
-        'heading1': 'h1',
-        'heading2': 'h2',
-        'heading3': 'h3',
-        'paragraph': 'p',
-        'list': 'ul',
-        'ordered-list': 'ol'
+  const exportAsDOCX = async () => {
+    const paragraphs = activeContent.map(section => {
+      const alignmentMap: Record<string, AlignmentType> = {
+        'left': AlignmentType.LEFT,
+        'center': AlignmentType.CENTER,
+        'right': AlignmentType.RIGHT
       }
-      const tag = tagMap[section.type]
-      const style = `style="font-size: ${section.style.fontSize}px; font-weight: ${section.style.bold ? 'bold' : 'normal'}; font-style: ${section.style.italic ? 'italic' : 'normal'}; text-align: ${section.style.alignment}; color: ${section.style.color};"`
-      return `<${tag} ${style}>${section.content}</${tag}>`
-    }).join('\n')
 
-    const blob = new Blob([html], { type: 'text/html' })
+      const text = new TextRun({
+        text: section.content || '',
+        bold: section.style.bold,
+        italic: section.style.italic,
+        underline: section.style.underline ? { type: 'single' } : undefined,
+        size: (section.style.fontSize || 14) * 2, // half-points
+        font: section.style.fontFamily || 'Calibri',
+        color: section.style.color?.replace('#', ''),
+      })
+
+      const headingLevelMap: Record<string, HeadingLevel> = {
+        'heading1': HeadingLevel.HEADING_1,
+        'heading2': HeadingLevel.HEADING_2,
+        'heading3': HeadingLevel.HEADING_3,
+      }
+
+      if (['heading1', 'heading2', 'heading3'].includes(section.type)) {
+        return new Paragraph({
+          text: section.content,
+          heading: headingLevelMap[section.type],
+          alignment: alignmentMap[section.style.alignment || 'left'],
+        })
+      }
+
+      if (section.type === 'list') {
+        return new Paragraph({
+          text: section.content,
+          bullet: { level: 0 },
+          alignment: alignmentMap[section.style.alignment || 'left'],
+        })
+      }
+
+      if (section.type === 'ordered-list') {
+        return new Paragraph({
+          text: section.content,
+          numbering: { level: 0, reference: 'default-numbering' },
+          alignment: alignmentMap[section.style.alignment || 'left'],
+        })
+      }
+
+      return new Paragraph({
+        children: [text],
+        alignment: alignmentMap[section.style.alignment || 'left'],
+      })
+    })
+
+    const doc = new Document({
+      sections: [
+        {
+          children: [
+            new Paragraph({
+              text: docTitle,
+              heading: HeadingLevel.HEADING_1,
+              bold: true,
+              alignment: AlignmentType.CENTER,
+            }),
+            ...paragraphs
+          ],
+        },
+      ],
+    })
+
+    const blob = await Packer.toBlob(doc)
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `${activeDoc?.name || 'document'}.html`
+    a.download = `${docTitle || 'document'}.docx`
     a.click()
   }
 
@@ -143,8 +204,8 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
       'heading2': { fontSize: 22, fontWeight: 'bold', marginTop: 18, marginBottom: 12, color: '#e0e7ff' },
       'heading3': { fontSize: 18, fontWeight: 'bold', marginTop: 12, marginBottom: 8, color: '#e0e7ff' },
       'paragraph': { fontSize: 14, marginBottom: 12, lineHeight: 1.6, color: '#d1d5db' },
-      'list': { marginLeft: 24, marginBottom: 12, color: '#d1d5db' },
-      'ordered-list': { marginLeft: 24, marginBottom: 12, color: '#d1d5db' }
+      'list': { marginLeft: 24, marginBottom: 12, color: '#d1d5db', listStyleType: 'disc' },
+      'ordered-list': { marginLeft: 24, marginBottom: 12, color: '#d1d5db', listStyleType: 'decimal' }
     }
     return styles[type] || styles['paragraph']
   }
@@ -157,10 +218,21 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-1">
           <FileText className="w-6 h-6 text-purple-400" />
-          <div>
-            <h2 className="text-white font-semibold">{activeDoc?.name || 'Document'}</h2>
+          <div className="flex-1">
+            <input
+              type="text"
+              value={docTitle}
+              onChange={(e) => {
+                setDocTitle(e.target.value)
+                setDocuments(prev => prev.map(d =>
+                  d.id === activeDocId ? { ...d, name: e.target.value } : d
+                ))
+              }}
+              className="text-white font-semibold bg-transparent outline-none w-full hover:bg-white/10 px-2 py-1 rounded transition-colors"
+              placeholder="Document name"
+            />
             <p className="text-white/60 text-xs">Last modified: {activeDoc?.lastModified.toLocaleDateString()}</p>
           </div>
         </div>
@@ -175,12 +247,12 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
 
       {/* Toolbar */}
       <motion.div
-        className="glass-purple px-6 py-3 border-b border-purple-400/20 flex flex-wrap gap-2 items-center"
+        className="glass-purple px-6 py-3 border-b border-purple-400/20 flex flex-wrap gap-3 items-center"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <div className="flex gap-1 border-r border-purple-400/20 pr-3">
+        <div className="flex gap-1">
           <button className="p-2 hover:bg-white/20 rounded transition-colors text-white" title="Bold">
             <Bold className="w-4 h-4" />
           </button>
@@ -192,7 +264,9 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
           </button>
         </div>
 
-        <div className="flex gap-1 border-r border-purple-400/20 pr-3">
+        <div className="w-px h-6 bg-white/20" />
+
+        <div className="flex gap-1">
           <button className="p-2 hover:bg-white/20 rounded transition-colors text-white" title="Align Left">
             <AlignLeft className="w-4 h-4" />
           </button>
@@ -204,7 +278,9 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
           </button>
         </div>
 
-        <div className="flex gap-1 border-r border-purple-400/20 pr-3">
+        <div className="w-px h-6 bg-white/20" />
+
+        <div className="flex gap-1">
           <button
             onClick={() => addSection('heading1')}
             className="p-2 hover:bg-white/20 rounded transition-colors text-white text-xs font-semibold"
@@ -228,7 +304,9 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
           </button>
         </div>
 
-        <div className="flex gap-1 border-r border-purple-400/20 pr-3">
+        <div className="w-px h-6 bg-white/20" />
+
+        <div className="flex gap-1">
           <button
             onClick={() => addSection('list')}
             className="p-2 hover:bg-white/20 rounded transition-colors text-white"
@@ -246,17 +324,17 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
         </div>
 
         <button
-          onClick={exportAsHTML}
-          className="ml-auto p-2 hover:bg-white/20 rounded transition-colors text-white"
-          title="Export as HTML"
+          onClick={exportAsDOCX}
+          className="ml-auto p-2 hover:bg-white/20 rounded transition-colors text-white flex items-center gap-2"
+          title="Export as DOCX"
         >
           <Download className="w-4 h-4" />
+          <span className="text-xs">DOCX</span>
         </button>
       </motion.div>
 
       {/* Editor Content */}
       <motion.div
-        ref={editorRef}
         className="flex-1 overflow-y-auto p-8"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -282,34 +360,55 @@ export const DocumentEditor: React.FC<{ windowId?: string }> = ({ windowId }) =>
                   exit={{ opacity: 0, y: -10 }}
                   layout
                 >
-                  {section.type === 'list' && (
-                    <ul style={getHeadingStyle(section.type)}>
-                      <li>{section.content}</li>
-                    </ul>
+                  {editingId === section.id ? (
+                    // Edit Mode - Text Input
+                    <input
+                      type="text"
+                      value={section.content}
+                      onChange={(e) => updateSection(section.id, e.target.value)}
+                      onBlur={() => setEditingId(null)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          setEditingId(null)
+                        }
+                      }}
+                      className="w-full p-2 bg-gray-700/50 border border-purple-400/40 rounded text-white outline-none"
+                      style={getHeadingStyle(section.type)}
+                      autoFocus
+                    />
+                  ) : (
+                    // View Mode
+                    <>
+                      {section.type === 'list' && (
+                        <ul style={getHeadingStyle(section.type)}>
+                          <li>{section.content || 'Bullet point...'}</li>
+                        </ul>
+                      )}
+                      {section.type === 'ordered-list' && (
+                        <ol style={getHeadingStyle(section.type)}>
+                          <li>{section.content || 'Numbered point...'}</li>
+                        </ol>
+                      )}
+                      {(section.type === 'heading1' || section.type === 'heading2' || section.type === 'heading3') && (
+                        <div
+                          style={getHeadingStyle(section.type)}
+                          onClick={() => setEditingId(section.id)}
+                          className="cursor-text hover:bg-white/5 px-2 py-1 rounded transition-colors"
+                        >
+                          {section.content || `Type ${section.type} here...`}
+                        </div>
+                      )}
+                      {section.type === 'paragraph' && (
+                        <div
+                          style={getHeadingStyle(section.type)}
+                          onClick={() => setEditingId(section.id)}
+                          className="cursor-text hover:bg-white/5 px-2 py-1 rounded transition-colors"
+                        >
+                          {section.content || 'Click to type...'}
+                        </div>
+                      )}
+                    </>
                   )}
-                  {section.type === 'ordered-list' && (
-                    <ol style={getHeadingStyle(section.type)}>
-                      <li>{section.content}</li>
-                    </ol>
-                  )}
-                  {(section.type === 'heading1' || section.type === 'heading2' || section.type === 'heading3') && (
-                    <div style={getHeadingStyle(section.type)}>
-                      {section.content || `Type your ${section.type} here...`}
-                    </div>
-                  )}
-                  {section.type === 'paragraph' && (
-                    <div style={getHeadingStyle(section.type)}>
-                      {section.content || 'Start typing here...'}
-                    </div>
-                  )}
-
-                  <input
-                    type="text"
-                    value={section.content}
-                    onChange={(e) => updateSection(section.id, e.target.value)}
-                    className="absolute inset-0 w-full bg-transparent outline-none opacity-0 hover:opacity-100 focus:opacity-100 text-white"
-                    style={getHeadingStyle(section.type)}
-                  />
 
                   <button
                     onClick={() => deleteSection(section.id)}
